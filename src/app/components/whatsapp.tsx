@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 export default function WhatsAppButton() {
   const buttonRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 20, y: 20 });
+  const [position, setPosition] = useState({ x: 20, y: 550 });
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hasMoved, setHasMoved] = useState(false);
