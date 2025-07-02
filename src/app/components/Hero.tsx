@@ -158,7 +158,7 @@ export default function HeroBookingSection() {
   }, [showModal]);
 
 
-  const [isMounted, setIsMounted] = useState(false);
+  const [, setIsMounted] = useState(false);
 
 useEffect(() => {
   setIsMounted(true);
