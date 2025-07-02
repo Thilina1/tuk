@@ -69,11 +69,21 @@ export default function WhoWeAre() {
               </motion.blockquote>
 
               {/* Button */}
-              <div className="mt-8 text-center md:text-left">
-                <button className="bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold px-6 py-2 rounded-full transition shadow-md">
-                  Learn More About Us
-                </button>
-              </div>
+              <div className="flex flex-col sm:flex-row gap-4 mt-6">
+  {/* Learn More Button */}
+  <button
+    type="button"
+    className="w-full sm:w-auto font-semibold text-sm py-2 px-5 rounded-lg shadow transition-colors duration-300 bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:opacity-90"
+    style={{
+      backgroundImage: "linear-gradient(to right, #fbbf24, #f97316)",
+      color: "#fff",
+    }}
+  >
+    Learn More About Us
+  </button>
+</div>
+
+              
             </div>
           </div>
         </motion.div>

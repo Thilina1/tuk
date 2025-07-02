@@ -42,15 +42,19 @@ export default function Reviews() {
 
   return (
     <section
-      className="bg-yellow-300 py-20 px-6 overflow-hidden"
+      className="py-20 px-6 overflow-hidden"
       style={{
-        backgroundColor: "#fcd34d", // Tailwind yellow-300
+        backgroundColor: "#f0bf37",
         colorScheme: "light",
-        WebkitAppearance: "none",
-        appearance: "none",
+        color: "#1a1a1a",
+        filter: "none",
+        mixBlendMode: "normal",
       }}
     >
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16">
+      <div
+        className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16"
+        style={{ color: "#1a1a1a" }}
+      >
         {/* Text Block */}
         <motion.div
           initial="hidden"
@@ -59,15 +63,28 @@ export default function Reviews() {
           variants={fadeInUp}
           transition={{ duration: 0.6 }}
           className="order-1 md:order-2 max-w-xl text-center md:text-left"
+          style={{
+            color: "#1a1a1a",
+            backgroundColor: "transparent",
+          }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-3 tracking-tight">
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-3 tracking-tight"
+            style={{ color: "#0f766e" }}
+          >
             Trusted by Travellers 🚩
           </h2>
 
-          <p className="text-lg font-medium text-gray-800 mb-1">
+          <p
+            className="text-lg font-medium mb-1"
+            style={{ color: "#1f2937" }}
+          >
             “TukTukDrive is amazing!”
           </p>
-          <p className="text-gray-800 text-base leading-relaxed mb-4">
+          <p
+            className="text-base leading-relaxed mb-4"
+            style={{ color: "#1f2937" }}
+          >
             Read our recent reviews to discover why our customers adore us.
             We provide unparalleled travel experiences by crafting personalized
             itineraries, tips on how to travel like a local, and 24/7 support...
@@ -75,21 +92,19 @@ export default function Reviews() {
 
           {/* Social Icons */}
           <div className="flex justify-center md:justify-start gap-4 mt-6">
-            {[FaFacebookF, FaGoogle, FaTripadvisor, FaInstagram].map(
-              (Icon, i) => (
-                <div
-                  key={i}
-                  className="p-3 bg-white rounded-full ring-2 ring-teal-500/20 hover:ring-teal-500 shadow hover:scale-110 transition duration-200 ease-in-out cursor-pointer"
-                  style={{
-                    backgroundColor: "#ffffff",
-                    WebkitAppearance: "none",
-                    appearance: "none",
-                  }}
-                >
-                  <Icon size={20} className="text-teal-700" />
-                </div>
-              )
-            )}
+            {[FaFacebookF, FaGoogle, FaTripadvisor, FaInstagram].map((Icon, i) => (
+              <div
+                key={i}
+                className="p-3 rounded-full shadow hover:scale-110 transition duration-200 ease-in-out cursor-pointer"
+                style={{
+                  backgroundColor: "#ffffff",
+                  color: "#0f766e",
+                  border: "2px solid rgba(15, 118, 110, 0.2)",
+                }}
+              >
+                <Icon size={20} />
+              </div>
+            ))}
           </div>
         </motion.div>
 
@@ -107,12 +122,11 @@ export default function Reviews() {
                 key={r.platform}
                 variants={fadeInUp}
                 transition={{ duration: 0.5, delay: i * 0.2 }}
-                className="bg-white rounded-xl px-5 py-4 w-56 h-[90px] flex items-center justify-center shadow-md border border-black/10"
+                className="rounded-xl px-5 py-4 w-56 h-[90px] flex items-center justify-center shadow-md"
                 style={{
                   backgroundColor: "#ffffff",
                   color: "#171717",
-                  WebkitAppearance: "none",
-                  appearance: "none",
+                  border: "1px solid rgba(0,0,0,0.1)",
                 }}
               >
                 <Image
@@ -122,6 +136,10 @@ export default function Reviews() {
                   height={50}
                   loading="lazy"
                   className="object-contain"
+                  style={{
+                    filter: "none",
+                    mixBlendMode: "normal",
+                  }}
                 />
               </motion.div>
             ))}

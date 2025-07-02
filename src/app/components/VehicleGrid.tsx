@@ -64,7 +64,7 @@ export default function Vehicles() {
         paddingRight: "1rem",
       }}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto pt-12">
         <motion.div
           initial="hidden"
           whileInView="visible"

@@ -695,7 +695,7 @@ const BookingModal = ({
           </button>
           <button
             onClick={handleNext}
-            className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+            className="px-4 py-2 bg-orange-500 text-gray-800 rounded hover:bg-orange-600"
           >
             {step < 3 ? "Next" : "Book"}
           </button>

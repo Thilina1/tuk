@@ -9,7 +9,7 @@ const articles = [
     title: "🏯 Sigiriya – The Ancient Rock Fortress",
     image: "/blog/friends.jpg",
     excerpt:
-      "Climbing Sigiriya is like stepping into an ancient world. As you ascend past centuries-old frescoes and lion paw carvings, the views get better with every step. From the summit, sweeping landscapes stretch out in every direction. It’s not just a hike — it’s a journey through Sri Lanka’s royal history.",
+      "Climbing Sigiriya is like stepping into an ancient world. As you ascend past centuries-old frescoes and lion-paw carvings, the views get better with every step. From the summit, sweeping landscapes stretch out in every direction. It’s not just a hike — it’s a journey through Sri Lanka’s royal history.",
   },
   {
     title: "🕍 Temple of the Sacred Tooth Relic – Kandy",
@@ -31,35 +31,31 @@ const articles = [
   },
 ];
 
-// Animation Variants
 const containerVariants = {
   hidden: {},
   visible: {
-    transition: {
-      staggerChildren: 0.15,
-    },
+    transition: { staggerChildren: 0.15 },
   },
 };
 
 const fadeInUp: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.6,
-      ease: easeInOut, // ✅ imported easing function
-    },
+    transition: { duration: 0.6, ease: easeInOut },
   },
 };
 
-
 export default function BlogSection() {
   return (
-    <section className="bg-gradient-to-b from-white to-yellow-50 py-4 pb-13 px-6">
+    <section
+      className="py-4 pt-15 pb-13 px-6"
+      style={{
+        background: "linear-gradient(to bottom, #ffffff, #fef9c3)",
+        colorScheme: "light",
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -69,18 +65,27 @@ export default function BlogSection() {
           variants={fadeInUp}
           className="text-center mb-14"
         >
-          <p className="text-sm text-teal-600 uppercase tracking-widest font-semibold">
+          <p
+            className="text-sm uppercase tracking-widest font-semibold"
+            style={{ color: "#0d9488" }}
+          >
             Our Blog
           </p>
-          <h2 className="text-4xl font-extrabold text-slate-900 mt-2">
+          <h2
+            className="text-4xl font-extrabold mt-2"
+            style={{ color: "#0f172a" }}
+          >
             Read Our Latest Articles
           </h2>
-          <p className="text-slate-600 mt-2 text-base max-w-2xl mx-auto">
+          <p
+            className="mt-2 text-base max-w-2xl mx-auto"
+            style={{ color: "#475569" }}
+          >
             Get inspired by stories, guides, and local insights for your Sri Lankan adventures.
           </p>
         </motion.div>
 
-        {/* Blog Grid */}
+        {/* Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -92,9 +97,10 @@ export default function BlogSection() {
             <motion.div
               key={idx}
               variants={fadeInUp}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group relative"
+              className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group relative"
+              style={{ backgroundColor: "#ffffff" }}
             >
-              {/* Image Wrapper with Overlay */}
+              {/* Image */}
               <div className="relative h-48 overflow-hidden">
                 <Image
                   src={post.image}
@@ -102,30 +108,56 @@ export default function BlogSection() {
                   fill
                   className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-80 transition" />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
+                    opacity: 0.6,
+                    transition: "opacity 300ms",
+                  }}
+                />
               </div>
 
-              {/* Content */}
+              {/* Text */}
               <div className="p-5">
-                <h3 className="font-semibold text-lg text-slate-900 leading-snug line-clamp-2 group-hover:text-amber-600 transition-colors">
+                <h3
+                  className="font-semibold text-lg leading-snug line-clamp-2 transition-colors"
+                  style={{ color: "#0f172a" }}
+                >
                   {post.title}
                 </h3>
-                <p className="mt-2 text-sm text-slate-600 line-clamp-3">
+                <p
+                  className="mt-2 text-sm line-clamp-3"
+                  style={{ color: "#475569" }}
+                >
                   {post.excerpt}
                 </p>
 
-                {/* Read More Button */}
-                <button className="mt-4 inline-flex items-center gap-1 text-sm text-purple-700 font-semibold group-hover:underline underline-offset-4 transition">
-                  Read More <FiArrowRight className="text-base mt-0.5" />
+                {/* Fixed Color Button */}
+                <button
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold transition hover:underline underline-offset-4"
+                  style={{ color: "#7c3aed" }}
+                >
+                  Read More{" "}
+                  <FiArrowRight className="text-base mt-0.5" style={{ color: "inherit" }} />
                 </button>
               </div>
             </motion.div>
           ))}
         </motion.div>
+
+        {/* More Button */}
         <div className="mt-8 flex justify-center">
-                <button className="bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold px-6 py-2 rounded-full transition shadow-md">
-                  More
-                </button>
+          <button
+            className="text-sm font-semibold px-6 py-2 rounded-full transition shadow-md hover:shadow-lg"
+            style={{
+              backgroundColor: "#f59e0b",
+              color: "#0f172a",
+            }}
+          >
+            More
+          </button>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { MapPin, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,7 +16,7 @@ const destinations = [
     name: "MIRISSA",
     description:
       "A beautiful beach town perfect for surfing and whale watching on Sri Lanka’s southern coast.",
-    image: "/blog/blogPost/mirissa.jpeg",
+    image: "/blog/blogPost/mirissa.jpg",
   },
   {
     name: "KANDY",
@@ -37,11 +37,20 @@ export default function DestinationSlider() {
     setCurrentIndex((prev) => (prev === destinations.length - 1 ? 0 : prev + 1));
   };
 
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      goNext();
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [currentIndex]);
+
   const current = destinations[currentIndex];
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 items-stretch px-4 py-12 bg-gradient-to-b from-white via-yellow-50 to-white">
-      {/* 🔹 Image FIRST on mobile, SECOND on desktop */}
+    <div className="light w-full flex flex-col md:flex-row gap-6 items-stretch px-4 py-12 bg-gradient-to-b from-white via-yellow-50 to-white text-gray-900">
+
+      {/* Image FIRST on mobile, SECOND on desktop */}
       <div className="order-1 md:order-2 flex-1 relative rounded-2xl overflow-hidden shadow-lg border border-yellow-100">
         <AnimatePresence mode="wait">
           <motion.div
@@ -61,25 +70,23 @@ export default function DestinationSlider() {
           </motion.div>
         </AnimatePresence>
 
-{/* Navigation Buttons */}
-<div className="absolute bottom-4 left-4 flex gap-3">
-  <button
-    onClick={goPrev}
-    className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-x-1 focus:outline-none focus:ring-2 focus:ring-yellow-300"
-    aria-label="Previous"
-  >
-    ←
-  </button>
-  <button
-    onClick={goNext}
-    className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold shadow-md hover:shadow-lg transition duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-yellow-300"
-    aria-label="Next"
-  >
-    →
-  </button>
-</div>
-
-
+        {/* Navigation Buttons */}
+        <div className="absolute bottom-4 left-4 flex gap-3">
+          <button
+            onClick={goPrev}
+            className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-x-1 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            aria-label="Previous"
+          >
+            ←
+          </button>
+          <button
+            onClick={goNext}
+            className="px-3 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold shadow-md hover:shadow-lg transition duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            aria-label="Next"
+          >
+            →
+          </button>
+        </div>
 
         {/* Page Indicator */}
         <div className="absolute top-2 right-2 text-sm font-bold text-white bg-yellow-500 px-2 py-1 rounded-full shadow">
@@ -87,7 +94,7 @@ export default function DestinationSlider() {
         </div>
       </div>
 
-      {/* 🔹 Text SECOND on mobile, FIRST on desktop */}
+      {/* Text SECOND on mobile, FIRST on desktop */}
       <div className="order-2 md:order-1 flex-1 flex flex-col justify-center bg-white/70 backdrop-blur-md border border-yellow-100 rounded-2xl p-6 shadow-md text-gray-800">
         <h3 className="text-xs font-semibold text-yellow-600 uppercase mb-1 tracking-wider">
           Featured Destination
@@ -106,11 +113,16 @@ export default function DestinationSlider() {
             <h4 className="font-bold text-lg">{current.name}</h4>
           </div>
           <p className="text-sm text-gray-600 mb-4">{current.description}</p>
-
-          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg shadow hover:opacity-90 transition font-semibold text-sm">
-            Read Details
-            <ArrowRight className="w-4 h-4 text-white" />
-          </button>
+          <button
+  className="text-sm font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300"
+  style={{
+    backgroundColor: "#facc15", // yellow-400
+    color: "#1f2937", // slate-800
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+  }}
+>
+Read Details
+</button>
         </div>
       </div>
     </div>

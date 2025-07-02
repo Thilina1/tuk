@@ -109,7 +109,7 @@ export default function FAQPage() {
 
   return (
     <section
-      className="min-h-screen pt-5 pb-15 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen pt-15 pb-15 px-4 sm:px-6 lg:px-8"
       style={{
         background: "linear-gradient(to bottom, #FEF3C7, #ffffff, #f8fafc)",
         color: "#1f2937", // slate-800

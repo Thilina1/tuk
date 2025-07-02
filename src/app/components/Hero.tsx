@@ -254,7 +254,7 @@ useEffect(() => {
             </div>
 
             <div>
-  <label className="text-xs font-medium">WhatsApp Number:</label>
+  {/* <label className="text-xs font-medium">WhatsApp Number:</label>
   {isMounted && (
     <PhoneInput
       country={"lk"}
@@ -265,7 +265,25 @@ useEffect(() => {
       inputClass="w-full bg-white/20 border border-white/30 p-2 rounded-md text-sm text-white"
       buttonStyle={{ backgroundColor: "transparent", borderRight: "1px solid #ccc" }}
     />
-  )}
+  )} */}
+              <div>
+              <label className="text-xs font-medium">WhatsApp Number</label>
+              <PhoneInput
+                country={"lk"}
+                value={formValues.whatsapp}
+                onChange={(phone) => setFormValues((prev) => ({ ...prev, whatsapp: phone }))}
+                inputClass="!w-full !bg-white/20 !border-none !pl-16 !pr-2 !py-2 !rounded-md !text-sm !text-white placeholder-white/60"
+                containerClass="!w-full !relative"
+                buttonClass="!bg-white/10 !border-r !border-white/30 !rounded-l-md !px-2"
+                dropdownStyle={{ color: "#000" }}
+                enableSearch
+                placeholder="+94 XXX XX XXXX XXXX XXXX"
+                inputProps={{
+                  required: true, // ✅ Correct way
+                  autoFocus: true, // optional
+                }}
+              />
+            </div>
 
             </div>
 
