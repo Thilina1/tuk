@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
 interface LocationEntry {
@@ -22,27 +16,24 @@ export default function LocationPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editLocation, setEditLocation] = useState<LocationEntry | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<LocationEntry | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const locationRef = collection(db, "locations");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const locationRef = collection(db, "locations");
       const snapshot = await getDocs(locationRef);
       const data = snapshot.docs
         .map((doc) => ({ id: doc.id, ...doc.data() } as LocationEntry))
         .filter((entry) => entry.status !== "inactive");
-  
+
       setLocations(data);
       setLoading(false);
     };
-  
+
     fetchData();
-  }, []); // ✅ No dependencies now
-  
-  
+  }, []);
 
   const handleAddLocation = async ({ name, price }: { name: string; price: number }) => {
     const docRef = await addDoc(locationRef, { name, price, status: "active" });
@@ -128,64 +119,78 @@ export default function LocationPage() {
   );
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Location Management</h1>
-
-      <div className="flex justify-end mb-4">
-  <button onClick={() => setShowAddModal(true)} className="bg-green-500 text-white px-4 py-2 rounded">
-    Add New Location
-  </button>
-</div>
-
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Location Management</h1>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="bg-green-500 text-white px-4 py-2 rounded shadow"
+        >
+          ➕ Add New Location
+        </button>
+      </div>
 
       {loading ? (
-  <div className="flex justify-center items-center h-40">
-    <svg
-      className="animate-spin h-8 w-8 text-blue-600"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v8H4z"
-      ></path>
-    </svg>
-    <span className="ml-3 text-gray-600">Loading locations...</span>
-  </div>
-) : (
-
-      <table className="min-w-full bg-white border rounded text-sm">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="p-2 text-left">Location</th>
-            <th className="p-2 text-left">Price</th>
-            <th className="p-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {locations.map((loc) => (
-            <tr key={loc.id} className="border-t">
-              <td className="p-2">{loc.name}</td>
-              <td className="p-2">${loc.price}</td>
-              <td className="p-2">
-                <button onClick={() => setEditLocation(loc)} className="text-blue-600 mr-2">Edit</button>
-                <button onClick={() => setConfirmDelete(loc)} className="text-red-600">Delete</button>
-              </td>
+        <div className="flex justify-center items-center h-40">
+          <svg
+            className="animate-spin h-8 w-8 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+          <span className="ml-3 text-gray-600">Loading locations...</span>
+        </div>
+      ) : (
+        <table className="min-w-full bg-white shadow rounded-lg overflow-hidden text-sm">
+          <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+            <tr>
+              <th className="px-3 py-2 text-left">Location</th>
+              <th className="px-3 py-2 text-left">Price</th>
+              <th className="px-3 py-2 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-)}
+          </thead>
+          <tbody>
+            {locations.map((loc) => (
+              <tr
+                key={loc.id}
+                className="hover:bg-gray-50 even:bg-gray-50 text-gray-800"
+              >
+                <td className="px-3 py-2">{loc.name}</td>
+                <td className="px-3 py-2">${loc.price}</td>
+                <td className="px-3 py-2 space-x-1">
+                  <button
+                    onClick={() => setEditLocation(loc)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs shadow"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(loc)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs shadow"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
       {showAddModal && (
         <LocationModal
           onSave={handleAddLocation}

@@ -120,47 +120,37 @@ export default function TuktukPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Tuk Tuk Management</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Add Tuk Tuk
-        </button>
-      </div>
-
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-  <input
-    type="text"
-    placeholder="Search Owner"
-    value={searchOwner}
-    onChange={(e) => setSearchOwner(e.target.value)}
-    className="border px-3 py-2 rounded w-full"
-  />
-  <input
-    type="text"
-    placeholder="Search Vehicle No"
-    value={searchVehicleNo}
-    onChange={(e) => setSearchVehicleNo(e.target.value)}
-    className="border px-3 py-2 rounded w-full"
-  />
-  <input
-    type="text"
-    placeholder="Search District"
-    value={searchDistrict}
-    onChange={(e) => setSearchDistrict(e.target.value)}
-    className="border px-3 py-2 rounded w-full"
-  />
-  <input
-    type="text"
-    placeholder="Search Province"
-    value={searchProvince}
-    onChange={(e) => setSearchProvince(e.target.value)}
-    className="border px-3 py-2 rounded w-full"
-  />
+{/* 🔷 Header */}
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+  <h2 className="text-2xl font-semibold text-gray-800">Tuk Tuk Management</h2>
+  <button
+    onClick={() => setShowModal(true)}
+    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded shadow"
+  >
+    ➕ Add Tuk Tuk
+  </button>
 </div>
+
+{/* 🔷 Search Section */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  {[{ label: 'Owner', value: searchOwner, setter: setSearchOwner },
+    { label: 'Vehicle No', value: searchVehicleNo, setter: setSearchVehicleNo },
+    { label: 'District', value: searchDistrict, setter: setSearchDistrict },
+    { label: 'Province', value: searchProvince, setter: setSearchProvince }]
+    .map(({ label, value, setter }) => (
+    <div key={label} className="flex flex-col">
+      <label className="text-xs text-gray-600 mb-1">{label}</label>
+      <input
+        type="text"
+        placeholder={`Search ${label}`}
+        value={value}
+        onChange={(e) => setter(e.target.value)}
+        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100"
+      />
+    </div>
+  ))}
+</div>
+
 
 {loading ? (
   <div className="flex justify-center items-center h-40">
@@ -187,56 +177,64 @@ export default function TuktukPage() {
   </div>
 ) :(
 
-      <table className="min-w-full bg-white border rounded text-sm">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="p-2 text-left">#</th>
-            <th className="p-2 text-left">Owner</th>
-            <th className="p-2 text-left">Vehicle No</th>
-            <th className="p-2 text-left">Users</th>
-            <th className="p-2 text-left">District</th>
-            <th className="p-2 text-left">Province</th>
-            <th className="p-2 text-left">Mobile</th>
-            <th className="p-2 text-left">Manufactured Year</th>
-            <th className="p-2 text-left">Warranty Exp</th>
-            <th className="p-2 text-left">License Exp</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        {filteredTuktuks.map((tuk, index) => (
-            <tr key={tuk.id} className="border-t">
-              <td className="p-2">{index + 1}</td>
-              <td className="p-2">{tuk.ownerName}</td>
-              <td className="p-2">{tuk.vehicleNumber}</td>
-              <td className="p-2">{tuk.vehicleUsers}</td>
-              <td className="p-2">{tuk.district}</td>
-              <td className="p-2">{tuk.province}</td>
-              <td className="p-2">{tuk.mobile}</td>
-              <td className="p-2">{tuk.manufacturedYear}</td>
-              <td className="p-2">{tuk.warrantyExpiry}</td>
-              <td className="p-2">{tuk.licenseExpiry}</td>
-              <td className="p-2">
-                <button
-                  onClick={() => toggleActive(tuk)}
-                  className={`text-xs px-3 py-1 rounded ${tuk.active ? 'bg-green-500 text-white' : 'bg-gray-300 text-black'}`}
-                >
-                  {tuk.active ? 'Active' : 'Inactive'}
-                </button>
-              </td>
-              <td className="p-2">
-                <button
-                  onClick={() => handleDelete(tuk.id!)}
-                  className="bg-red-500 text-white px-2 py-1 rounded text-xs"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+<table className="min-w-full bg-white shadow rounded-lg overflow-hidden text-sm">
+  <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+    <tr>
+      <th className="px-3 py-2 text-left">#</th>
+      <th className="px-3 py-2 text-left">Owner</th>
+      <th className="px-3 py-2 text-left">Vehicle No</th>
+      <th className="px-3 py-2 text-left">Users</th>
+      <th className="px-3 py-2 text-left">District</th>
+      <th className="px-3 py-2 text-left">Province</th>
+      <th className="px-3 py-2 text-left">Mobile</th>
+      <th className="px-3 py-2 text-left">Year</th>
+      <th className="px-3 py-2 text-left">Warranty Exp</th>
+      <th className="px-3 py-2 text-left">License Exp</th>
+      <th className="px-3 py-2 text-left">Status</th>
+      <th className="px-3 py-2 text-left">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filteredTuktuks.map((tuk, index) => (
+      <tr
+        key={tuk.id}
+        className="hover:bg-gray-50 even:bg-gray-50 text-gray-800"
+      >
+        <td className="px-3 py-2">{index + 1}</td>
+        <td className="px-3 py-2">{tuk.ownerName}</td>
+        <td className="px-3 py-2">{tuk.vehicleNumber}</td>
+        <td className="px-3 py-2">{tuk.vehicleUsers}</td>
+        <td className="px-3 py-2">{tuk.district}</td>
+        <td className="px-3 py-2">{tuk.province}</td>
+        <td className="px-3 py-2">{tuk.mobile}</td>
+        <td className="px-3 py-2">{tuk.manufacturedYear}</td>
+        <td className="px-3 py-2">{tuk.warrantyExpiry}</td>
+        <td className="px-3 py-2">{tuk.licenseExpiry}</td>
+        <td className="px-3 py-2">
+          <button
+            onClick={() => toggleActive(tuk)}
+            className={`text-xs px-3 py-1 rounded-full shadow ${
+              tuk.active
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-200 text-gray-700'
+            }`}
+          >
+            {tuk.active ? 'Active' : 'Inactive'}
+          </button>
+        </td>
+        <td className="px-3 py-2">
+          <button
+            onClick={() => handleDelete(tuk.id!)}
+            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs shadow"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
 )}
       {showModal && (
   <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">

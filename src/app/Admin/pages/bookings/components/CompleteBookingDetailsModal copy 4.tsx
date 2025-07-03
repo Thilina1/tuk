@@ -428,14 +428,12 @@ useEffect(() => {
     }}
     className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
   />
-  <br></br>
-<label
-  htmlFor="trainTransferCheckbox"
-  className="text-base font-bold text-gray-700 select-none"
->
-  Enable Train Transfer
-</label>
-
+  <label
+    htmlFor="trainTransferCheckbox"
+    className="text-sm font-medium text-gray-700 select-none"
+  >
+    Enable Train Transfer
+  </label>
 </div>
 
 
@@ -460,10 +458,10 @@ useEffect(() => {
       placeholder="Search or select train transfer"
     />
 
-<br></br>
+
 <div>
   <label className="block text-xs text-red-600 font-medium">
-    Train Hold Back Assigned Person *
+    Hold Back Assigned Person *
   </label>
 
   <Select
@@ -481,18 +479,15 @@ useEffect(() => {
   />
 </div>
 </div>
-
-
-
-
-
-
-
-
 </div>
-<br></br>
+
+
+
+
+
+
           <div className="md:col-span-2">
-            <label className="block text-base font-bold text-gray-700">Extras</label>
+            <label className="block text-xs">Extras</label>
             <div className="grid grid-cols-2 gap-2">
               {extrasList.map((extra) => (
                 <div key={extra} className="flex justify-between">
@@ -513,8 +508,9 @@ useEffect(() => {
             </div>
           </div>
 
-          <div className="md:col-span-2">
-  <label className="block text-base font-bold text-gray-700">Assigned Tuk Tuks *</label>
+
+          <div className="md:col-span-2 pt-6">
+  <label className="block text-xs">Assigned Tuk Tuks *</label>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
   
 

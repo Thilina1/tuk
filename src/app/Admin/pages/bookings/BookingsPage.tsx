@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, Timestamp } from "firebase/firestore"; // ✅ Timestamp imported
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
 import CompleteBookings from "./components/CompleteBookings";
 import IncompleteBookings from "./components/IncompleteBookings";
 import AssignedBookings from "./components/AssignedBookings";
 import FinishedBookings from "./components/FinishedBookings";
+import OnBoardBookings from "./components/OnBoardBooking";
+import OnboardedBookings from "./components/OnBoardedBooking";
 
-// --- Types ---
+
 export interface TrainTransfer {
   from: string;
   to: string;
@@ -44,7 +46,7 @@ export interface BookingData {
   assignedPerson: string;
   holdBackAssignedPerson: string;
   trainTransferAssignedPerson: string;
-  createdAt: Timestamp; // ✅ Properly typed
+  createdAt: Timestamp;
   pickupPrice?: number;
   returnPrice?: number;
   trainTransfer?: {
@@ -56,12 +58,14 @@ export interface BookingData {
   };
 }
 
-type TabType = "complete" | "incomplete" | "assigned" | "finished";
+type TabType = "complete" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded";
 
 const tabs: { label: string; value: TabType }[] = [
-  { label: "✅ New Bookings", value: "complete" },
+  { label: "✅ New", value: "complete" },
   { label: "❌ Not Complete", value: "incomplete" },
   { label: "🚖 Assigned", value: "assigned" },
+  { label: "🛫 Readt to OnBoard", value: "OnBoard" },
+  { label: "🛫 OnBoarded", value: "OnBoarded" },
   { label: "🏁 Finished", value: "finished" },
 ];
 
@@ -72,18 +76,12 @@ export default function BookingsPage() {
   useEffect(() => {
     const fetchBookings = async () => {
       const snapshot = await getDocs(collection(db, "bookings"));
-
       const data: BookingData[] = snapshot.docs.map((doc) => {
-        const booking = doc.data() as Omit<BookingData, "id">; // ✅ Safe casting, no any
-        return {
-          id: doc.id,
-          ...booking,
-        };
+        const booking = doc.data() as Omit<BookingData, "id">;
+        return { id: doc.id, ...booking };
       });
-
       setBookings(data);
     };
-
     fetchBookings();
   }, []);
 
@@ -93,36 +91,44 @@ export default function BookingsPage() {
         return <CompleteBookings bookings={bookings} />;
       case "incomplete":
         return <IncompleteBookings bookings={bookings} />;
+      case "OnBoard":
+        return <OnBoardBookings bookings={bookings} />;
       case "assigned":
         return <AssignedBookings bookings={bookings} />;
-      case "finished":
-        return <FinishedBookings bookings={bookings} />;
-      default:
+      case "OnBoarded":
+        return <OnboardedBookings bookings={bookings} />;
+        case "finished":
+          return <FinishedBookings bookings={bookings} />;
+
+        default:
         return null;
     }
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Bookings</h2>
+    <div className="p-4 max-w-7xl mx-auto">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Bookings Overview</h2>
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex space-x-2 mb-4">
         {tabs.map((tab) => (
           <button
             key={tab.value}
-            className={`px-4 py-2 rounded ${
-              activeTab === tab.value
-                ? "bg-orange-500 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
             onClick={() => setActiveTab(tab.value)}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition 
+              ${
+                activeTab === tab.value
+                  ? "bg-orange-500 text-white shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      {renderTab()}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        {renderTab()}
+      </div>
     </div>
   );
 }

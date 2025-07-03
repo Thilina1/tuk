@@ -138,71 +138,81 @@ export default function PersonsPage() {
 
 
     
+<div className="p-6">
+  {/* 🔷 Header */}
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <h2 className="text-2xl font-semibold text-gray-800">Persons</h2>
+    <button
+      onClick={() => setShowModal(true)}
+      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded shadow"
+    >
+      ➕ Add Person
+    </button>
+  </div>
 
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Persons</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Add Person
-        </button>
-      </div>
+  {/* 🔷 Search Section */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+    {/* Search by Name */}
+    <div className="flex flex-col">
+      <label className="text-xs text-gray-600 mb-1">Search by Name</label>
+      <input
+        type="text"
+        placeholder="Name"
+        value={searchFilters.name}
+        onChange={(e) =>
+          setSearchFilters((prev) => ({ ...prev, name: e.target.value }))
+        }
+        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100"
+      />
+    </div>
+
+    {/* Province */}
+    <div className="flex flex-col">
+      <label className="text-xs text-gray-600 mb-1">Province</label>
+      <select
+        value={searchFilters.province}
+        onChange={(e) =>
+          setSearchFilters((prev) => ({
+            ...prev,
+            province: e.target.value,
+            district: '', // reset district if province changes
+          }))
+        }
+        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100"
+      >
+        <option value="">All Provinces</option>
+        {Object.keys(provinceDistricts).map((prov) => (
+          <option key={prov} value={prov}>
+            {prov}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* District */}
+    <div className="flex flex-col">
+      <label className="text-xs text-gray-600 mb-1">District</label>
+      <select
+        value={searchFilters.district}
+        onChange={(e) =>
+          setSearchFilters((prev) => ({ ...prev, district: e.target.value }))
+        }
+        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100"
+        disabled={!searchFilters.province}
+      >
+        <option value="">All Districts</option>
+        {provinceDistricts[searchFilters.province]?.map((dist) => (
+          <option key={dist} value={dist}>
+            {dist}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
 
 
 
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-  <input
-    type="text"
-    placeholder="Search by name"
-    value={searchFilters.name}
-    onChange={(e) =>
-      setSearchFilters((prev) => ({ ...prev, name: e.target.value }))
-    }
-    className="border p-2"
-  />
-
-  <select
-    value={searchFilters.province}
-    onChange={(e) =>
-      setSearchFilters((prev) => ({
-        ...prev,
-        province: e.target.value,
-        district: '', // reset district if province changes
-      }))
-    }
-    className="border p-2"
-  >
-    <option value="">All Provinces</option>
-    {Object.keys(provinceDistricts).map((prov) => (
-      <option key={prov} value={prov}>
-        {prov}
-      </option>
-    ))}
-  </select>
-
-  <select
-    value={searchFilters.district}
-    onChange={(e) =>
-      setSearchFilters((prev) => ({ ...prev, district: e.target.value }))
-    }
-    className="border p-2"
-    disabled={!searchFilters.province}
-  >
-    <option value="">All Districts</option>
-    {provinceDistricts[searchFilters.province]?.map((dist) => (
-      <option key={dist} value={dist}>
-        {dist}
-      </option>
-    ))}
-  </select>
-</div>
-
-
-
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white p-6 rounded shadow-lg w-full max-w-2xl relative">
@@ -281,67 +291,74 @@ export default function PersonsPage() {
 
 
       
-      <table className="min-w-full text-sm border">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-2 text-left">#</th>
-            <th className="p-2 text-left">Name</th>
-            <th className="p-2 text-left">ID Number</th>
-            <th className="p-2 text-left">License No</th>
-            <th className="p-2 text-left">Date Of Birth</th>
-            <th className="p-2 text-left">Mobile</th>
-            <th className="p-2 text-left">Email</th>
-            <th className="p-2 text-left">Location</th>
-            <th className="p-2 text-left">Province</th>
-            <th className="p-2 text-left">District</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        {persons
-  .filter((person) =>
-    person.name.toLowerCase().includes(searchFilters.name.toLowerCase())
-  )
-  .filter((person) =>
-    searchFilters.province ? person.province === searchFilters.province : true
-  )
-  .filter((person) =>
-    searchFilters.district ? person.district === searchFilters.district : true
-  )
-  .map((person, index) => (
+<table className="min-w-full bg-white shadow rounded-lg overflow-hidden text-sm">
+  <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
+    <tr>
+      <th className="px-3 py-2 text-left">#</th>
+      <th className="px-3 py-2 text-left">Name</th>
+      <th className="px-3 py-2 text-left">ID Number</th>
+      <th className="px-3 py-2 text-left">License No</th>
+      <th className="px-3 py-2 text-left">Date Of Birth</th>
+      <th className="px-3 py-2 text-left">Mobile</th>
+      <th className="px-3 py-2 text-left">Email</th>
+      <th className="px-3 py-2 text-left">Location</th>
+      <th className="px-3 py-2 text-left">Province</th>
+      <th className="px-3 py-2 text-left">District</th>
+      <th className="px-3 py-2 text-left">Status</th>
+      <th className="px-3 py-2 text-left">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {persons
+      .filter((person) =>
+        person.name.toLowerCase().includes(searchFilters.name.toLowerCase())
+      )
+      .filter((person) =>
+        searchFilters.province ? person.province === searchFilters.province : true
+      )
+      .filter((person) =>
+        searchFilters.district ? person.district === searchFilters.district : true
+      )
+      .map((person, index) => (
+        <tr
+          key={person.id}
+          className="hover:bg-gray-50 even:bg-gray-50 text-gray-800"
+        >
+          <td className="px-3 py-2">{index + 1}</td>
+          <td className="px-3 py-2">{person.name}</td>
+          <td className="px-3 py-2">{person.idNumber}</td>
+          <td className="px-3 py-2">{person.licenseNumber}</td>
+          <td className="px-3 py-2">{person.dateOfBirth}</td>
+          <td className="px-3 py-2">{person.mobile}</td>
+          <td className="px-3 py-2">{person.email}</td>
+          <td className="px-3 py-2">{person.location}</td>
+          <td className="px-3 py-2">{person.province}</td>
+          <td className="px-3 py-2">{person.district}</td>
+          <td className="px-3 py-2">
+            <button
+              onClick={() => toggleActiveStatus(person)}
+              className={`text-xs px-3 py-1 rounded-full shadow ${
+                person.isActive
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-200 text-gray-700'
+              }`}
+            >
+              {person.isActive ? 'Active' : 'Inactive'}
+            </button>
+          </td>
+          <td className="px-3 py-2 space-x-1">
+            <button
+              onClick={() => handleDelete(person.id)}
+              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs shadow"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
 
-            <tr key={person.id} className="border-t">
-              <td className="p-2">{index + 1}</td>
-              <td className="p-2">{person.name}</td>
-              <td className="p-2">{person.idNumber}</td>
-              <td className="p-2">{person.licenseNumber}</td>
-              <td className="p-2">{person.dateOfBirth}</td>
-              <td className="p-2">{person.mobile}</td>
-              <td className="p-2">{person.email}</td>
-              <td className="p-2">{person.location}</td>
-              <td className="p-2">{person.province}</td>
-              <td className="p-2">{person.district}</td>
-              <td className="p-2">
-                <button
-                  onClick={() => toggleActiveStatus(person)}
-                  className={`px-3 py-1 rounded text-xs text-white ${person.isActive ? 'bg-green-600' : 'bg-red-500'}`}
-                >
-                  {person.isActive ? 'Active' : 'Inactive'}
-                </button>
-              </td>
-              <td className="p-2">
-                <button
-                  onClick={() => handleDelete(person.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded text-xs"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
 )}
     </div>
   );
