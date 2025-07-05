@@ -306,7 +306,7 @@ const BookingModal = ({
 
 
     if (step === 3) {
-      const updates: any = {
+      const updates: Record<string, string | number | boolean | undefined> = {
         RentalPrice: totalRental,
         isBooked: true,
       };
@@ -322,8 +322,6 @@ const BookingModal = ({
     
       await updateDoc(docRef, updates);
     
-    
-    
       // Call your backend to send the email
       try {
         const response = await fetch('/api/send-email/bookingEmail', {
@@ -332,7 +330,6 @@ const BookingModal = ({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            // send any relevant formValues or booking info for email body
             name: formValues.name,
             email: formValues.email,
             whatsapp: formValues.whatsapp,
@@ -890,9 +887,10 @@ const BookingModal = ({
       Final Total: ${totalRental.toFixed(2)}
     </p>
 
-    <p className="text-sm text-gray-600">
-      Clicking "Book" will confirm your booking and send a confirmation email.
-    </p>
+<p className="text-sm text-gray-600">
+  Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.
+</p>
+
   </div>
 )}
 
