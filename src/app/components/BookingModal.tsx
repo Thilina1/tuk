@@ -185,9 +185,7 @@ const BookingModal = ({
           trainTransfer: formValues.trainTransfer,
         }),
       });
-      
     }
-    
 
     if (step === 2) {
       await updateDoc(docRef, {
@@ -244,11 +242,6 @@ const BookingModal = ({
         console.error('❌ Error sending email:', error);
       }
     }
-    
-
-
-
-
 
     if (step < 3) setStep((prev) => prev + 1);
     else closeModal();
@@ -266,33 +259,44 @@ const BookingModal = ({
         </button>
 
         <div className="mb-6">
-  <div className="flex justify-center items-center gap-4 w-full">
-    {[
-      { label: "Rental Details", icon: <FaCar /> },
-      { label: "Extras", icon: <FaGift /> },
-      { label: "License Details", icon: <FaIdCard /> },
-      { label: "Payment", icon: <FaCreditCard /> },
-    ].map((stepItem, index) => (
-      <div key={stepItem.label} className="flex-1 flex flex-col items-center relative">
-        <div
-          className={`rounded-full w-10 h-10 flex items-center justify-center text-white text-lg z-10
-            ${step >= index ? "bg-green-500" : "bg-gray-300"}`}
-        >
-          {stepItem.icon}
-        </div>
-        <span className="text-xs mt-1 text-center">{stepItem.label}</span>
-
-        {index < 3 && (
-  <div
-    className={`absolute top-1/2 left-1/2 right-0 h-1 -translate-y-1/2 
-    ${step > index ? "bg-green-500" : "bg-gray-300"}`}
-    style={{ width: "100%" }}
-  />
-)}
-
+        <div className="flex flex-wrap justify-between items-center gap-2 w-full max-w-md mx-auto">
+  {[
+    { label: "Rental Details", icon: <FaCar /> },
+    { label: "Extras", icon: <FaGift /> },
+    { label: "License Details", icon: <FaIdCard /> },
+    { label: "Payment", icon: <FaCreditCard /> },
+  ].map((stepItem, index) => (
+    <div
+      key={stepItem.label}
+      className="flex-1 min-w-[60px] flex flex-col items-center relative"
+    >
+      <div
+        className={`rounded-full w-10 h-10 flex items-center justify-center text-white text-lg z-10`}
+        style={{
+          backgroundColor: step >= index ? "#22c55e" : "#d1d5db", // green or gray fixed
+        }}
+      >
+        {stepItem.icon}
       </div>
-    ))}
-  </div>
+      <span className="text-[11px] mt-1 text-center text-black">
+        {stepItem.label}
+      </span>
+
+      {index < 3 && (
+        <div
+          className="absolute top-1/2 left-full transform -translate-y-1/2"
+          style={{
+            width: "100%",
+            height: "2px",
+            backgroundColor: step > index ? "#22c55e" : "#d1d5db",
+            zIndex: 0,
+          }}
+        />
+      )}
+    </div>
+  ))}
+</div>
+
 </div>
 
 
