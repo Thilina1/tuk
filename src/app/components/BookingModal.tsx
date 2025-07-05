@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
+import { FaCar, FaGift, FaIdCard, FaCreditCard } from "react-icons/fa";
 
 
 
@@ -84,13 +85,14 @@ const BookingModal = ({
   >([]);
 
   const extrasList = [
-    { name: "Local License", icon: "/icons/License.png" },
-    { name: "Full-Time Driver", icon: "/icons/Driver.png" },
-    { name: "Surf-Board Rack", icon: "/icons/surfboard.png" },
-    { name: "Bluetooth Speakers", icon: "/icons/speaker.png" },
-    { name: "Cooler Box", icon: "/icons/cooler.png" },
-    { name: "Baby Seat", icon: "/icons/babyseat.png" },
+    { name: "Local License", icon: "/icons/License.png", price: 5 },
+    { name: "Full-Time Driver", icon: "/icons/Driver.png", price: 10 },
+    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 3 },
+    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 4 },
+    { name: "Cooler Box", icon: "/icons/cooler.png", price: 6 },
+    { name: "Baby Seat", icon: "/icons/babyseat.png", price: 7 },
   ];
+  
 
 
   React.useEffect(() => {
@@ -129,10 +131,11 @@ const BookingModal = ({
 
   const perDayCharge = 13;
   const licenseCharge = 35;
-  const extrasTotal = Object.values(formValues.extras).reduce(
-    (sum, qty) => sum + qty * 2,
+  const extrasTotal = extrasList.reduce(
+    (sum, extra) => sum + (formValues.extras[extra.name] || 0) * extra.price,
     0
   );
+  
 
   const totalRental =
   rentalDays * formValues.tukCount * perDayCharge +
@@ -263,19 +266,35 @@ const BookingModal = ({
         </button>
 
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-bold text-gray-800">
-              {["Rental Details", "Extras", "License Details", "Payment"][step]}
-            </h2>
-            <span className="text-sm text-gray-500">{step + 1} / 4</span>
-          </div>
-          <div className="w-full bg-gray-200 h-2 rounded-full">
-            <div
-              className="bg-orange-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((step + 1) / 4) * 100}%` }}
-            />
-          </div>
+  <div className="flex justify-center items-center gap-4 w-full">
+    {[
+      { label: "Rental Details", icon: <FaCar /> },
+      { label: "Extras", icon: <FaGift /> },
+      { label: "License Details", icon: <FaIdCard /> },
+      { label: "Payment", icon: <FaCreditCard /> },
+    ].map((stepItem, index) => (
+      <div key={stepItem.label} className="flex-1 flex flex-col items-center relative">
+        <div
+          className={`rounded-full w-10 h-10 flex items-center justify-center text-white text-lg z-10
+            ${step >= index ? "bg-green-500" : "bg-gray-300"}`}
+        >
+          {stepItem.icon}
         </div>
+        <span className="text-xs mt-1 text-center">{stepItem.label}</span>
+
+        {index < 3 && (
+  <div
+    className={`absolute top-1/2 left-1/2 right-0 h-1 -translate-y-1/2 
+    ${step > index ? "bg-green-500" : "bg-gray-300"}`}
+    style={{ width: "100%" }}
+  />
+)}
+
+      </div>
+    ))}
+  </div>
+</div>
+
 
         {step === 0 && validationError && (
           <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
@@ -299,8 +318,8 @@ const BookingModal = ({
                     onChange={(e) =>
                       setFormValues({ ...formValues, [key]: e.target.value })
                     }
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                  />
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    />
                 </div>
               ))}
 
@@ -313,8 +332,8 @@ const BookingModal = ({
                     onChange={(e) =>
                       setFormValues({ ...formValues, pickupDate: e.target.value })
                     }
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                  />
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    />
                 </div>
                 <div className="flex-1">
                   <label className="text-sm font-semibold">Pickup Time</label>
@@ -323,7 +342,8 @@ const BookingModal = ({
   onChange={(e) =>
     setFormValues({ ...formValues, pickupTime: e.target.value })
   }
-  className="w-full border border-gray-300 rounded px-3 py-2"
+  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+
 >
   {timeOptions}
 </select>
@@ -340,8 +360,8 @@ const BookingModal = ({
                     onChange={(e) =>
                       setFormValues({ ...formValues, returnDate: e.target.value })
                     }
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                  />
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    />
                 </div>
                 <div className="flex-1">
                   <label className="text-sm font-semibold">Return Time</label>
@@ -350,7 +370,7 @@ const BookingModal = ({
   onChange={(e) =>
     setFormValues({ ...formValues, returnTime: e.target.value })
   }
-  className="w-full border border-gray-300 rounded px-3 py-2"
+  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
 >
   {timeOptions}
 </select>
@@ -366,8 +386,8 @@ const BookingModal = ({
   <div className="flex-1">
     <label className="text-sm font-semibold">Pick-Up Location</label>
     <select
-      className="w-full border border-gray-300 rounded px-3 py-2"
-      value={formValues.pickup}
+  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+  value={formValues.pickup}
       onChange={(e) => {
         const selected = locationOptions.find((loc) => loc.name === e.target.value);
         setFormValues((prev) => ({
@@ -379,7 +399,9 @@ const BookingModal = ({
     >
       <option value="">Select Pick-Up Location</option>
       {locationOptions.map((loc) => (
-        <option key={loc.name} value={loc.name}>
+        <option key={loc.name} value={loc.name} 
+        className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+        >
           {loc.name} ({loc.price === 0 ? "Free" : `$${loc.price}`})
         </option>
       ))}
@@ -389,8 +411,8 @@ const BookingModal = ({
   <div className="flex-1">
     <label className="text-sm font-semibold">Return Location</label>
     <select
-      className="w-full border border-gray-300 rounded px-3 py-2"
-      value={formValues.returnLoc}
+  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+  value={formValues.returnLoc}
       onChange={(e) => {
         const selected = locationOptions.find((loc) => loc.name === e.target.value);
         setFormValues((prev) => ({
@@ -424,8 +446,8 @@ const BookingModal = ({
                         tukCount: parseInt(e.target.value),
                       })
                     }
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                  >
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    >
                     {Array.from({ length: 9 }, (_, i) => i + 1).map((val) => (
                       <option key={val}>{val}</option>
                     ))}
@@ -441,8 +463,8 @@ const BookingModal = ({
                         licenseCount: parseInt(e.target.value),
                       })
                     }
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                  >
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    >
                     {Array.from({ length: 9 }, (_, i) => i + 1).map((val) => (
                       <option key={val}>{val}</option>
                     ))}
@@ -467,23 +489,27 @@ const BookingModal = ({
         {step === 1 && (
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Select Your Extras</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   {extrasList.map((extra) => (
     <div
       key={extra.name}
-      className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded border"
+      className="flex items-center justify-between bg-white border rounded-lg shadow-sm p-3 hover:shadow-md transition"
     >
-      <div className="flex items-center gap-2">
-      <Image
-  src={extra.icon}
-  alt={extra.name}
-  width={20}
-  height={20}
-  className="w-5 h-5 object-contain"
-/>
-
-        <span className="text-sm">{extra.name}</span>
+      <div className="flex items-center gap-3">
+        <Image
+          src={extra.icon}
+          alt={extra.name}
+          width={32}
+          height={32}
+          className="w-8 h-8 object-contain"
+        />
+        <div>
+          <div className="font-medium text-sm text-gray-800">{extra.name}</div>
+          <div className="text-xs text-gray-500">${extra.price} each</div>
+        </div>
       </div>
+
       <select
         value={formValues.extras[extra.name] || 0}
         onChange={(e) =>
@@ -495,7 +521,7 @@ const BookingModal = ({
             },
           })
         }
-        className="border border-gray-300 rounded px-2 py-1 text-sm"
+        className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-orange-400"
       >
         {Array.from({ length: 11 }, (_, i) => (
           <option key={i} value={i}>
@@ -510,21 +536,33 @@ const BookingModal = ({
 
 
 
-<div className="border border-gray-200 p-4 rounded space-y-2 bg-gray-50">
-  <label className="flex items-center gap-2 text-sm font-semibold">
+
+
+<div className="bg-white border rounded-lg shadow-sm p-4 space-y-3">
+  <div className="flex items-center gap-3">
     <input
+      id="train-transfer-checkbox"
       type="checkbox"
       checked={includeTrainTransfer}
       onChange={(e) => setIncludeTrainTransfer(e.target.checked)}
+      className="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-400"
     />
-    Add Train Transfer
-  </label>
+    <label
+      htmlFor="train-transfer-checkbox"
+      className="text-sm font-medium text-gray-800"
+    >
+      Add <span className="text-orange-600 font-semibold">Train Transfer</span>
+    </label>
+  </div>
 
   {includeTrainTransfer && (
     <>
-      <label className="text-sm">Select Train Transfer</label>
+      <label className="text-sm font-medium text-gray-700">
+        Select Train Transfer
+      </label>
+
       <select
-        className="w-full border border-gray-300 rounded px-3 py-2"
+        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
         value={formValues.trainTransfer?.from || ""}
         onChange={(e) => {
           const selected = trainTransferOptions.find(
@@ -547,16 +585,31 @@ const BookingModal = ({
       </select>
 
       {formValues.trainTransfer && (
-        <div className="text-sm text-gray-700 ml-1 mt-1">
-          <p><strong>From:</strong> {formValues.trainTransfer.from}</p>
-          <p><strong>To:</strong> {formValues.trainTransfer.to}</p>
-          <p><strong>Pickup Time:</strong> {formValues.trainTransfer.pickupTime}</p>
-          <p><strong>Price:</strong> ${formValues.trainTransfer.price}</p>
+        <div className="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 mt-2 text-sm text-gray-700 space-y-1">
+          <div>
+            <span className="font-medium">From:</span>{" "}
+            {formValues.trainTransfer.from}
+          </div>
+          <div>
+            <span className="font-medium">To:</span>{" "}
+            {formValues.trainTransfer.to}
+          </div>
+          <div>
+            <span className="font-medium">Pickup Time:</span>{" "}
+            {formValues.trainTransfer.pickupTime}
+          </div>
+          <div>
+            <span className="font-medium">Price:</span>{" "}
+            <span className="text-emerald-600 font-semibold">
+              ${formValues.trainTransfer.price}
+            </span>
+          </div>
         </div>
       )}
     </>
   )}
 </div>
+
 
 
 
@@ -584,8 +637,8 @@ const BookingModal = ({
           onChange={(e) =>
             setFormValues({ ...formValues, licenseName: e.target.value })
           }
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
       </div>
 
       <div>
@@ -596,8 +649,8 @@ const BookingModal = ({
           onChange={(e) =>
             setFormValues({ ...formValues, licenseAddress: e.target.value })
           }
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
       </div>
 
       <div>
@@ -609,8 +662,8 @@ const BookingModal = ({
     onChange={(e) =>
       setFormValues({ ...formValues, licenseCountry: e.target.value })
     }
-    className="w-full border border-gray-300 rounded px-3 py-2"
-  />
+    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
 </div>
 
 
@@ -622,8 +675,8 @@ const BookingModal = ({
           onChange={(e) =>
             setFormValues({ ...formValues, postalCode: e.target.value })
           }
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
       </div>
 
       <div>
@@ -634,8 +687,8 @@ const BookingModal = ({
           onChange={(e) =>
             setFormValues({ ...formValues, licenseNumber: e.target.value })
           }
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
       </div>
 
       <div>
@@ -646,8 +699,8 @@ const BookingModal = ({
           onChange={(e) =>
             setFormValues({ ...formValues, passportNumber: e.target.value })
           }
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
       </div>
     </div>
 
@@ -663,8 +716,8 @@ const BookingModal = ({
             uploadedDocs: Array.from(e.target.files || []),
           })
         }
-        className="w-full border border-gray-300 rounded px-3 py-2"
-      />
+        className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+        />
       {formValues.uploadedDocs && formValues.uploadedDocs.length > 0 && (
         <ul className="mt-2 list-disc pl-5 text-sm text-gray-700">
           {formValues.uploadedDocs.map((file, index) => (
