@@ -49,6 +49,7 @@ export interface BookingData {
   createdAt: Timestamp;
   pickupPrice?: number;
   returnPrice?: number;
+  couponCode?:string;
   trainTransfer?: {
     from: string;
     to: string;

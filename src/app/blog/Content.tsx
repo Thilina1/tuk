@@ -152,6 +152,7 @@ export default function BlogContent() {
               title: "A Visit to Kandy City (UNESCO Site)",
               tag: "🏞️ Kandy World Heritage Site",
               subtag: "🌍 Tuk Tuk Ride",
+              link: "/blog/blogsContent/kandyFirst",
             },
             {
               image: "/blog/blogPost/sigiriya.jpeg",
@@ -159,6 +160,7 @@ export default function BlogContent() {
               title: "The Sigiriya Rock Fortress (UNESCO Site)",
               tag: "📍 Sigiriya",
               subtag: "🏛️ Culture",
+              link: "/blogsContent/sigiriya",
             },
             {
               image: "/blog/blogPost/ella_hike.jpeg",
@@ -166,6 +168,7 @@ export default function BlogContent() {
               title: "Trek in the Knuckles Mountain Range",
               tag: "⛰️ Knuckles Mountain Range",
               subtag: "🧭 Adventure",
+              link: "/blogsContent/ella",
             },
           ].map((card, index) => (
             <div
@@ -187,6 +190,7 @@ export default function BlogContent() {
                 <div className="text-sm font-medium" style={{ color: "#b45309" }}>{card.tag}</div>
                 <div className="text-xs" style={{ color: "#6b7280" }}>{card.subtag}</div>
                 <div className="mt-4">
+                  
                 <button
   className="text-sm font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300"
   style={{
@@ -194,6 +198,8 @@ export default function BlogContent() {
     color: "#1f2937", // slate-800
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
   }}
+  onClick={() => (window.location.href = card.link)}
+
 >
 Learn More</button>
                 </div>
@@ -201,6 +207,9 @@ Learn More</button>
             </div>
           ))}
         </div>
+
+
+
       </section>
     </section>
   );

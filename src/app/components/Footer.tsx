@@ -42,6 +42,9 @@ export default function Footer() {
             fontWeight: "bold",
             border: "none",
           }}
+          onClick={() => {
+            window.location.href = "/";
+          }}
         >
           Book Your Tuk Tuk
         </button>

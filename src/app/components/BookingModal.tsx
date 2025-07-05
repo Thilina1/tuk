@@ -1,16 +1,24 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaCar, FaGift, FaIdCard, FaCreditCard } from "react-icons/fa";
 
 
 
+
 type Extras = {
   [key: string]: number;
 };
+
+type AppliedCoupon = {
+  id: string;
+  discountMode: string;
+  discountValue: number;
+};
+
 
 type BookingFormValues = {
   name: string;
@@ -54,6 +62,19 @@ type Props = {
 
 };
 
+
+type CouponDoc = {
+  id: string;
+  discountCode: string;
+  discountMode: "percentage" | "fixed";
+  discountValue: number;
+  active: boolean;
+  startDate: string;
+  endDate: string;
+  currentUsers: number;
+  maxUsers: number;
+};
+
 const timeOptions = Array.from({ length: 15 }, (_, i) => {
   const hour = i + 6;
   const value = hour.toString().padStart(2, '0') + ":00";
@@ -71,11 +92,6 @@ const BookingModal = ({
   closeModal,
   docId,
   locationOptions,
-
-
-  
-
-
 }: Props) => {
   const [validationError, setValidationError] = useState("");
   const [includeTrainTransfer, setIncludeTrainTransfer] = useState(false);
@@ -84,6 +100,63 @@ const BookingModal = ({
     { from: string; to: string; pickupTime: string; price: number }[]
   >([]);
 
+
+
+  
+
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponError, setCouponError] = useState("");
+  
+
+
+  const handleApplyCoupon = async () => {
+    setCouponError("");
+  
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code.");
+      return;
+    }
+  
+    const today = new Date();
+  
+    const snapshot = await getDocs(collection(db, "discounts"));
+    const matched = snapshot.docs
+    .map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as CouponDoc)
+    )
+    .find(
+      (d) =>
+        d.discountCode?.toLowerCase() === couponCode.trim().toLowerCase() &&
+        d.active &&
+        new Date(d.startDate) <= today &&
+        today <= new Date(d.endDate) &&
+        d.currentUsers < d.maxUsers
+    );
+  
+  
+    if (!matched) {
+      setAppliedCoupon(null);
+      setCouponError("Invalid or expired coupon.");
+      setCouponCode("");  // 👈 clear the input so user can retry cleanly
+      return;
+    }
+    
+  
+    setAppliedCoupon({
+      id: matched.id,
+      discountMode: matched.discountMode,
+      discountValue: matched.discountValue,
+    });
+  };
+  
+
+
+  
   const extrasList = [
     { name: "Local License", icon: "/icons/License.png", price: 5 },
     { name: "Full-Time Driver", icon: "/icons/Driver.png", price: 10 },
@@ -137,16 +210,48 @@ const BookingModal = ({
   );
   
 
-  const totalRental =
-  rentalDays * formValues.tukCount * perDayCharge +
-  formValues.licenseCount * licenseCharge +
-  extrasTotal +
-  (formValues.pickupPrice || 0) +
-  (formValues.returnPrice || 0) +
-  ((includeTrainTransfer && formValues.trainTransfer?.price) || 0);
+  const totalRental = useMemo(() => {
+    let total =
+      rentalDays * formValues.tukCount * perDayCharge +
+      formValues.licenseCount * licenseCharge +
+      extrasTotal +
+      (formValues.pickupPrice || 0) +
+      (formValues.returnPrice || 0) +
+      ((includeTrainTransfer && formValues.trainTransfer?.price) || 0);
+  
+    if (appliedCoupon) {
+      if (appliedCoupon.discountMode === "percentage") {
+        total = total * (1 - appliedCoupon.discountValue / 100);
+      } else if (appliedCoupon.discountMode === "fixed") {
+        total = total - appliedCoupon.discountValue;
+      }
+      total = Math.max(total, 0);
+    }
+  
+    return total;
+  }, [
+    rentalDays,
+    formValues.tukCount,
+    formValues.licenseCount,
+    extrasTotal,
+    formValues.pickupPrice,
+    formValues.returnPrice,
+    includeTrainTransfer,
+    formValues.trainTransfer,
+    appliedCoupon
+  ]);
+  
+
+
+
+  const [loading, setLoading] = useState(false);
 
 
   const handleNext = async () => {
+    setLoading(true);
+
+    try{
+
     const docRef = doc(db, "bookings", docId);
     setValidationError("");
     if (step === 0) {
@@ -201,10 +306,23 @@ const BookingModal = ({
 
 
     if (step === 3) {
-      await updateDoc(docRef, {
+      const updates: any = {
         RentalPrice: totalRental,
         isBooked: true,
-      });
+      };
+    
+      if (appliedCoupon) {
+        updates.couponCode = couponCode.trim();
+    
+        const couponRef = doc(db, "discounts", appliedCoupon.id);
+        await updateDoc(couponRef, {
+          currentUsers: increment(1),
+        });
+      }
+    
+      await updateDoc(docRef, updates);
+    
+    
     
       // Call your backend to send the email
       try {
@@ -245,59 +363,58 @@ const BookingModal = ({
 
     if (step < 3) setStep((prev) => prev + 1);
     else closeModal();
-  };
+  } finally {
+      setLoading(false);
+
+  }};
 
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="relative bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 text-black shadow-2xl">
-        <button
-          onClick={closeModal}
-          className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
-          aria-label="Close"
-        >
-          ×
-        </button>
+      <button
+  onClick={closeModal}
+  className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-500 text-gray-600 hover:text-white shadow transition"
+  aria-label="Close"
+>
+  &times;
+</button>
 
-        <div className="mb-6">
-        <div className="flex flex-wrap justify-between items-center gap-2 w-full max-w-md mx-auto">
-  {[
-    { label: "Rental Details", icon: <FaCar /> },
-    { label: "Extras", icon: <FaGift /> },
-    { label: "License Details", icon: <FaIdCard /> },
-    { label: "Payment", icon: <FaCreditCard /> },
-  ].map((stepItem, index) => (
-    <div
-      key={stepItem.label}
-      className="flex-1 min-w-[60px] flex flex-col items-center relative"
-    >
-      <div
-        className={`rounded-full w-10 h-10 flex items-center justify-center text-white text-lg z-10`}
-        style={{
-          backgroundColor: step >= index ? "#22c55e" : "#d1d5db", // green or gray fixed
-        }}
-      >
-        {stepItem.icon}
-      </div>
-      <span className="text-[11px] mt-1 text-center text-black">
-        {stepItem.label}
-      </span>
 
-      {index < 3 && (
+        <div className="relative w-full max-w-md mx-auto px-4">
+  {/* background line */}
+  <div className="absolute top-1/2 left-5 right-5 h-1 bg-gray-300 z-0 transform -translate-y-1/2" />
+
+  {/* progress line */}
+  <div
+    className="absolute top-1/2 left-5 h-1 bg-green-500 z-0 transform -translate-y-1/2"
+    style={{
+      width: `calc(${(step / 3) * 100}% - ${5 * 2}px)`,
+    }}
+  />
+
+  <div className="flex justify-between relative z-10">
+    {[
+      { label: "Rental Details", icon: <FaCar /> },
+      { label: "Extras", icon: <FaGift /> },
+      { label: "License Details", icon: <FaIdCard /> },
+      { label: "Payment", icon: <FaCreditCard /> },
+    ].map((stepItem, index) => (
+      <div key={stepItem.label} className="flex flex-col items-center">
         <div
-          className="absolute top-1/2 left-full transform -translate-y-1/2"
+          className="rounded-full w-10 h-10 flex items-center justify-center text-white text-lg"
           style={{
-            width: "100%",
-            height: "2px",
-            backgroundColor: step > index ? "#22c55e" : "#d1d5db",
-            zIndex: 0,
+            backgroundColor: step >= index ? "#22c55e" : "#d1d5db",
           }}
-        />
-      )}
-    </div>
-  ))}
+        >
+          {stepItem.icon}
+        </div>
+        <span className="text-xs mt-1 text-center">{stepItem.label}</span>
+      </div>
+    ))}
+  </div>
 </div>
 
-</div>
+
 
 
         {step === 0 && validationError && (
@@ -734,28 +851,107 @@ const BookingModal = ({
 )}
 
 
-        {step === 3 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Payment (Coming Soon)</h3>
-            <p>This step is reserved for payment or summary confirmation.</p>
-            <p>Total Rentals: ${totalRental}</p>
-          </div>
-        )}
+
+
+{step === 3 && (
+  <div className="space-y-4">
+    <h3 className="text-lg font-semibold">Payment & Confirmation</h3>
+
+    <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-2">
+      <p><strong>Rental Price:</strong> ${totalRental.toFixed(2)}</p>
+
+      {appliedCoupon && (
+        <p className="text-green-600">
+          ✅ Coupon <strong>{couponCode}</strong> applied: {appliedCoupon.discountMode} {appliedCoupon.discountValue}
+        </p>
+      )}
+
+      <div className="flex gap-2 mt-2">
+        <input
+          type="text"
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+          placeholder="Enter coupon code"
+          className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
+        />
+        <button
+          onClick={handleApplyCoupon}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+        >
+          Apply
+        </button>
+      </div>
+      {couponError && (
+        <p className="text-sm text-red-600 mt-1">{couponError}</p>
+      )}
+    </div>
+
+    <p className="text-xl font-bold text-emerald-600">
+      Final Total: ${totalRental.toFixed(2)}
+    </p>
+
+    <p className="text-sm text-gray-600">
+      Clicking "Book" will confirm your booking and send a confirmation email.
+    </p>
+  </div>
+)}
+
+
+
+
+
+
+
 
         <div className="flex justify-between mt-8">
-          <button
-            onClick={() => setStep((prev) => Math.max(0, prev - 1))}
-            disabled={step === 0}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-orange-500 text-gray-800 rounded hover:bg-orange-600"
-          >
-            {step < 3 ? "Next" : "Book"}
-          </button>
+<button
+  onClick={() => setStep((prev) => Math.max(0, prev - 1))}
+  disabled={step === 0}
+  className="px-4 py-2 rounded hover:opacity-80 disabled:opacity-50"
+  style={{
+    backgroundColor: step === 0 ? "#E5E7EB" : "#E5E7EB",  // fixed light gray
+    color: "#1F2937",                                     // fixed dark text
+  }}
+>
+  Back
+</button>
+
+<button
+  onClick={handleNext}
+  disabled={loading}
+  className="px-4 py-2 rounded hover:opacity-80 flex items-center justify-center gap-2"
+  style={{
+    backgroundColor: "#F97316",  // fixed orange
+    color: "#1F2937",            // fixed dark text
+  }}
+>
+  {loading ? (
+    <svg
+      className="animate-spin h-4 w-4 text-black"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      ></path>
+    </svg>
+  ) : (
+    <span>{step < 3 ? "Next" : "Book"}</span>
+  )}
+</button>
+
+
         </div>
       </div>
     </div>
