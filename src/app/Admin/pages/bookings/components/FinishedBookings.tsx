@@ -95,7 +95,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
                     <div><strong>Pickup Time:</strong> {selectedBooking.trainTransfer.pickupTime}</div>
                     <div><strong>Price:</strong> ${selectedBooking.trainTransfer.price}</div>
                     <div className="md:col-span-2">
-                      <strong>Assigned Person:</strong> {selectedBooking.trainTransferAssignedPerson || "N/A"}
+                      <strong>Handover Agent (Train Transfer):</strong> {selectedBooking.trainTransferAssignedPerson || "N/A"}
                     </div>
                   </div>
                 ) : (
@@ -107,8 +107,8 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
               <div className="space-y-4 border border-gray-300 p-4 rounded-lg shadow-sm mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">Assigned Tuks</h3>
                 <div><strong>Assigned Tuks:</strong> {selectedBooking.assignedTuks?.join(", ")}</div>
-                <div><strong>Allocate Person:</strong> {selectedBooking.assignedPerson || "N/A"}</div>
-                <div><strong>Hold Back Person:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
+                <div><strong>Handover Agent (Start):</strong> {selectedBooking.assignedPerson || "N/A"}</div>
+                <div><strong>Return Agent:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
               </div>
             </div>
 

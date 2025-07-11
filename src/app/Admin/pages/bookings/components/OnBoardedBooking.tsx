@@ -147,8 +147,8 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
               </div>
 
               <div><strong>Assigned Tuks:</strong> {selectedBooking.assignedTuks?.join(", ")}</div>
-              <div><strong>Allocate Person:</strong> {selectedBooking.assignedPerson || "N/A"}</div>
-              <div><strong>Hold Back Person:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
+              <div><strong>Handover Agent (Start):</strong> {selectedBooking.assignedPerson || "N/A"}</div>
+              <div><strong>Return Agent:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
             </div>
             <div className="flex justify-end mt-6">
               <button

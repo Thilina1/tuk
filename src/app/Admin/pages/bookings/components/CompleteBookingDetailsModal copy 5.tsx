@@ -22,14 +22,13 @@ interface Props {
 }
 
 const extrasList = [
-  { name: "Local License", price: 5 },
-  { name: "Full-Time Driver", price: 10 },
-  { name: "Surf-Board Rack", price: 3 },
-  { name: "Bluetooth Speakers", price: 4 },
-  { name: "Cooler Box", price: 6 },
-  { name: "Baby Seat", price: 7 },
+  "Local License",
+  "Full-Time Driver",
+  "Surf-Board Rack",
+  "Bluetooth Speakers",
+  "Cooler Box",
+  "Baby Seat",
 ];
-
 
 interface TukTukDoc {
   vehicleNumber: string;
@@ -103,11 +102,10 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     const perDayCharge = 13;
     const licenseCharge = 35;
   
-    const extrasTotal = extrasList.reduce(
-      (sum, extra) => sum + (formValues.extras?.[extra.name] || 0) * extra.price,
+    const extrasTotal = Object.values(formValues.extras || {}).reduce(
+      (sum, qty) => sum + qty * 2,
       0
     );
-    
   
     const trainTransferCost = formValues.trainTransfer?.price || 0;
   
@@ -487,30 +485,28 @@ useEffect(() => {
 
 
 
-<div className="md:col-span-2">
-  <label className="block text-xs">Extras</label>
-  <div className="grid grid-cols-2 gap-2">
-    {extrasList.map((extra) => (
-      <div key={extra.name} className="flex justify-between items-center text-sm">
-        <span>
-          {extra.name} <span className="text-gray-500">(${extra.price} each)</span>
-        </span>
-        <select
-          value={formValues.extras?.[extra.name] || 0}
-          onChange={(e) => handleExtrasChange(extra.name, parseInt(e.target.value))}
-          className="border px-2 rounded"
-        >
-          {Array.from({ length: 11 }, (_, i) => (
-            <option key={i} value={i}>
-              {i}
-            </option>
-          ))}
-        </select>
-      </div>
-    ))}
-  </div>
-</div>
 
+          <div className="md:col-span-2">
+            <label className="block text-xs">Extras</label>
+            <div className="grid grid-cols-2 gap-2">
+              {extrasList.map((extra) => (
+                <div key={extra} className="flex justify-between">
+                  <span>{extra}</span>
+                  <select
+                    value={formValues.extras?.[extra] || 0}
+                    onChange={(e) => handleExtrasChange(extra, parseInt(e.target.value))}
+                    className="border px-2"
+                  >
+                    {Array.from({ length: 11 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
 
 
           <div className="md:col-span-2 pt-6">
@@ -592,21 +588,17 @@ useEffect(() => {
 
         </div>
 
-{formValues.couponCode && (
-<div>
-  <label className="block text-xs">Coupon Code</label>
-    <input
-      type="email"
-      value={formValues.couponCode}
-      onChange={(e) => handleChange("couponCode", e.target.value)}
-      className="border p-1 w-full"
-      readOnly   // 👈 this makes it non-editable
-    />
-</div>
-)}
+        <div>
+            <label className="block text-xs">Coupon Code</label>
+            <input
+  type="email"
+  value={formValues.couponCode}
+  onChange={(e) => handleChange("couponCode", e.target.value)}
+  className="border p-1 w-full"
+  readOnly   // 👈 this makes it non-editable
+/>
 
-
-
+          </div>
 
 
         <div className="flex items-center gap-4 mt-6">

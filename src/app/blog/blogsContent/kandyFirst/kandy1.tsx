@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import {
   FaXTwitter,
@@ -80,45 +81,44 @@ export default function Kandy() {
         {/* Right Sidebar */}
         <aside className="space-y-6">
           {/* Share */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
-  <h3 className="text-sm font-semibold text-amber-900 mb-4">
-    Share this story
-  </h3>
+          <div className="rounded-xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
+            <h3 className="text-sm font-semibold text-amber-900 mb-4">
+              Share this story
+            </h3>
 
-  <div className="flex justify-center gap-4">
-    {[
-      { icon: <FaXTwitter />, label: "Twitter" },
-      { icon: <FaFacebookF />, label: "Facebook" },
-      { icon: <FaLinkedinIn />, label: "LinkedIn" },
-      { icon: <FaWhatsapp />, label: "WhatsApp" },
-    ].map(({ icon, label }, i) => (
-      <a
-        key={i}
-        href="#"
-        aria-label={label}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
-      >
-        {icon}
-      </a>
-    ))}
-  </div>
-</div>
-
+            <div className="flex justify-center gap-4">
+              {[
+                { icon: <FaXTwitter />, label: "Twitter" },
+                { icon: <FaFacebookF />, label: "Facebook" },
+                { icon: <FaLinkedinIn />, label: "LinkedIn" },
+                { icon: <FaWhatsapp />, label: "WhatsApp" },
+              ].map(({ icon, label }, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  aria-label={label}
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
+                >
+                  {icon}
+                </a>
+              ))}
+            </div>
+          </div>
 
           {/* Booking promo */}
-          <div className="rounded-xl bg-amber-50 shadow-sm p-6 flex flex-col justify-between">
+          <div className="rounded-xl bg-gradient-to-br from-amber-200 to-amber-300 shadow-sm p-6 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-amber-800">
+              <h3 className="text-lg font-bold text-amber-900">
                 🚗 Ready to Explore?
               </h3>
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-2 text-sm text-amber-800">
                 Book your tuk tuk today and experience Kandy like a local — at
                 your own pace, with the wind in your hair!
               </p>
             </div>
             <a
               href="/book"
-              className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
+              className="mt-4 inline-block text-center font-semibold bg-amber-500 text-white px-4 py-2 rounded-full shadow hover:bg-amber-600 transition"
             >
               Book Now →
             </a>

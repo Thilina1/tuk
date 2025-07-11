@@ -149,7 +149,7 @@ export default function AssignedBookings({ bookings }: { bookings: BookingData[]
                   <p><strong>To:</strong> {selectedBooking.trainTransfer.to}</p>
                   <p><strong>Pickup Time:</strong> {selectedBooking.trainTransfer.pickupTime}</p>
                   <p><strong>Price:</strong> ${selectedBooking.trainTransfer.price}</p>
-                  <p><strong>Train Assigned Person:</strong> {selectedBooking.trainTransferAssignedPerson || "N/A"}</p>
+                  <p><strong>Handover Agent (Train Transfer):</strong> {selectedBooking.trainTransferAssignedPerson || "N/A"}</p>
                 </div>
               ) : (
                 "None"
@@ -160,8 +160,8 @@ export default function AssignedBookings({ bookings }: { bookings: BookingData[]
             <div className="border border-gray-300 p-6 rounded-lg shadow-sm mb-4">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Assigned Tuks</h3>
               <div><strong>Assigned Tuks:</strong> {selectedBooking.assignedTuks?.join(", ")}</div>
-              <div><strong>Allocate Person:</strong> {selectedBooking.assignedPerson || "N/A"}</div>
-              <div><strong>Hold Back Person:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
+              <div><strong>Handover Agent (Start):</strong> {selectedBooking.assignedPerson || "N/A"}</div>
+              <div><strong>Return Agent:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
             </div>
 
             {/* Close Button */}
