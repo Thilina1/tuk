@@ -4,7 +4,6 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "r
 import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
-import { FaCar, FaGift, FaIdCard, FaCreditCard } from "react-icons/fa";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 import Script from "next/script";
 
@@ -104,11 +103,7 @@ const BookingModal = ({
   locationOptions,
 }: Props) => {
   const [validationError, setValidationError] = useState("");
-  const [includeTrainTransfer, setIncludeTrainTransfer] = useState(false);
 
-  const [trainTransferOptions, setTrainTransferOptions] = useState<
-    { from: string; to: string; pickupTime: string; price: number }[]
-  >([]);
 
 
 
@@ -235,7 +230,6 @@ const BookingModal = ({
             pickupTime: item.pickupTime,
             price: item.price || 0,
           }));
-        setTrainTransferOptions(formatted);
       } catch (error) {
         console.error("Error fetching train transfers:", error);
       }
@@ -270,8 +264,7 @@ const BookingModal = ({
       formValues.licenseCount * licenseCharge +
       extrasTotal +
       (formValues.pickupPrice || 0) +
-      (formValues.returnPrice || 0) +
-      ((includeTrainTransfer && formValues.trainTransfer?.price) || 0);
+      (formValues.returnPrice || 0) ;
   
     if (appliedCoupon) {
       if (appliedCoupon.discountMode === "percentage") {
@@ -290,7 +283,6 @@ const BookingModal = ({
     extrasTotal,
     formValues.pickupPrice,
     formValues.returnPrice,
-    includeTrainTransfer,
     formValues.trainTransfer,
     appliedCoupon
   ]);
@@ -340,9 +332,6 @@ const BookingModal = ({
     if (step === 1) {
       await updateDoc(docRef, {
         extras: formValues.extras,
-        ...(includeTrainTransfer && formValues.trainTransfer && {
-          trainTransfer: formValues.trainTransfer,
-        }),
       });
     }
 

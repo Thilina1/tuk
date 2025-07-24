@@ -17,7 +17,7 @@ export default function AboutUs() {
     {
       icon: <FaGlobeAsia className="text-blue-500 text-4xl" />,
       title: "Authentic Local Experiences",
-      desc: "Venture into villages, scenic landscapes, and hidden gems you won’t find in a guidebook.",
+      desc: "Venture into villages, scenic landscapes, and hidden gems you won t find in a guidebook.",
     },
     {
       icon: <FaClock className="text-pink-500 text-4xl" />,
@@ -43,8 +43,8 @@ export default function AboutUs() {
           At TukTukDrive.com, we believe in the power of community-driven tourism. Our
 mission is to empower local TukTuk owners by connecting them with adventurous
 travelers seeking unique, self-drive experiences across the stunning landscapes of Sri
-Lanka. By choosing to ride with us, you're not just getting a fun and eco-friendly way to
-explore; you’re contributing to the local economy and supporting communities who call
+Lanka. By choosing to ride with us, you are not just getting a fun and eco-friendly way to
+explore; you are contributing to the local economy and supporting communities who call
 this island home.
           </p>
         </div>
@@ -59,7 +59,7 @@ this island home.
 Our goal is simple: to provide an unforgettable, eco-conscious, and enriching
 journey through Sri Lanka, all while boosting the livelihoods of local TukTuk owners.
 We offer a self-drive experience that brings you closer to the heart of Sri Lanka, allowing
-you to explore the island in a way that’s personal, immersive, and adventurous.        
+you to explore the island in a way that is personal, immersive, and adventurous.        
             </p>
           </div>
           <div className="bg-yellow-50 rounded-xl shadow p-8 hover:shadow-lg transition">
@@ -83,7 +83,7 @@ travel experience.
           <div className="text-center mb-4">
             <h3 className="text-4xl font-bold text-gray-900">Why Choose TukTukDrive?</h3>
             <p className="mt-4 text-gray-600">
-              Here’s what makes your journey with us truly unforgettable.
+              Here is what makes your journey with us truly unforgettable.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">

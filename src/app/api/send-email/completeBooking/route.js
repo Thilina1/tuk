@@ -22,10 +22,7 @@ export async function POST(request) {
       },
     });
 
-    const extrasFormatted = Object.entries(data.extras || {})
-      .filter(([count]) => count > 0)
-      .map(([key, val]) => `${key} (${val})`)
-      .join(', ') || 'None';
+
 
     const mailOptions = {
       from: '"TukTuk Booking" <test@tuktukdrive.com>',
