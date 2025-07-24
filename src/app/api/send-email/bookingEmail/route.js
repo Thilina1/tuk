@@ -5,17 +5,28 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: 'thilinaweeras@gmail.com',
+    //     pass: 'aklxqxdmgjwxrplz', // Use App Passwords, never real one in prod!
+    //   },
+    // });
+
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'mail.tuktukdrive.com',
+      port: 465,
+      secure: true, // SSL/TLS
       auth: {
-        user: 'thilinaweeras@gmail.com',
-        pass: 'aklxqxdmgjwxrplz', // Use App Passwords, never real one in prod!
+        user: 'test@tuktukdrive.com',
+        pass: 'F6{X_jks2D[#',
       },
     });
 
     const mailOptions = {
-      from: '"TukTuk Booking" <thilinaweeras@gmail.com>',
-      to: [data.email, 'thilinaweerasing@gmail.com'],
+      from: '"TukTuk Booking" <test@tuktukdrive.com>',
+      to: [data.email],
+      bcc: 'test@tuktukdrive.com',
       subject: '🎉 Booking Confirmed! - TukTukDrive 🚖',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">

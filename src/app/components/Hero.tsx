@@ -9,6 +9,7 @@ import "react-phone-input-2/lib/style.css";
 
 import dynamic from 'next/dynamic';
 const PhoneInput = dynamic(() => import('react-phone-input-2'), { ssr: false });
+import { FaWhatsapp } from "react-icons/fa";
 
 
 // Define a proper type for Location
@@ -45,6 +46,7 @@ type BookingFormValues = {
   passportNumber: string;
   uploadedDocs: File[];
   isBooked: boolean;
+  hasIDP: string;
 };
 
 export default function HeroBookingSection() {
@@ -92,6 +94,7 @@ export default function HeroBookingSection() {
     passportNumber: "",
     uploadedDocs: [],
     isBooked: false,
+    hasIDP: ""
   });
 
   const inputClass =
@@ -220,9 +223,27 @@ useEffect(() => {
   </p>
   <p className="text-sm sm:text-base" style={{ color: "rgba(255, 255, 255, 0.9)" }}>
     Book instantly with peace of mind. 24/7 roadside support and easy pickup. <br />
-    <span style={{ color: "#fbbf24", fontWeight: 600 }}>
-      Contact us: +94 77 0063 780
-    </span>
+
+    <a
+  href="https://wa.me/94770063780"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    color: "#fbbf24",
+    fontWeight: 500,
+    fontSize: "1.6rem",
+    marginTop: "10px",
+    textDecoration: "none", // optional: remove underline
+  }}
+>
+  Chat with us: +94 77 006 3780
+  <FaWhatsapp color="#25D366" size={35} />
+
+</a>
+
   </p>
 </div>
 
@@ -280,7 +301,7 @@ useEffect(() => {
                 placeholder="+94 XXX XX XXXX XXXX XXXX"
                 inputProps={{
                   required: true, // ✅ Correct way
-                  autoFocus: true, // optional
+                 // autoFocus: true, // optional
                 }}
               />
             </div>
@@ -315,7 +336,7 @@ useEffect(() => {
 
             </div>
             
-            <label className="text-xs font-medium">Return Location</label>
+            <label className="text-xs font-medium">Pick-Up Date and Time</label>
             <div className="flex gap-2">
               <input
                 type="date"

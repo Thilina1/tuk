@@ -16,120 +16,76 @@ export default function Navbar() {
   ];
 
   return (
-    <nav
-      className="sticky top-0 z-50"
-      style={{
-        backgroundColor: "#ffffff",
-        color: "#374151", // Tailwind text-gray-700
-        colorScheme: "light",
-        WebkitAppearance: "none",
-        appearance: "none",
-        borderBottom: "1px solid #e5e7eb", // Tailwind border-gray-200
-      }}
-    >
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center py-4 md:py-5">
-          <Link href="/">
-            <span
-              className="text-2xl font-extrabold tracking-tight"
-              style={{ color: "#9333ea" }} // Tailwind text-purple-600
-            >
-              Logo
-            </span>
+          {/* Logo */}
+          <Link href="/" className="text-2xl font-extrabold tracking-tight text-purple-600">
+            Logo
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <ul className="flex items-center space-x-6">
-              {menus.map((item, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={item.path}
-                    className="font-medium"
-                    style={{
-                      color: "#374151", // text-gray-700
-                      textDecoration: "none",
-                    }}
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex items-center space-x-6">
+            {menus.map((item, idx) => (
+              <li key={idx}>
+                <Link
+                  href={item.path}
+                  className="relative font-medium text-gray-700 hover:text-purple-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-purple-600 hover:after:w-full after:transition-all after:duration-300"
+                >
+                  {item.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              style={{
-                color: "#374151",
-                backgroundColor: "transparent",
-                padding: "0.5rem",
-                borderRadius: "0.375rem",
-                WebkitAppearance: "none",
-                appearance: "none",
-              }}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-gray-700 p-2 rounded hover:bg-gray-100 transition"
+            aria-label="Menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden fixed inset-x-0 top-0 z-40 bg-white/95 backdrop-blur-md shadow-md transform transition-transform duration-300 ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
+        <div className="max-w-screen-xl mx-auto px-6 py-4 flex justify-between items-center">
+          <Link
+            href="/"
+            onClick={() => setIsOpen(false)}
+            className="text-2xl font-extrabold tracking-tight text-purple-600"
+          >
+            Logo
+          </Link>
+
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-gray-700 p-2 rounded hover:bg-gray-100 transition"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
-        {isOpen && (
-          <div
-            className="md:hidden fixed inset-0 z-40 flex flex-col items-center justify-center px-6"
-            style={{
-              backgroundColor: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(8px)",
-              color: "#374151",
-              colorScheme: "light",
-              WebkitAppearance: "none",
-              appearance: "none",
-            }}
-          >
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4"
-              style={{
-                color: "#374151",
-                backgroundColor: "transparent",
-                padding: "0.5rem",
-                borderRadius: "0.375rem",
-              }}
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
-              <Link href="/" onClick={() => setIsOpen(false)}>
-                <span
-                  className="text-2xl font-extrabold tracking-tight"
-                  style={{ color: "#9333ea" }}
-                >
-                  Logo
-                </span>
+        <ul className="flex flex-col items-center space-y-6 pb-6">
+          {menus.map((item, idx) => (
+            <li key={idx}>
+              <Link
+                href={item.path}
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-medium text-gray-700 hover:text-purple-600 transition-colors duration-200"
+              >
+                {item.title}
               </Link>
-            </div>
-
-            <ul className="flex flex-col items-center space-y-6 mt-20">
-              {menus.map((item, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={item.path}
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      fontSize: "1.25rem",
-                      fontWeight: 500,
-                      color: "#374151",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   );

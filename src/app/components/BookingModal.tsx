@@ -1,12 +1,21 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaCar, FaGift, FaIdCard, FaCreditCard } from "react-icons/fa";
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+import Script from "next/script";
 
 
+declare global {
+  interface Window {
+    payhere: {
+      startPayment: (payment: any) => void;
+    };
+  }
+}
 
 
 type Extras = {
@@ -36,6 +45,7 @@ type BookingFormValues = {
   licenseName: string;
   licenseAddress: string;
   licenseCountry: string;
+  hasIDP: string;
   postalCode: string;
   licenseNumber: string;
   passportNumber: string;
@@ -107,7 +117,51 @@ const BookingModal = ({
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
+  const [payhereReady, setPayhereReady] = useState(false);
+
+
+  useEffect(() => {
+    const checkPayHere = () => {
+      if (typeof window !== "undefined" && (window as any).payhere?.startPayment) {
+        setPayhereReady(true);
+      } else {
+        setTimeout(checkPayHere, 100); // retry until it's available
+      }
+    };
+    checkPayHere();
+  }, []);
   
+
+  const handlePay = () => {
+    if (!payhereReady || typeof window === "undefined" || typeof window.payhere === "undefined") {
+      alert("PayHere not loaded yet. Please wait a moment.");
+      return;
+    }
+  
+    const payment = {
+      sandbox: true,
+      merchant_id: "1231320",
+      return_url: "https://tuktukdrive.com/",
+      cancel_url: "https://tuktukdrive.com/",
+      notify_url: "https://tuktukdrive.com/",
+      order_id: `ORDER-${Date.now()}`,
+      items: "Tuk Tuk Rental",
+      amount: totalRental.toFixed(2),
+      currency: "USD",
+      first_name: "Thilina",
+      last_name: "Weerasinghe",
+      email: "example@email.com",
+      phone: "0771234567",
+      address: "Matale",
+      city: "Matale",
+      country: "Sri Lanka",
+    };
+  
+    // @ts-ignore
+    window.payhere.startPayment(payment);
+  };
+  
+
 
 
   const handleApplyCoupon = async () => {
@@ -158,12 +212,12 @@ const BookingModal = ({
 
   
   const extrasList = [
-    { name: "Local License", icon: "/icons/License.png", price: 5 },
-    { name: "Full-Time Driver", icon: "/icons/Driver.png", price: 10 },
-    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 3 },
-    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 4 },
-    { name: "Cooler Box", icon: "/icons/cooler.png", price: 6 },
-    { name: "Baby Seat", icon: "/icons/babyseat.png", price: 7 },
+    { name: "Train Transfer", icon: "/icons/License.png", price: 5, type:" per unit" },
+    { name: "Full-Time Driver", icon: "/icons/Driver.png", price: 10, type:" per day" },
+    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 3, type:" per unit" },
+    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 4, type:" per unit" },
+    { name: "Cooler Box", icon: "/icons/cooler.png", price: 6, type:" per unit" },
+    { name: "Baby Seat", icon: "/icons/babyseat.png", price: 7, type:" per unit" },
   ];
   
 
@@ -365,6 +419,7 @@ const BookingModal = ({
 
   }};
 
+
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="relative bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 text-black shadow-2xl">
@@ -377,39 +432,60 @@ const BookingModal = ({
 </button>
 
 
-        <div className="relative w-full max-w-md mx-auto px-4">
-  {/* background line */}
-  <div className="absolute top-1/2 left-5 right-5 h-1 bg-gray-300 z-0 transform -translate-y-1/2" />
+<div className="relative w-full ">
 
-  {/* progress line */}
-  <div
-    className="absolute top-1/2 left-5 h-1 bg-green-500 z-0 transform -translate-y-1/2"
-    style={{
-      width: `calc(${(step / 3) * 100}% - ${5 * 2}px)`,
-    }}
-  />
-
-  <div className="flex justify-between relative z-10">
+<div className="flex justify-between items-start px-4 mb-4">
+  {/* Progress Bar */}
+  <div className="flex flex-1 space-x-1">
     {[
-      { label: "Rental Details", icon: <FaCar /> },
-      { label: "Extras", icon: <FaGift /> },
-      { label: "License Details", icon: <FaIdCard /> },
-      { label: "Payment", icon: <FaCreditCard /> },
-    ].map((stepItem, index) => (
-      <div key={stepItem.label} className="flex flex-col items-center">
+      { number: 1, title: "Rental Details", subtitle: "Request Details" },
+      { number: 2, title: "Extras", subtitle: "Extras Selection" },
+      { number: 3, title: "License Details", subtitle: "Documents" },
+      { number: 4, title: "Payment", subtitle: "Confirm & Pay" },
+    ].map((stepItem, index) => {
+      const isActiveOrCompleted = index <= step;
+
+      return (
         <div
-          className="rounded-full w-10 h-10 flex items-center justify-center text-white text-lg"
-          style={{
-            backgroundColor: step >= index ? "#22c55e" : "#d1d5db",
-          }}
+          key={index}
+          className={`flex-1 text-center py-2 px-1 rounded-md shadow-sm
+            ${isActiveOrCompleted
+              ? "bg-green-600 text-white"
+              : "bg-gray-100 text-gray-700"
+            }`}
         >
-          {stepItem.icon}
+          <div className="text-sm font-bold">
+            {stepItem.number}. {stepItem.title}
+          </div>
+          <div className="text-xs text-gray-200 hidden sm:block">
+            {stepItem.subtitle}
+          </div>
         </div>
-        <span className="text-xs mt-1 text-center">{stepItem.label}</span>
-      </div>
-    ))}
+      );
+    })}
   </div>
+
+  {/* Close Button */}
+  {/* <button
+    onClick={closeModal}
+    className="ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-500 text-gray-600 hover:text-white shadow transition"
+    aria-label="Close"
+  >
+    &times;
+  </button> */}
 </div>
+
+</div>
+
+<Script
+  src="https://www.payhere.lk/lib/payhere.js"
+  strategy="afterInteractive"
+  onLoad={() => {
+    console.log("✅ PayHere loaded");
+    setPayhereReady(true);
+  }}
+/>
+
 
 
 
@@ -590,16 +666,19 @@ const BookingModal = ({
                 </div>
               </div>
 
-              <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
-                <p><strong>Per Day Charge:</strong> $13</p>
-                <p><strong>License Charge:</strong> $35 × {formValues.licenseCount}</p>
-                <p><strong>Rental Days:</strong> {rentalDays}</p>
-                <p><strong>Extras Total:</strong> ${extrasTotal}</p>
-                <p className="text-xl font-bold mt-2 text-emerald-600">
-                  Total Rentals: ${totalRental}
-                </p>
-              </div>
+<div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
+  <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
+  <p><strong>Number of days:</strong> {rentalDays}</p>
+  <p><strong>Per day charge:</strong> $13</p>
+  <p><strong>Rental for the number of days:</strong> $13 × {rentalDays} = </p>
+  <p><strong>Local License:</strong> $35</p>
+  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount}</p>
+  <p><strong>Extras Total:</strong> ${extrasTotal}</p>
+  <p className="text-lg font-bold mt-2 text-emerald-600">
+    Total Rentals: ${totalRental}
+  </p>
+</div>
+
             </div>
           </div>
         )}
@@ -624,7 +703,7 @@ const BookingModal = ({
         />
         <div>
           <div className="font-medium text-sm text-gray-800">{extra.name}</div>
-          <div className="text-xs text-gray-500">${extra.price} each</div>
+          <div className="text-xs text-gray-500">${extra.price} {extra.type} </div>
         </div>
       </div>
 
@@ -656,80 +735,6 @@ const BookingModal = ({
 
 
 
-<div className="bg-white border rounded-lg shadow-sm p-4 space-y-3">
-  <div className="flex items-center gap-3">
-    <input
-      id="train-transfer-checkbox"
-      type="checkbox"
-      checked={includeTrainTransfer}
-      onChange={(e) => setIncludeTrainTransfer(e.target.checked)}
-      className="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-400"
-    />
-    <label
-      htmlFor="train-transfer-checkbox"
-      className="text-sm font-medium text-gray-800"
-    >
-      Add <span className="text-orange-600 font-semibold">Train Transfer</span>
-    </label>
-  </div>
-
-  {includeTrainTransfer && (
-    <>
-      <label className="text-sm font-medium text-gray-700">
-        Select Train Transfer
-      </label>
-
-      <select
-        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-        value={formValues.trainTransfer?.from || ""}
-        onChange={(e) => {
-          const selected = trainTransferOptions.find(
-            (option) => option.from === e.target.value
-          );
-          if (selected) {
-            setFormValues((prev) => ({
-              ...prev,
-              trainTransfer: selected,
-            }));
-          }
-        }}
-      >
-        <option value="">Select a train transfer</option>
-        {trainTransferOptions.map((option, idx) => (
-          <option key={idx} value={option.from}>
-            {option.from} → {option.to} | {option.pickupTime} (${option.price})
-          </option>
-        ))}
-      </select>
-
-      {formValues.trainTransfer && (
-        <div className="bg-gray-50 border border-gray-200 rounded-md px-3 py-2 mt-2 text-sm text-gray-700 space-y-1">
-          <div>
-            <span className="font-medium">From:</span>{" "}
-            {formValues.trainTransfer.from}
-          </div>
-          <div>
-            <span className="font-medium">To:</span>{" "}
-            {formValues.trainTransfer.to}
-          </div>
-          <div>
-            <span className="font-medium">Pickup Time:</span>{" "}
-            {formValues.trainTransfer.pickupTime}
-          </div>
-          <div>
-            <span className="font-medium">Price:</span>{" "}
-            <span className="text-emerald-600 font-semibold">
-              ${formValues.trainTransfer.price}
-            </span>
-          </div>
-        </div>
-      )}
-    </>
-  )}
-</div>
-
-
-
 
 
 
@@ -747,10 +752,29 @@ const BookingModal = ({
     <h3 className="text-lg font-semibold">License & Identity Details</h3>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      
+    <div>
+  <label className="text-sm font-semibold">International Driving Permit (IDP)</label>
+  <select
+    value={formValues.hasIDP || ""}
+    onChange={(e) =>
+      setFormValues({ ...formValues, hasIDP: e.target.value })
+    }
+    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+  >
+    <option value="" disabled>Select Yes or No</option>
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+</div>
+
+      
+      
       <div>
         <label className="text-sm font-semibold">Full Name</label>
         <input
           type="text"
+          placeholder="Enter Full Name"          
           value={formValues.licenseName}
           onChange={(e) =>
             setFormValues({ ...formValues, licenseName: e.target.value })
@@ -763,6 +787,7 @@ const BookingModal = ({
         <label className="text-sm font-semibold">Address</label>
         <input
           type="text"
+          placeholder="Enter Address"
           value={formValues.licenseAddress}
           onChange={(e) =>
             setFormValues({ ...formValues, licenseAddress: e.target.value })
@@ -789,6 +814,7 @@ const BookingModal = ({
         <label className="text-sm font-semibold">Postal Code</label>
         <input
           type="text"
+          placeholder="Enter Postal Code"
           value={formValues.postalCode}
           onChange={(e) =>
             setFormValues({ ...formValues, postalCode: e.target.value })
@@ -802,6 +828,7 @@ const BookingModal = ({
         <input
           type="text"
           value={formValues.licenseNumber}
+          placeholder="Enter license Number"
           onChange={(e) =>
             setFormValues({ ...formValues, licenseNumber: e.target.value })
           }
@@ -814,6 +841,7 @@ const BookingModal = ({
         <input
           type="text"
           value={formValues.passportNumber}
+          placeholder="Enter Passport Number"
           onChange={(e) =>
             setFormValues({ ...formValues, passportNumber: e.target.value })
           }
@@ -886,6 +914,13 @@ const BookingModal = ({
     <p className="text-xl font-bold text-emerald-600">
       Final Total: ${totalRental.toFixed(2)}
     </p>
+
+    <button
+            onClick={handlePay}
+            className="w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition"
+          >
+            Pay with PayHere
+    </button>
 
 <p className="text-sm text-gray-600">
   Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.

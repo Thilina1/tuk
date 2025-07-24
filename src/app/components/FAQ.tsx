@@ -41,7 +41,7 @@ const faqSections = [
         answer: (
           <div>
             <ol className="list-decimal ml-6 mt-2">
-              <li>Call us immediately at +94 770 063 780</li>
+              <li>Call us immediately at +94 77 006 3780</li>
               <li>Contact the insurance company (number on your insurance card)</li>
               <li>Stay at the location until instructions are given</li>
             </ol>

@@ -17,36 +17,42 @@ export default function Vehicles() {
 
   const vehicles = useMemo(() => [
     {
+      name: "REGULAR TUK",
+      price: "FROM $12/DAY",
+      desc: "The classic. Simple, rugged, and built for local adventures across the island.",
+      image: "/tukTuk/RegularTukTuk.png",
+    },
+    {
       name: "ELECTRIC TUKTUK",
       price: "FROM $18/DAY",
       desc: "Silent, emission-free tuk tuk with 150km range and automatic gearbox.",
       image: "/tukTuk/BlueETX.png",
     },
     {
-      name: "CABRIOTUK",
+      name: "CABRIO TUK",
       price: "FROM $16/DAY",
       desc: "Open-roof adventure tuk tuk — perfect for tropical vibes and panoramic views.",
       image: "/tukTuk/convertETuk.png",
     },
     {
-      name: "REGULARTUK",
+      name: "Bikes",
       price: "FROM $12/DAY",
-      desc: "The classic. Simple, rugged, and built for local adventures across the island.",
+      desc: "The freedom machine. Auto gear, reliable, and perfect for exploring every corner of the island.",
       image: "/tukTuk/RegularTukTuk.png",
     },
   ], []);
 
   const leftExtras = [
-    { name: "Train Transfer", icon: "/icons/train.png" },
-    { name: "Local License", icon: "/icons/License.png" },
-    { name: "Full-Time Driver", icon: "/icons/Driver.png" },
-    { name: "Surf-Board Rack", icon: "/icons/surfboard.png" },
+    { name: "Train Transfer", icon: "/icons/train.png", description:"While you are traveling by train, We drive your tuk tuk with your luggages for you. Enjoy your train ride around Kandy, Ella, Nanuoya, Hatton, Haputale, Galle." },
+    { name: "Full-Time Driver", icon: "/icons/Driver.png", description:"You can keep a full-time driver for your tuk tuk tour. No need to worry about driver's accommodation, FnB and also your local driver permit" },
+    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", description:"For beach lovers and adventurers. Securely transport your boards to Sri Lanka’s best surf spots." },
+    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", description:"Enhance your ride with your favorite tunes. Add fun to your ride with high-quality portable Bluetooth speaker." },
   ];
 
   const rightExtras = [
-    { name: "Bluetooth Speakers", icon: "/icons/speaker.png" },
-    { name: "Cooler Box", icon: "/icons/cooler.png" },
-    { name: "Baby Seat", icon: "/icons/babyseat.png" },
+    { name: "Cooler Box", icon: "/icons/cooler.png", description: "Keep your drinks, snacks cold and fresh during long trips and sunny beach days." },
+    { name: "Baby Seat", icon: "/icons/babyseat.png", description:"Travel safely with little ones on board. Designed to provide maximum protection and meet international safety standards." },
+    { name: "Dash Cam", icon: "/icons/License.png", description:"Record your journey with a dash cam, ensuring safety and capturing scenic road trips." },
   ];
 
   const fadeUp = {
@@ -99,6 +105,7 @@ export default function Vehicles() {
                 style={{
                   backgroundColor: "#ffffff",
                   border: "1px solid #fef3c7", // border-yellow-200
+                  height: "130px", // <-- Set fixed height here
                 }}
               >
                 <div style={{ backgroundColor: "#fef9c3" }} className="p-3 rounded-full shadow-md">
@@ -109,7 +116,7 @@ export default function Vehicles() {
                     {extra.name}
                   </p>
                   <p style={{ color: "#64748b" }} className="text-sm mt-1">
-                    Add this to your journey
+                    {extra.description}
                   </p>
                 </div>
               </motion.div>
@@ -126,7 +133,9 @@ export default function Vehicles() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 200 }}
                     className="min-w-full rounded-xl shadow-xl p-6 text-center"
-                    style={{ backgroundColor: "#0c4a6e", color: "#ffffff" }} // bg-sky-900
+                    style={{ backgroundColor: "#0c4a6e", color: "#ffffff" 
+                      
+                    }} // bg-sky-900
                   >
                     <div className="flex justify-center items-center h-80 mb-4">
                       <Image
@@ -175,7 +184,7 @@ export default function Vehicles() {
           </div>
 
           {/* Right Extras */}
-          <div className="hidden md:flex flex-col gap-4">
+          <div className="hidden md:flex flex-col gap-4 ">
             {rightExtras.map((extra, i) => (
               <motion.div
                 key={extra.name}
@@ -188,6 +197,7 @@ export default function Vehicles() {
                 style={{
                   backgroundColor: "#ffffff",
                   border: "1px solid #fef3c7",
+                  height: "130px"
                 }}
               >
                 <div style={{ backgroundColor: "#fef9c3" }} className="p-3 rounded-full shadow-md">
@@ -198,11 +208,66 @@ export default function Vehicles() {
                     {extra.name}
                   </p>
                   <p style={{ color: "#64748b" }} className="text-sm mt-1">
-                    Add this to your journey
+                  {extra.description}
                   </p>
                 </div>
               </motion.div>
             ))}
+
+<motion.div
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+  variants={fadeUp}
+  className="relative flex justify-center items-center p-4 rounded-xl shadow-sm"
+  style={{
+    backgroundImage: "url('/hero/cardBackground.PNG')", // update path
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    height: "130px",
+    border: "1px solid #fef3c7",
+    overflow: "hidden",
+  }}
+>
+  {/* Dark canvas overlay */}
+  <div
+    className="absolute inset-0 rounded-xl"
+    style={{
+      backgroundColor: "rgba(0,0,0,0.4)", // adjust darkness here
+      zIndex: 1,
+    }}
+  />
+
+  {/* Button */}
+  <motion.button
+    className="relative z-10 px-6 py-3 rounded-lg shadow-md font-semibold text-white flex items-center gap-2"
+    style={{
+      backgroundImage: "linear-gradient(to right, #fbbf24, #f97316)",
+    }}
+    onClick={() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }}
+  >
+    Reserve Your Tuk
+    <motion.span
+      initial={{ x: 0 }}
+      animate={{ x: [0, 5, 10, 0] }}
+      transition={{
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 1,
+        ease: "easeInOut",
+      }}
+      className="inline-block"
+    >
+      👉
+    </motion.span>
+  </motion.button>
+</motion.div>
+
+
+
           </div>
 
           {/* Mobile Extras (below slideshow) */}
@@ -224,7 +289,7 @@ export default function Vehicles() {
                     {extra.name}
                   </p>
                   <p style={{ color: "#64748b" }} className="text-sm mt-1">
-                    Add this to your journey
+                  {extra.description}
                   </p>
                 </div>
               </div>

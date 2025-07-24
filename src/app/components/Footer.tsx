@@ -79,11 +79,11 @@ export default function Footer() {
           <ul className="space-y-3" style={{ color: "#d1d5db" }}>
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-amber-400" />
-              <span>+94 71 234 5678</span>
+              <span>+94 77 006 3780</span>
             </li>
             <li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-amber-400" />
-              <span>hello@tuktukdrive.com</span>
+              <span>info@tuktukdrive.com</span>
             </li>
           </ul>
         </div>

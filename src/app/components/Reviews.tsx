@@ -72,22 +72,22 @@ export default function Reviews() {
             className="text-3xl md:text-4xl font-bold mb-3 tracking-tight"
             style={{ color: "#0f766e" }}
           >
-            Trusted by Travellers 🚩
+           Why Travelers Choose Us 🚩
           </h2>
 
           <p
             className="text-lg font-medium mb-1"
             style={{ color: "#1f2937" }}
           >
-            “TukTukDrive is amazing!”
+            “TukTukDrive is a must-try!”
           </p>
           <p
             className="text-base leading-relaxed mb-4"
             style={{ color: "#1f2937" }}
           >
-            Read our recent reviews to discover why our customers adore us.
-            We provide unparalleled travel experiences by crafting personalized
-            itineraries, tips on how to travel like a local, and 24/7 support...
+            Don’t just take our word for it—read our glowing reviews and see why customers love
+us! Our travelers love the customized experiences, local tips, and round-the-clock
+support that make every trip unforgettable. ...
           </p>
 
           {/* Social Icons */}

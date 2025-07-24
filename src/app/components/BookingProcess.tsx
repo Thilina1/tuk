@@ -115,7 +115,7 @@ export default function BookingProcess() {
               className="flex flex-col items-center text-center rounded-xl p-6 shadow-lg hover:shadow-xl transition duration-300"
               style={{
                 backgroundColor: "#ffffff",
-                color: "#1e293b", // slate-800
+                color: "#1e293b"
               }}
             >
               <div className="relative mb-5">

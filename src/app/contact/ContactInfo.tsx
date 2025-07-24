@@ -26,8 +26,8 @@ export default function ContactInfo() {
 
         <ul className="space-y-4 text-sm text-black text-center">
           <li>📧 <strong>Email:</strong> info@tuktukrental.com</li>
-          <li>📲 <strong>Phone / Whatsapp:</strong> (+94) 71 2345 768</li>
-          <li>🏢 <strong>Head Office:</strong> No 28, Main Street, Colombo, Sri Lanka</li>
+          <li>📲 <strong>Phone / Whatsapp:</strong> (+94) 77 006 3780</li>
+          <li>🏢 <strong>Head Office:</strong> No. 06, Ambasewanagama, Kengalla. (Kandy) Sri Lanka </li>
         </ul>
       </div>
     </div>

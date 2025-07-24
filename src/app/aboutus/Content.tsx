@@ -1,124 +1,120 @@
 "use client";
 
 import {
-  FaRegSmile,
+  FaHandshake,
   FaGlobeAsia,
   FaClock,
-  FaMoneyBillWave,
-  FaRoute,
-  FaHandshake,
+  FaLeaf,
 } from "react-icons/fa";
 
-export default function Content() {
+export default function AboutUs() {
+  const features = [
+    {
+      icon: <FaHandshake className="text-green-500 text-4xl" />,
+      title: "Empowering Local Communities",
+      desc: "Every ride supports Sri Lanka’s TukTuk owners, sustaining families through tourism.",
+    },
+    {
+      icon: <FaGlobeAsia className="text-blue-500 text-4xl" />,
+      title: "Authentic Local Experiences",
+      desc: "Venture into villages, scenic landscapes, and hidden gems you won’t find in a guidebook.",
+    },
+    {
+      icon: <FaClock className="text-pink-500 text-4xl" />,
+      title: "Safety & Reliability",
+      desc: "A rigorously maintained fleet ensures worry-free, high-standard adventures.",
+    },
+    {
+      icon: <FaLeaf className="text-emerald-500 text-4xl" />,
+      title: "Eco-Friendly Journeys",
+      desc: "Minimize your carbon footprint while exploring consciously.",
+    },
+  ];
+
   return (
-    <div
-      style={{
-        background: "linear-gradient(to bottom right, #fef3c7, #ffffff)", // from-yellow-50 to-white
-        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
-        padding: "4rem 2rem",
-        color: "#1f2937", // text-gray-800
-      }}
-    >
-      {/* About Description */}
-      <div style={{ textAlign: "center", maxWidth: "64rem", margin: "0 auto", marginBottom: "4rem" }}>
-        <h2
-          style={{
-            fontSize: "2.25rem",
-            fontWeight: 800,
-            color: "#111827", // text-gray-900
-            marginBottom: "1rem",
-          }}
-        >
-          About TukTuk Drive
-        </h2>
-        <p style={{ fontSize: "1.125rem", color: "#374151", marginBottom: "1rem" }}>
-          <strong>TukTuk Drive</strong> isn&apos;t just about transportation — it&apos;s about transformation.
-        </p>
-        <p style={{ color: "#4B5563" }}>
-          From sandy coasts to misty hills, we provide more than just a vehicle. We offer training, curated routes, real-time support, and a warm welcome that makes every mile unforgettable.
-        </p>
+    <section className="bg-white">
+      {/* Hero */}
+      <div className="relative bg-gradient-to-r from-yellow-50 via-white to-yellow-100 py-20 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h3 className=" md:text-4xl font-extrabold text-gray-900 leading-tight">
+            Who Are We?.
+          </h3>
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+          At TukTukDrive.com, we believe in the power of community-driven tourism. Our
+mission is to empower local TukTuk owners by connecting them with adventurous
+travelers seeking unique, self-drive experiences across the stunning landscapes of Sri
+Lanka. By choosing to ride with us, you're not just getting a fun and eco-friendly way to
+explore; you’re contributing to the local economy and supporting communities who call
+this island home.
+          </p>
+        </div>
       </div>
 
-      {/* Feature Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "2rem",
-          maxWidth: "72rem",
-          margin: "0 auto",
-        }}
-      >
-        {[
-          {
-            icon: <FaRegSmile style={{ color: "#FACC15", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Friendly Support",
-            desc: "24/7 human help, in your language. We&apos;re locals, and we care.",
-          },
-          {
-            icon: <FaRoute style={{ color: "#059669", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Custom Routes",
-            desc: "Pre-mapped scenic drives or off-the-grid adventures — your choice.",
-          },
-          {
-            icon: <FaGlobeAsia style={{ color: "#3B82F6", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Authentic Exploration",
-            desc: "Experience Sri Lanka beyond tourist spots. Connect with real culture.",
-          },
-          {
-            icon: <FaMoneyBillWave style={{ color: "#8B5CF6", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Transparent Pricing",
-            desc: "All-inclusive, no hidden fees. What you see is what you pay.",
-          },
-          {
-            icon: <FaClock style={{ color: "#EC4899", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Instant Booking",
-            desc: "Get on the road in minutes with a few simple steps.",
-          },
-          {
-            icon: <FaHandshake style={{ color: "#10B981", fontSize: "2rem", marginBottom: "1rem" }} />,
-            title: "Built on Trust",
-            desc: "Thousands of happy explorers, 5-star reviews, and growing.",
-          },
-        ].map((item, index) => (
-          <div
-            key={index}
-            style={{
-              backgroundColor: "#ffffff",
-              padding: "1.5rem",
-              textAlign: "center",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1)",
-              transition: "box-shadow 0.3s ease",
-              border: "1px solid #E5E7EB",
-            }}
-          >
-            {item.icon}
-            <h4 style={{ fontWeight: 600, fontSize: "1.125rem", color: "#1F2937", marginBottom: "0.5rem" }}>
-              {item.title}
-            </h4>
-            <p style={{ fontSize: "0.875rem", color: "#4B5563" }}>{item.desc}</p>
+      {/* Mission & Story */}
+      <div className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6">
+          <div className="bg-yellow-50 rounded-xl shadow p-8 hover:shadow-lg transition">
+            <h2 className="text-3xl font-bold text-gray-800 ">Our Mission</h2>
+            <p className="text-gray-600 leading-relaxed">
+Our goal is simple: to provide an unforgettable, eco-conscious, and enriching
+journey through Sri Lanka, all while boosting the livelihoods of local TukTuk owners.
+We offer a self-drive experience that brings you closer to the heart of Sri Lanka, allowing
+you to explore the island in a way that’s personal, immersive, and adventurous.        
+            </p>
           </div>
-        ))}
+          <div className="bg-yellow-50 rounded-xl shadow p-8 hover:shadow-lg transition">
+            <h2 className="text-3xl font-bold text-gray-800 ">Our Story</h2>
+            <p className="text-gray-600 leading-relaxed">
+            Born out of a love for adventure and a commitment to sustainable tourism,
+TukTukDrive.com started with a single vision: to empower local TukTuk owners while
+offering travelers the chance to explore Sri Lanka in a truly authentic and fun way. What
+started as a small initiative has grown into a community-driven platform that brings
+travelers and locals together, promoting a more eco-friendly, inclusive, and enriching
+travel experience.
+
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Vision/Quote */}
-      <div style={{ textAlign: "center", marginTop: "4rem" }}>
-        <blockquote
-          style={{
-            fontStyle: "italic",
-            color: "#475569",
-            fontSize: "1.125rem",
-            maxWidth: "36rem",
-            margin: "0 auto",
-          }}
-        >
-          &ldquo;Not all those who wander are lost.&rdquo; –{" "}
-          <span style={{ fontWeight: 600 }}>J.R.R. Tolkien</span>
-        </blockquote>
-        <p style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: "#6B7280" }}>
-          ...and with TukTuk Drive, you&apos;ll always find adventure.
-        </p>
+      {/* Features */}
+      <div className="py-20 bg-gradient-to-b from-white to-yellow-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-4">
+            <h3 className="text-4xl font-bold text-gray-900">Why Choose TukTukDrive?</h3>
+            <p className="mt-4 text-gray-600">
+              Here’s what makes your journey with us truly unforgettable.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white shadow-xl rounded-2xl p-6 text-center hover:scale-105 transform transition"
+              >
+                <div className="mb-4 flex justify-center">{item.icon}</div>
+                <h4 className="text-xl font-semibold text-gray-800 mb-2">
+                  {item.title}
+                </h4>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* CTA */}
+      <div className="py-20 bg-gradient-to-r from-yellow-200 to-yellow-50 text-center">
+        <h3 className="text-3xl font-bold text-gray-900">
+          Ready to Start Your Journey?
+        </h3>
+        <p className="mt-4 text-gray-600">
+          Book your TukTuk today and explore Sri Lanka your way.
+        </p>
+        <button className="mt-6 px-6 py-3 bg-yellow-500 text-white rounded-full font-semibold shadow hover:bg-yellow-600 transition">
+          Book Now
+        </button>
+      </div>
+    </section>
   );
 }

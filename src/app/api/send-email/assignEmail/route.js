@@ -4,14 +4,27 @@ import nodemailer from 'nodemailer';
 export async function POST(request) {
   try {
     const data = await request.json();
+    
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'thilinaweeras@gmail.com',
-        pass: 'aklxqxdmgjwxrplz', // Use App Password!
-      },
-    });
+      // const transporter = nodemailer.createTransport({
+      //   host: 'mail.tuktukdrive.com',
+      //   port: 465,
+      //   secure: true, // SSL/TLS
+      //   auth: {
+      //     user: 'test@tuktukdrive.com',
+      //     pass: 'F6{X_jks2D[#',
+      //   },
+      // });
+
+      const transporter = nodemailer.createTransport({
+        host: 'mail.tuktukdrive.com',
+        port: 465,
+        secure: true, // SSL/TLS
+        auth: {
+          user: 'test@tuktukdrive.com',
+          pass: 'F6{X_jks2D[#',
+        },
+      });
 
     const extrasHTML = Object.entries(data.extras || {})
       .filter(([val]) => val > 0)
@@ -21,8 +34,8 @@ export async function POST(request) {
     const tukList = (data.assignedTuks || []).join(', ') || 'Not Assigned';
 
     const mailOptions = {
-      from: '"TukTuk Booking" <thilinaweeras@gmail.com>',
-      to: [data.email, 'thilinaweerasing@gmail.com'],
+      from: '"TukTuk Booking" <test@tuktukdrive.com>',
+      to: [data.email],
       subject: '✅ TukTuk Assignment Confirmation – TukTukDrive',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; padding: 24px; border-radius: 10px; border: 1px solid #e0e0e0;">
@@ -55,7 +68,7 @@ export async function POST(request) {
               <a href="mailto:support@tuktukdrive.com" style="color: #0077b6;">support@tuktukdrive.com</a>
             </p>
 
-            <p style="margin-top: 8px;"><strong>Reference Address:</strong> No: 233, Tuk Tuk Drive, Kandy Road, Kandy, Sri Lanka</p>
+            <p style="margin-top: 8px;"><strong>Reference Address:</strong> No. 06, Ambasewanagama, Kengalla. (Kandy), Sri Lanka</p>
 
             <div style="margin-top: 10px;">
               <a href="https://tuktukdrive.com" style="color: #0077b6; text-decoration: none;">Website</a> |
