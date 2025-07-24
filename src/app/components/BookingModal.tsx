@@ -218,28 +218,6 @@ const BookingModal = ({
   ];
   
 
-
-  React.useEffect(() => {
-    const fetchTrainTransfers = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "trainTransfers"));
-        const formatted = snapshot.docs
-  .map((doc) => doc.data())
-  .filter((item) => item.status === true)
-  .map((item) => ({
-    from: item.from,
-    to: item.to,
-    pickupTime: item.pickupTime,
-    price: item.price || 0,
-  }));
-;
-      } catch (error) {
-        console.error("Error fetching train transfers:", error);
-      }
-    };
-  
-    fetchTrainTransfers();
-  }, []);
   
   
 
