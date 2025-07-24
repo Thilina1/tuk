@@ -11,10 +11,11 @@ import Script from "next/script";
 declare global {
   interface Window {
     payhere: {
-      startPayment: (payment: any) => void;
+      startPayment: (payment: Record<string, unknown>) => void;
     };
   }
 }
+
 
 
 type Extras = {
@@ -117,9 +118,10 @@ const BookingModal = ({
 
   useEffect(() => {
     const checkPayHere = () => {
-      if (typeof window !== "undefined" && (window as any).payhere?.startPayment) {
+      if (typeof window.payhere?.startPayment === "function") {
         setPayhereReady(true);
-      } else {
+      }
+       else {
         setTimeout(checkPayHere, 100); // retry until it's available
       }
     };
@@ -152,8 +154,8 @@ const BookingModal = ({
       country: "Sri Lanka",
     };
   
-    // @ts-ignore
     window.payhere.startPayment(payment);
+
   };
   
 
