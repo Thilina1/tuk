@@ -38,7 +38,7 @@ export default function PaymentForm() {
     // 2. Prepare payment object
     const payment = {
       sandbox: true,
-      merchant_id: "YOUR_MERCHANT_ID", // replace
+      merchant_id: "1231320", // replace
       return_url: "https://yourdomain.com/payment-success",
       cancel_url: "https://yourdomain.com/payment-cancel",
       notify_url: "https://yourdomain.com/api/payhere-notify", // server-side
