@@ -45,7 +45,9 @@ type BookingFormValues = {
   postalCode: string;
   licenseNumber: string;
   passportNumber: string;
-  uploadedDocs: File[];
+  idpFiles: File[];
+  passportFiles: File[];
+  selfieWithLicense: File[];
   isBooked: boolean;
   hasIDP: string;
 };
