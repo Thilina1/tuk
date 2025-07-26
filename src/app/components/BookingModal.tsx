@@ -6,6 +6,7 @@ import { db } from "../../config/firebase";
 import Image from "next/image";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 import Script from "next/script";
+import { FaIdCard, FaPassport, FaUser } from "react-icons/fa"; // top of your file
 
 
 declare global {
@@ -53,7 +54,9 @@ type BookingFormValues = {
   postalCode: string;
   licenseNumber: string;
   passportNumber: string;
-  uploadedDocs: File[];
+  idpFiles: File[];
+  passportFiles: File[];
+  selfieWithLicense: File[];
   isBooked:boolean;
   pickupPrice?: number;
   returnPrice?:number;
@@ -377,7 +380,9 @@ const BookingModal = ({
         postalCode: formValues.postalCode,
         licenseNumber: formValues.licenseNumber,
         passportNumber: formValues.passportNumber,
-        uploadedDocs: formValues.uploadedDocs.map((f) => f.name),
+        idpFiles: (formValues.idpFiles || []).map((f) => f.name),
+        passportFiles: (formValues.passportFiles || []).map((f) => f.name),
+        selfieWithLicense: (formValues.selfieWithLicense || []).map((f) => f.name),
       });
     }
 
@@ -687,8 +692,12 @@ const BookingModal = ({
   <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
   <p><strong>Number of days:</strong> {rentalDays}</p>
   <strong>Rental for the number of days:</strong> $13 × {rentalDays} = ${13 * rentalDays}
-  <p><strong>Local License:</strong> $35</p>
-  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount}</p>
+  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
+  <p>
+  <strong>Pickup & Return Price:</strong>{" "}
+     ${formValues.pickupPrice || 0} + ${formValues.returnPrice || 0} = $
+     {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
+  </p>  
   <p><strong>Extras Total:</strong> ${extrasTotal}</p>
   <p className="text-lg font-bold mt-2 text-emerald-600">
     Total Rentals: ${totalRental}
@@ -753,237 +762,280 @@ const BookingModal = ({
 
 
 
-
-            <div className="mt-4 border border-gray-200 p-4 rounded">
-              <p><strong>Extras Total:</strong> ${extrasTotal}</p>
-              <p className="text-xl font-bold mt-2 text-emerald-600">
-                Updated Total: ${totalRental}
-              </p>
+<div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
+  <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
+  <strong>Rental for the number of days:</strong> $13 × {rentalDays} = ${13 * rentalDays}
+  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
+  <p>
+  <strong>Pickup & Return Price:</strong>{" "}
+     ${formValues.pickupPrice || 0} + ${formValues.returnPrice || 0} = $
+     {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
+  </p>  
+  <p><strong>Extras Total:</strong> ${extrasTotal}</p>
+  <p className="text-lg font-bold mt-2 text-emerald-600">
+    Total Rentals: ${totalRental}
+  </p>
             </div>
           </div>
         )}
 
 {step === 2 && (
-  <div className="space-y-4">
-    <h3 className="text-lg font-semibold">License & Identity Details</h3>
+  <div className="space-y-6">
+  <h3 className="text-lg font-semibold">License & Identity Details</h3>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      
-    <div>
-  <label className="text-sm font-semibold">International Driving Permit (IDP)</label>
-  <select
-    value={formValues.hasIDP || ""}
-    onChange={(e) =>
-      setFormValues({ ...formValues, hasIDP: e.target.value })
-    }
-    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-  >
-    <option value="" disabled>Select Yes or No</option>
-    <option value="Yes">Yes</option>
-    <option value="No">No</option>
-  </select>
-</div>
-
-      
-      
-      <div>
-        <label className="text-sm font-semibold">Full Name</label>
-        <input
-          type="text"
-          placeholder="Enter Full Name"          
-          value={formValues.licenseName}
-          onChange={(e) =>
-            setFormValues({ ...formValues, licenseName: e.target.value })
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-      </div>
-
-      <div>
-        <label className="text-sm font-semibold">Address</label>
-        <input
-          type="text"
-          placeholder="Enter Address"
-          value={formValues.licenseAddress}
-          onChange={(e) =>
-            setFormValues({ ...formValues, licenseAddress: e.target.value })
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-      </div>
-
-      <div>
-  <label className="text-sm font-semibold">Country</label>
-  <input
-    type="text"
-    placeholder="Enter country"
-    value={formValues.licenseCountry}
-    onChange={(e) =>
-      setFormValues({ ...formValues, licenseCountry: e.target.value })
-    }
-    className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-    />
-</div>
-
-
-      <div>
-        <label className="text-sm font-semibold">Postal Code</label>
-        <input
-          type="text"
-          placeholder="Enter Postal Code"
-          value={formValues.postalCode}
-          onChange={(e) =>
-            setFormValues({ ...formValues, postalCode: e.target.value })
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-      </div>
-
-      <div>
-        <label className="text-sm font-semibold">License Number</label>
-        <input
-          type="text"
-          value={formValues.licenseNumber}
-          placeholder="Enter license Number"
-          onChange={(e) =>
-            setFormValues({ ...formValues, licenseNumber: e.target.value })
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-      </div>
-
-      <div>
-        <label className="text-sm font-semibold">Passport Number</label>
-        <input
-          type="text"
-          value={formValues.passportNumber}
-          placeholder="Enter Passport Number"
-          onChange={(e) =>
-            setFormValues({ ...formValues, passportNumber: e.target.value })
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-      </div>
-    </div>
-
-    <div>
-      <label className="text-sm font-semibold">Upload Documents</label>
-      <input
-        type="file"
-        accept=".pdf,.jpg,.jpeg,.png"
-        multiple
-        onChange={(e) =>
-          setFormValues({
-            ...formValues,
-            uploadedDocs: Array.from(e.target.files || []),
-          })
-        }
-        className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-        />
-      {formValues.uploadedDocs && formValues.uploadedDocs.length > 0 && (
-        <ul className="mt-2 list-disc pl-5 text-sm text-gray-700">
-          {formValues.uploadedDocs.map((file, index) => (
-            <li key={index}>{file.name}</li>
-          ))}
-        </ul>
-      )}
-    </div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <label className="text-sm font-semibold">International Driving Permit (IDP)</label>
+    <select
+      value={formValues.hasIDP || ""}
+      onChange={(e) => setFormValues({ ...formValues, hasIDP: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    >
+      <option value="" disabled>Select Yes or No</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
   </div>
+
+  <div>
+    <label className="text-sm font-semibold">Full Name</label>
+    <input
+      type="text"
+      placeholder="Enter Full Name"
+      value={formValues.licenseName}
+      onChange={(e) => setFormValues({ ...formValues, licenseName: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+
+  <div>
+    <label className="text-sm font-semibold">Address</label>
+    <input
+      type="text"
+      placeholder="Enter Address"
+      value={formValues.licenseAddress}
+      onChange={(e) => setFormValues({ ...formValues, licenseAddress: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+
+  <div>
+    <label className="text-sm font-semibold">Country</label>
+    <input
+      type="text"
+      placeholder="Enter Country"
+      value={formValues.licenseCountry}
+      onChange={(e) => setFormValues({ ...formValues, licenseCountry: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+
+  <div>
+    <label className="text-sm font-semibold">Postal Code</label>
+    <input
+      type="text"
+      placeholder="Enter Postal Code"
+      value={formValues.postalCode}
+      onChange={(e) => setFormValues({ ...formValues, postalCode: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+
+  <div>
+    <label className="text-sm font-semibold">License Number</label>
+    <input
+      type="text"
+      placeholder="Enter License Number"
+      value={formValues.licenseNumber}
+      onChange={(e) => setFormValues({ ...formValues, licenseNumber: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+
+  <div>
+    <label className="text-sm font-semibold">Passport Number</label>
+    <input
+      type="text"
+      placeholder="Enter Passport Number"
+      value={formValues.passportNumber}
+      onChange={(e) => setFormValues({ ...formValues, passportNumber: e.target.value })}
+      className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+  </div>
+</div>
+  {/* IDP Upload */}
+  <div>
+    <label className="flex items-center text-sm font-semibold mb-2">
+      <FaIdCard className="text-orange-500 mr-2" />
+      Upload International Driving Permit (PDF or up to 3 Images)
+    </label>
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      multiple
+      onChange={(e) =>
+        setFormValues({ ...formValues, idpFiles: Array.from(e.target.files || []) })
+      }
+      className="w-full border border-dashed border-gray-300 bg-white rounded-lg px-4 py-3 text-sm cursor-pointer hover:border-orange-400 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+    />
+    {formValues.idpFiles?.length > 0 && (
+      <ul className="mt-2 list-disc pl-6 text-sm text-gray-700">
+        {formValues.idpFiles.map((file: File, index: number) => (
+          <li key={index}>{file.name}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  {/* Passport Upload */}
+  <div>
+    <label className="flex items-center text-sm font-semibold mb-2">
+      <FaPassport className="text-blue-500 mr-2" />
+      Upload Passport (PDF or Image)
+    </label>
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) =>
+        setFormValues({ ...formValues, passportFiles: Array.from(e.target.files || []) })
+      }
+      className="w-full border border-dashed border-gray-300 bg-white rounded-lg px-4 py-3 text-sm cursor-pointer hover:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+    />
+    {formValues.passportFiles?.length > 0 && (
+      <ul className="mt-2 list-disc pl-6 text-sm text-gray-700">
+        {formValues.passportFiles.map((file: File, index: number) => (
+          <li key={index}>{file.name}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  {/* Selfie with License Upload */}
+  <div>
+    <label className="flex items-center text-sm font-semibold mb-2">
+      <FaUser className="text-green-600 mr-2" />
+      Upload a Photo of Yourself (Image only)
+    </label>
+    <input
+      type="file"
+      accept=".jpg,.jpeg,.png"
+      onChange={(e) =>
+        setFormValues({ ...formValues, selfieWithLicense: Array.from(e.target.files || []) })
+      }
+      className="w-full border border-dashed border-gray-300 bg-white rounded-lg px-4 py-3 text-sm cursor-pointer hover:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none"
+    />
+    {formValues.selfieWithLicense?.length > 0 && (
+      <ul className="mt-2 list-disc pl-6 text-sm text-gray-700">
+        {formValues.selfieWithLicense.map((file: File, index: number) => (
+          <li key={index}>{file.name}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>
 )}
 
 
 
 
 {step === 3 && (
-  <div className="space-y-4">
-    <h3 className="text-lg font-semibold">Payment & Confirmation</h3>
+  <div className="space-y-6 p-6 rounded-xl bg-white shadow-lg border border-gray-200">
+  <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+    💳 Payment & Confirmation
+  </h3>
 
-    <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-2">
-      <p><strong>Rental Price:</strong> ${totalRental.toFixed(2)}</p>
-
-      {appliedCoupon && (
-        <p className="text-green-600">
-          ✅ Coupon <strong>{couponCode}</strong> applied: {appliedCoupon.discountMode} {appliedCoupon.discountValue}
-        </p>
-      )}
-
-      <div className="flex gap-2 mt-2">
-        <input
-          type="text"
-          value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value)}
-          placeholder="Enter coupon code"
-          className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
-        />
-        <button
-          onClick={handleApplyCoupon}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
-        >
-          Apply
-        </button>
-      </div>
-      {couponError && (
-        <p className="text-sm text-red-600 mt-1">{couponError}</p>
-      )}
+  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
+    <div className="flex justify-between text-gray-700">
+      
+      
+      <span className="font-medium">Rental Price</span>
+      <span>${totalRental.toFixed(2)}</span>
     </div>
 
-    <p className="text-xl font-bold text-emerald-600">
+    {appliedCoupon && (
+      <div className="text-green-700 text-sm bg-green-50 p-2 rounded-md border border-green-200">
+        ✅ Coupon <strong>{couponCode}</strong> applied:
+        {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
+      </div>
+    )}
+
+    <div className="flex gap-2 mt-2">
+      <input
+        type="text"
+        value={couponCode}
+        onChange={(e) => setCouponCode(e.target.value)}
+        placeholder="Enter coupon code"
+        className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
+      />
+      <button
+        onClick={handleApplyCoupon}
+        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm"
+      >
+        Apply
+      </button>
+    </div>
+
+    {couponError && (
+      <p className="text-sm text-red-600 mt-1">{couponError}</p>
+    )}
+  </div>
+
+  <div className="text-right">
+    <p className="text-lg font-bold text-emerald-700">
       Final Total: ${totalRental.toFixed(2)}
     </p>
-
-    <button
-  onClick={handlePayNow}
-  disabled={loading}
-  className="bg-yellow-400 w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold text-black hover:bg-yellow-500 transition disabled:opacity-50"
->
-  {loading ? (
-    <>
-      <svg
-        className="animate-spin h-5 w-5 text-black"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-        ></path>
-      </svg>
-      Processing...
-    </>
-  ) : (
-    <>
-      <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
-      Pay Now
-    </>
-  )}
-</button>
-
-
-
-<Script
-  src="https://www.payhere.lk/lib/payhere.js"
-  strategy="afterInteractive"
-  onLoad={() => {
-    console.log("✅ PayHere SDK loaded");
-  }}
-/>
-
-
-<p className="text-sm text-gray-600">
-  Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.
-</p>
-
   </div>
+
+  <button
+    onClick={handlePayNow}
+    disabled={loading}
+    className="bg-yellow-400 w-full py-3 rounded-lg flex items-center justify-center gap-2 font-semibold text-black hover:bg-yellow-500 transition disabled:opacity-50"
+  >
+    {loading ? (
+      <>
+        <svg
+          className="animate-spin h-5 w-5 text-black"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+          />
+        </svg>
+        Processing...
+      </>
+    ) : (
+      <>
+        <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
+        Pay Now
+      </>
+    )}
+  </button>
+
+  <Script
+    src="https://www.payhere.lk/lib/payhere.js"
+    strategy="afterInteractive"
+    onLoad={() => {
+      console.log("✅ PayHere SDK loaded");
+    }}
+  />
+
+  <p className="text-sm text-gray-500 text-center pt-2">
+    By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
+  </p>
+</div>
+
 )}
 
 
