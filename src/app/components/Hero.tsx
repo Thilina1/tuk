@@ -89,7 +89,7 @@ useEffect(() => {
 const handlePayNow = () => {
   const payment = {
     sandbox: true,
-    merchant_id: "NDA5MDU5MjE1OTQyNzU4NTk4Mjk3MTA5MTQ4NDEyNzEzODMyMTc1",
+    merchant_id: "1231320",
     return_url: "https://yourdomain.com/return",
     cancel_url: "https://yourdomain.com/cancel",
     notify_url: "https://yourdomain.com/api/payhere-notify",
@@ -315,7 +315,12 @@ useEffect(() => {
 
   </p>
 </div>
-
+<button
+  onClick={handlePayNow}
+  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+>
+  Pay $10 via PayHere 💳
+</button>
 
         <div className="w-full md:w-[350px] bg-white/10 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -497,12 +502,7 @@ useEffect(() => {
 </button>
 
 
-<button
-  onClick={handlePayNow}
-  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
->
-  Pay $10 via PayHere 💳
-</button>
+
 
 
           </form>
