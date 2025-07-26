@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
@@ -11,13 +11,14 @@ import Script from "next/script";
 declare global {
   interface Window {
     payhere: {
-      onError: (error: any) => void;
-      onDismissed: () => void;
-      onCompleted: (orderId: any) => void;
       startPayment: (payment: Record<string, unknown>) => void;
+      onCompleted?: (orderId: string) => void;
+      onDismissed?: () => void;
+      onError?: (error: string) => void;
     };
   }
 }
+
 
 
 
@@ -94,32 +95,6 @@ const timeOptions = Array.from({ length: 15 }, (_, i) => {
   return <option key={value} value={value}>{value}</option>;
 });
 
-async function openPayHereCheckout(data: {
-  amount: number;
-  name: string;
-  email: string;
-  phone: string;
-}) {
-  const res = await fetch("/api/payhere/checkout", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const html = await res.text();
-
-  const win = window.open("", "_blank");
-  if (win) {
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
-  } else {
-    alert("Popup blocked! Please allow popups and try again.");
-  }
-}
-
 
 
 
@@ -142,25 +117,50 @@ const BookingModal = ({
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
-//  const [payhereReady, setPayhereReady] = useState(false);
+  const [payhereReady, setPayhereReady] = useState(false);
 
 
-  // useEffect(() => {
-  //   const checkPayHere = () => {
-  //     if (typeof window.payhere?.startPayment === "function") {
-  //       setPayhereReady(true);
-  //     }
-  //      else {
-  //       setTimeout(checkPayHere, 100); // retry until it's available
-  //     }
-  //   };
-  //   checkPayHere();
-  // }, []);
+  useEffect(() => {
+    const checkPayHere = () => {
+      if (typeof window.payhere?.startPayment === "function") {
+        setPayhereReady(true);
+      }
+       else {
+        setTimeout(checkPayHere, 100); // retry until it's available
+      }
+    };
+    checkPayHere();
+  }, []);
   
 
+  const handlePay = () => {
+    if (!payhereReady || typeof window === "undefined" || typeof window.payhere === "undefined") {
+      alert("PayHere not loaded yet. Please wait a moment.");
+      return;
+    }
+  
+    const payment = {
+      sandbox: true,
+      merchant_id: "1231320",
+      return_url: "https://tuktukdrive.com/",
+      cancel_url: "https://tuktukdrive.com/",
+      notify_url: "https://tuktukdrive.com/",
+      order_id: `ORDER-${Date.now()}`,
+      items: "Tuk Tuk Rental",
+      amount: totalRental.toFixed(2),
+      currency: "USD",
+      first_name: "Thilina",
+      last_name: "Weerasinghe",
+      email: "example@email.com",
+      phone: "0771234567",
+      address: "Matale",
+      city: "Matale",
+      country: "Sri Lanka",
+    };
+  
+    window.payhere.startPayment(payment);
 
-  
-  
+  };
   
 
 
@@ -456,7 +456,7 @@ const BookingModal = ({
   strategy="afterInteractive"
   onLoad={() => {
     console.log("✅ PayHere loaded");
-   // setPayhereReady(true);
+    setPayhereReady(true);
   }}
 />
 
@@ -889,7 +889,12 @@ const BookingModal = ({
       Final Total: ${totalRental.toFixed(2)}
     </p>
 
-
+    <button
+            onClick={handlePay}
+            className="w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition"
+          >
+            Pay with PayHere
+    </button>
 
 <p className="text-sm text-gray-600">
   Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.
