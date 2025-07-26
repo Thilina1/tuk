@@ -86,36 +86,33 @@ useEffect(() => {
 }, []);
 
 
-const payment = {
-  sandbox: true,
-  merchant_id: "1231320", // ✅ Confirm this is your sandbox merchant ID
-  return_url: "https://greentechstartups.com/return",
-  cancel_url: "https://greentechstartups.com/cancel",
-  notify_url: "https://greentechstartups.com/api/payhere-notify",
-
-  order_id: "ORDER100111",
-  items: "TukTuk Rental",
-  amount: "10.00",
-  currency: "USD",
-
-  first_name: "Thilina",
-  last_name: "Weerasinghe",
-  email: "thilina@example.com",
-  phone: "0768408835",
-  address: "1, Matale Road",
-  city: "Kandy",
-  country: "Sri Lanka",
-};
-
-
-
 const handlePayNow = () => {
-  if (typeof window !== "undefined" && window.payhere) {
-    window.payhere.startPayment(payment);
-  } else {
-    console.error("🚨 PayHere is not loaded");
-  }
+  const payment = {
+    sandbox: true,
+    merchant_id: "1231320",
+    return_url: "https://yourdomain.com/return",
+    cancel_url: "https://yourdomain.com/cancel",
+    notify_url: "https://yourdomain.com/api/payhere-notify",
+
+    order_id: "ORDER1001",
+    items: "TukTuk Rental",
+    amount: "10.00",
+    currency: "USD",
+
+    first_name: "Thilina",
+    last_name: "Weerasinghe",
+    email: "thilina@example.com",
+    phone: "0768408835",
+    address: "1, Matale Road",
+    city: "Kandy",
+    country: "Sri Lanka",
+  };
+
+  // Launch payment popup
+  window.payhere.startPayment(payment);
 };
+
+
 
 
 
@@ -319,7 +316,7 @@ useEffect(() => {
   </p>
 </div>
 <button
-  onClick={handlePayNow }
+  onClick={handlePayNow}
   className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
 >
   Pay $10 via PayHere 💳
