@@ -445,14 +445,6 @@ window.payhere.startPayment(payment);
 </div>
 
 </div>
-
-<Script src="https://www.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
-
-
-
-
-
-
         {step === 0 && validationError && (
           <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
               {validationError}
@@ -881,6 +873,10 @@ window.payhere.startPayment(payment);
     <button onClick={handlePayNow} className="bg-yellow-400 w-full py-2 font-semibold">
           Pay Now
         </button>
+
+
+        <Script src="https://www.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
+
 
 <p className="text-sm text-gray-600">
   Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.
