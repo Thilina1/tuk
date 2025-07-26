@@ -416,7 +416,7 @@ useEffect(() => {
 
           <div className="md:col-span-2">
   {/* Always show the checkbox */}
-  <div className="flex items-center gap-3 mb-4">
+<div className="flex items-center gap-3 mb-4 hidden">
   <input
     id="trainTransferCheckbox"
     type="checkbox"

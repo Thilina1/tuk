@@ -38,10 +38,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-gray-50 text-gray-800">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-gray-100 to-white text-gray-800">
       {/* Sidebar */}
       <aside
-        className={`${sidebarExpanded ? "w-60" : "w-16"} 
+        className={`fixed top-0 left-0 h-screen z-20
+          ${sidebarExpanded ? "w-60" : "w-16"}
           bg-gray-900 text-white flex flex-col transition-all duration-300`}
       >
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-700">
@@ -74,11 +75,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </ul>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      {/* Main content area with dynamic margin */}
+      <div
+        className="flex flex-col flex-1 transition-all duration-300"
+        style={{ marginLeft: sidebarExpanded ? "15rem" : "4rem" }}
+      >
         {/* Header */}
-        <header className="bg-white border-b px-6 py-3 flex justify-between items-center shadow-sm">
-          <div className="text-lg font-medium">TukTukDrive Admin</div>
+        <header className="backdrop-blur bg-white/70 border-b px-6 py-3 flex justify-between items-center shadow-sm sticky top-0 z-10">
+          <div className="text-xl font-semibold tracking-tight text-gray-700">TukTukDrive Admin Dashboard</div>
 
           <div ref={dropdownRef} className="relative">
             <button
@@ -101,8 +105,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 p-6 bg-gray-50">{children}</main>
+        {/* Scrollable Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">{children}</main>
       </div>
     </div>
   );
