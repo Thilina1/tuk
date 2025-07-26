@@ -4,6 +4,10 @@
 import React, { useState } from "react";
 import Script from "next/script";
 
+
+
+
+
 export default function PaymentForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -53,8 +57,7 @@ export default function PaymentForm() {
     };
 
     // 3. Trigger payment popup
-    // @ts-ignore
-    window.payhere.startPayment(payment);
+window.payhere.startPayment(payment);
   };
 
   return (
