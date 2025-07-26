@@ -12,13 +12,20 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 } from "chart.js";
 import { Line, Pie } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
-
-
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 type Booking = {
   createdAt?: { toDate: () => Date };
@@ -29,7 +36,6 @@ type Booking = {
   pickup?: string;
   returnLoc?: string;
 };
-
 
 export default function DashboardPage() {
   const [totalRentalAll, setTotalRentalAll] = useState<number>(0);
@@ -57,11 +63,11 @@ export default function DashboardPage() {
         let notBookedCount = 0;
         const dayRevenueMap: Record<string, number> = {};
         const dayCountMap: Record<string, number> = {};
-        const pickups: any[] = [];
-        const returns: any[] = [];
+        const pickups: Booking[] = [];
+        const returns: Booking[] = [];
 
         snapshot.forEach((doc) => {
-          const data = doc.data();
+          const data = doc.data() as Booking;
 
           const createdAt = data.createdAt?.toDate?.() ?? null;
           const pickupDate = data.pickupDate?.toDate?.() ?? null;
@@ -70,24 +76,23 @@ export default function DashboardPage() {
           if (typeof data.RentalPrice === "number") {
             totalAll += data.RentalPrice;
 
-            if (createdAt && !isNaN(createdAt.getTime()) && createdAt >= thirtyDaysAgo && createdAt <= endOfToday) {
+            if (createdAt && createdAt >= thirtyDaysAgo && createdAt <= endOfToday) {
               total30 += data.RentalPrice;
-
               const day = createdAt.toISOString().split("T")[0];
               dayRevenueMap[day] = (dayRevenueMap[day] || 0) + data.RentalPrice;
               dayCountMap[day] = (dayCountMap[day] || 0) + 1;
             }
           }
 
-          if (data.isBooked === true) bookedCount++;
+          if (data.isBooked) bookedCount++;
           else notBookedCount++;
 
-          if (pickupDate && !isNaN(pickupDate.getTime()) && pickupDate >= startOfToday && pickupDate <= sevenDaysLater) {
-            pickups.push({ ...data, pickupDate });
+          if (pickupDate && pickupDate >= startOfToday && pickupDate <= sevenDaysLater) {
+            pickups.push({ ...data, pickupDate: { toDate: () => pickupDate } });
           }
 
-          if (returnDate && !isNaN(returnDate.getTime()) && returnDate >= startOfToday && returnDate <= sevenDaysLater) {
-            returns.push({ ...data, returnDate });
+          if (returnDate && returnDate >= startOfToday && returnDate <= sevenDaysLater) {
+            returns.push({ ...data, returnDate: { toDate: () => returnDate } });
           }
         });
 
@@ -104,8 +109,8 @@ export default function DashboardPage() {
           labels: sortedDays,
           data: sortedDays.map((day) => dayCountMap[day]),
         });
-        setUpcomingPickups(pickups.sort((a, b) => new Date(a.pickupDate).getTime() - new Date(b.pickupDate).getTime()));
-        setUpcomingReturns(returns.sort((a, b) => new Date(a.returnDate).getTime() - new Date(b.returnDate).getTime()));
+        setUpcomingPickups(pickups.sort((a, b) => a.pickupDate!.toDate().getTime() - b.pickupDate!.toDate().getTime()));
+        setUpcomingReturns(returns.sort((a, b) => a.returnDate!.toDate().getTime() - b.returnDate!.toDate().getTime()));
       } catch (err) {
         console.error("Error loading bookings", err);
       } finally {
@@ -193,22 +198,22 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4"></h2>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Upcoming Pickups</h2>
               <ul className="text-sm text-gray-800 space-y-2">
                 {upcomingPickups.map((b, i) => (
                   <li key={i} className="border-b pb-2">
-            a.pickupDate!.toDate().getTime() - b.pickupDate!.toDate().getTime()
-            </li>
+                    <span className="font-medium">{b.pickup}</span> — {new Date(b.pickupDate!.toDate()).toLocaleDateString()} — <span className="text-emerald-600 font-semibold">${b.RentalPrice}</span>
+                  </li>
                 ))}
               </ul>
             </div>
             <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4"></h2>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Upcoming Returns</h2>
               <ul className="text-sm text-gray-800 space-y-2">
                 {upcomingReturns.map((b, i) => (
                   <li key={i} className="border-b pb-2">
-            a.returnDate!.toDate().getTime() - b.returnDate!.toDate().getTime()
-            </li>
+                    <span className="font-medium">{b.returnLoc}</span> — {new Date(b.returnDate!.toDate()).toLocaleDateString()} — <span className="text-blue-600 font-semibold">${b.RentalPrice}</span>
+                  </li>
                 ))}
               </ul>
             </div>
