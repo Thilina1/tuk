@@ -20,4 +20,5 @@ export async function POST(req) {
   const finalHash = CryptoJS.MD5(rawHash).toString().toUpperCase();
 
   return NextResponse.json({ hash: finalHash });
+  
 }
