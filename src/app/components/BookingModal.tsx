@@ -109,58 +109,53 @@ const BookingModal = ({
 }: Props) => {
   const [validationError, setValidationError] = useState("");
 
-
-
-
-  
-
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
-  const [payhereReady, setPayhereReady] = useState(false);
 
 
-  useEffect(() => {
-    const checkPayHere = () => {
-      if (typeof window.payhere?.startPayment === "function") {
-        setPayhereReady(true);
-      }
-       else {
-        setTimeout(checkPayHere, 100); // retry until it's available
-      }
-    };
-    checkPayHere();
-  }, []);
-  
+  const handlePayNow = async () => {
+    // 1. Get hash from backend
+    const response = await fetch("/api/payhere/checkout/api", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: totalRental.toFixed(2),
+        orderId:orderId,
+        currency: "USD",
+      }),
+    });
 
-  const handlePay = () => {
-    if (!payhereReady || typeof window === "undefined" || typeof window.payhere === "undefined") {
-      alert("PayHere not loaded yet. Please wait a moment.");
-      return;
-    }
-  
+    const { hash } = await response.json();
+
+    // 2. Prepare payment object
     const payment = {
       sandbox: true,
-      merchant_id: "1231320",
-      return_url: "https://tuktukdrive.com/",
-      cancel_url: "https://tuktukdrive.com/",
-      notify_url: "https://tuktukdrive.com/",
-      order_id: `ORDER-${Date.now()}`,
-      items: "Tuk Tuk Rental",
-      amount: totalRental.toFixed(2),
+      merchant_id: "1231320", // replace
+      return_url: "https://yourdomain.com/payment-success",
+      cancel_url: "https://yourdomain.com/payment-cancel",
+      notify_url: "https://yourdomain.com/api/payhere-notify", // server-side
+      order_id: orderId,
+      items: "Rental Booking",
+      amount: parseFloat(totalRental.toFixed(2)),
       currency: "USD",
-      first_name: "Thilina",
+      hash,
+      first_name: "formData.",
       last_name: "Weerasinghe",
-      email: "example@email.com",
-      phone: "0771234567",
-      address: "Matale",
-      city: "Matale",
+      email: "email",
+      phone: "0768408835",
+      address: "Hapugahalanda,Pilihudugolla",
+      city: "Nula",
       country: "Sri Lanka",
     };
-  
-    window.payhere.startPayment(payment);
 
+    // 3. Trigger payment popup
+window.payhere.startPayment(payment);
   };
+
+
+
+
+
   
 
 
@@ -242,7 +237,7 @@ const BookingModal = ({
     0
   );
   
-
+  const orderId = `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
   const totalRental = useMemo(() => {
     let total =
       rentalDays * formValues.tukCount * perDayCharge +
@@ -451,14 +446,8 @@ const BookingModal = ({
 
 </div>
 
-<Script
-  src="https://www.payhere.lk/lib/payhere.js"
-  strategy="afterInteractive"
-  onLoad={() => {
-    console.log("✅ PayHere loaded");
-    setPayhereReady(true);
-  }}
-/>
+<Script src="https://www.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
+
 
 
 
@@ -889,12 +878,9 @@ const BookingModal = ({
       Final Total: ${totalRental.toFixed(2)}
     </p>
 
-    <button
-            onClick={handlePay}
-            className="w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition"
-          >
-            Pay with PayHere
-    </button>
+    <button onClick={handlePayNow} className="bg-yellow-400 w-full py-2 font-semibold">
+          Pay Now
+        </button>
 
 <p className="text-sm text-gray-600">
   Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.
