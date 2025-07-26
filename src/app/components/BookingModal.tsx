@@ -155,11 +155,22 @@ const BookingModal = ({
   
       const docRef = doc(db, "bookings", docId);
   
-      const updates: Record<string, any> = {
+
+      type BookingUpdatePayload = {
+        RentalPrice?: number;
+        isBooked?: boolean;
+        paymentOrderId?: string;
+        couponCode?: string;
+      };
+      
+
+
+      const updates: BookingUpdatePayload = {
         RentalPrice: totalRental,
         isBooked: true,
         paymentOrderId: completedOrderId,
       };
+      
   
       if (appliedCoupon) {
         updates.couponCode = couponCode.trim();
