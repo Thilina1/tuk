@@ -6,6 +6,8 @@ import BookingModal from "../components/BookingModal";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "react-phone-input-2/lib/style.css";
+import Script from 'next/script';
+
 
 import dynamic from 'next/dynamic';
 const PhoneInput = dynamic(() => import('react-phone-input-2'), { ssr: false });
@@ -57,6 +59,70 @@ export default function HeroBookingSection() {
   const [docId, setDocId] = useState<string | null>(null);
   const [dateError, setDateError] = useState("");
   const [locationOptions, setLocationOptions] = useState<{ name: string; price: number }[]>([]);
+
+
+
+
+
+
+
+
+  
+useEffect(() => {
+  if (typeof window !== "undefined" && window.payhere) {
+    window.payhere.onCompleted = function onCompleted(orderId) {
+      console.log("✅ Payment completed. OrderID:", orderId);
+      // e.g., update Firestore, show success, close modal
+    };
+
+    window.payhere.onDismissed = function onDismissed() {
+      console.log("❌ Payment dismissed by user");
+    };
+
+    window.payhere.onError = function onError(error) {
+      console.error("🚨 PayHere error", error);
+    };
+  }
+}, []);
+
+
+const handlePayNow = () => {
+  const payment = {
+    sandbox: true,
+    merchant_id: "NDA5MDU5MjE1OTQyNzU4NTk4Mjk3MTA5MTQ4NDEyNzEzODMyMTc1",
+    return_url: "https://yourdomain.com/return",
+    cancel_url: "https://yourdomain.com/cancel",
+    notify_url: "https://yourdomain.com/api/payhere-notify",
+
+    order_id: "ORDER1001",
+    items: "TukTuk Rental",
+    amount: "10.00",
+    currency: "USD",
+
+    first_name: "Thilina",
+    last_name: "Weerasinghe",
+    email: "thilina@example.com",
+    phone: "0768408835",
+    address: "1, Matale Road",
+    city: "Kandy",
+    country: "Sri Lanka",
+  };
+
+  // Launch payment popup
+  window.payhere.startPayment(payment);
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
   const extrasList = [
     "Train Transfer",
@@ -182,6 +248,9 @@ useEffect(() => {
   });
 
   return (
+    <>
+    <Script src="https://www.payhere.lk/lib/payhere.js" strategy="afterInteractive" />
+
     <section
       ref={sectionRef}
       className="relative w-full text-white overflow-hidden min-h-screen bg-fixed bg-cover bg-center"
@@ -428,6 +497,14 @@ useEffect(() => {
 </button>
 
 
+<button
+  onClick={handlePayNow}
+  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+>
+  Pay $10 via PayHere 💳
+</button>
+
+
           </form>
 
           
@@ -458,6 +535,7 @@ useEffect(() => {
         />
       )}
     </section>
+    </>
   );
 }
 // function setLoading(arg0: boolean) {

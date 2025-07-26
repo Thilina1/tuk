@@ -11,6 +11,9 @@ import Script from "next/script";
 declare global {
   interface Window {
     payhere: {
+      onError: (error: any) => void;
+      onDismissed: () => void;
+      onCompleted: (orderId: any) => void;
       startPayment: (payment: Record<string, unknown>) => void;
     };
   }
@@ -155,14 +158,6 @@ const BookingModal = ({
   // }, []);
   
 
-  const handlePay = async () => {
-    await openPayHereCheckout({
-      amount: 1000, // or get dynamically from your state
-      name: "John", // replace with actual user input
-      email: "john@example.com",
-      phone: "0771234567",
-    });
-  };
 
   
   
@@ -894,12 +889,7 @@ const BookingModal = ({
       Final Total: ${totalRental.toFixed(2)}
     </p>
 
-    <button
-            onClick={handlePay}
-            className="w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition"
-          >
-            Pay with PayHere
-    </button>
+
 
 <p className="text-sm text-gray-600">
   Clicking &quot;Book&quot; will confirm your booking and send a confirmation email.

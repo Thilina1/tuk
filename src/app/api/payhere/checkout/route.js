@@ -13,7 +13,7 @@ export async function POST(req) {
     }
 
     const merchant_id = "1231320";
-    const merchant_secret = "NjAwMTM4OTcyMTMzNTQ0Njk1NDM2ODI1ODQyMzgzODgwNjA1OTkw";
+    const merchant_secret = "MjE4OTI2OTczOTM3MjY5NjM0MzA0MTkxNzI5NTY2MjE0NjA3NDMwNg==";
     const currency = data.currency || "USD";
     const order_id = `ORDER-${Date.now()}`;
 
