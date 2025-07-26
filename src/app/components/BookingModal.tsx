@@ -91,6 +91,32 @@ const timeOptions = Array.from({ length: 15 }, (_, i) => {
   return <option key={value} value={value}>{value}</option>;
 });
 
+async function openPayHereCheckout(data: {
+  amount: number;
+  name: string;
+  email: string;
+  phone: string;
+}) {
+  const res = await fetch("/api/payhere/checkout", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const html = await res.text();
+
+  const win = window.open("", "_blank");
+  if (win) {
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  } else {
+    alert("Popup blocked! Please allow popups and try again.");
+  }
+}
+
 
 
 
@@ -129,34 +155,17 @@ const BookingModal = ({
   }, []);
   
 
-  const handlePay = () => {
-    if (!payhereReady || typeof window === "undefined" || typeof window.payhere === "undefined") {
-      alert("PayHere not loaded yet. Please wait a moment.");
-      return;
-    }
-  
-    const payment = {
-      sandbox: true,
-      merchant_id: "1231320",
-      return_url: "https://greentechstartups.com/",
-      cancel_url: "https://greentechstartups.com/",
-      notify_url: "https://greentechstartups.com/",
-      order_id: `ORDER-${Date.now()}`,
-      items: "Tuk Tuk Rental",
-      amount: totalRental.toFixed(2),
-      currency: "USD",
-      first_name: "Thilina",
-      last_name: "Weerasinghe",
-      email: "thilinaweerasinghe1@gmail.com",
+  const handlePay = async () => {
+    await openPayHereCheckout({
+      amount: 1000, // or get dynamically from your state
+      name: "John", // replace with actual user input
+      email: "john@example.com",
       phone: "0771234567",
-      address: "Matale",
-      city: "Matale",
-      country: "Sri Lanka",
-    };
-  
-    window.payhere.startPayment(payment);
-
+    });
   };
+
+  
+  
   
 
 
