@@ -139,20 +139,20 @@ const BookingModal = ({
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
-  const [payhereReady, setPayhereReady] = useState(false);
+//  const [payhereReady, setPayhereReady] = useState(false);
 
 
-  useEffect(() => {
-    const checkPayHere = () => {
-      if (typeof window.payhere?.startPayment === "function") {
-        setPayhereReady(true);
-      }
-       else {
-        setTimeout(checkPayHere, 100); // retry until it's available
-      }
-    };
-    checkPayHere();
-  }, []);
+  // useEffect(() => {
+  //   const checkPayHere = () => {
+  //     if (typeof window.payhere?.startPayment === "function") {
+  //       setPayhereReady(true);
+  //     }
+  //      else {
+  //       setTimeout(checkPayHere, 100); // retry until it's available
+  //     }
+  //   };
+  //   checkPayHere();
+  // }, []);
   
 
   const handlePay = async () => {
@@ -461,7 +461,7 @@ const BookingModal = ({
   strategy="afterInteractive"
   onLoad={() => {
     console.log("✅ PayHere loaded");
-    setPayhereReady(true);
+   // setPayhereReady(true);
   }}
 />
 
