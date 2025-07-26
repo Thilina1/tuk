@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
