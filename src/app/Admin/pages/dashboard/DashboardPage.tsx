@@ -18,14 +18,27 @@ import { Line, Pie } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
+
+
+type Booking = {
+  createdAt?: { toDate: () => Date };
+  pickupDate?: { toDate: () => Date };
+  returnDate?: { toDate: () => Date };
+  RentalPrice: number;
+  isBooked: boolean;
+  pickup?: string;
+  returnLoc?: string;
+};
+
+
 export default function DashboardPage() {
   const [totalRentalAll, setTotalRentalAll] = useState<number>(0);
   const [totalRental30, setTotalRental30] = useState<number>(0);
-  const [revenueChartData, setRevenueChartData] = useState<any>({ labels: [], data: [] });
-  const [countChartData, setCountChartData] = useState<any>({ labels: [], data: [] });
+  const [revenueChartData, setRevenueChartData] = useState<{ labels: string[]; data: number[] }>({ labels: [], data: [] });
+  const [countChartData, setCountChartData] = useState<{ labels: string[]; data: number[] }>({ labels: [], data: [] });
   const [isBookedStats, setIsBookedStats] = useState({ booked: 0, notBooked: 0 });
-  const [upcomingPickups, setUpcomingPickups] = useState<any[]>([]);
-  const [upcomingReturns, setUpcomingReturns] = useState<any[]>([]);
+  const [upcomingPickups, setUpcomingPickups] = useState<Booking[]>([]);
+  const [upcomingReturns, setUpcomingReturns] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -184,8 +197,8 @@ export default function DashboardPage() {
               <ul className="text-sm text-gray-800 space-y-2">
                 {upcomingPickups.map((b, i) => (
                   <li key={i} className="border-b pb-2">
-                    <span className="font-medium">{b.pickup}</span> — {new Date(b.pickupDate).toLocaleDateString()} — <span className="text-emerald-600 font-semibold">${b.RentalPrice}</span>
-                  </li>
+            a.pickupDate!.toDate().getTime() - b.pickupDate!.toDate().getTime()
+            </li>
                 ))}
               </ul>
             </div>
@@ -194,8 +207,8 @@ export default function DashboardPage() {
               <ul className="text-sm text-gray-800 space-y-2">
                 {upcomingReturns.map((b, i) => (
                   <li key={i} className="border-b pb-2">
-                    <span className="font-medium">{b.returnLoc}</span> — {new Date(b.returnDate).toLocaleDateString()} — <span className="text-blue-600 font-semibold">${b.RentalPrice}</span>
-                  </li>
+            a.returnDate!.toDate().getTime() - b.returnDate!.toDate().getTime()
+            </li>
                 ))}
               </ul>
             </div>

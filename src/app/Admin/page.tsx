@@ -6,22 +6,28 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 
+// Define a proper Admin type
+type Admin = {
+  userName: string;
+  password: string;
+};
+
 export default function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const snapshot = await getDocs(collection(db, "admin"));
-      const admins = snapshot.docs.map((doc) => doc.data());
+      const admins: Admin[] = snapshot.docs.map((doc) => doc.data() as Admin);
 
       const matched = admins.find(
-        (admin: any) => admin.userName === email && admin.password === password
+        (admin) => admin.userName === email && admin.password === password
       );
 
       if (matched) {
@@ -30,9 +36,11 @@ export default function AdminLogin() {
       } else {
         alert("Invalid email or password.");
       }
-    } catch (error: any) {
-      console.error("Login error:", error.message || error);
-      alert(`Failed to login: ${error.message || "Unknown error"}`);
+    } catch (error: unknown) {
+      const errMsg =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      console.error("Login error:", errMsg);
+      alert(`Failed to login: ${errMsg}`);
     } finally {
       setLoading(false);
     }
@@ -72,7 +80,8 @@ export default function AdminLogin() {
         <div>
           <h1 className="text-2xl font-bold mb-2">Welcome Admin 👋</h1>
           <p className="text-sm text-gray-800 dark:text-gray-300">
-            Please login to manage your dashboard and keep things running smooth.
+            Please login to manage your dashboard and keep things running
+            smooth.
           </p>
         </div>
 
