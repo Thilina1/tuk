@@ -115,42 +115,85 @@ const BookingModal = ({
 
 
   const handlePayNow = async () => {
-    // 1. Get hash from backend
     const response = await fetch("/api/payhere/checkout/api", {
       method: "POST",
       body: JSON.stringify({
         amount: totalRental.toFixed(2),
-        orderId:orderId,
+        orderId: orderId,
         currency: "USD",
       }),
     });
-
+  
     const { hash } = await response.json();
-
-    // 2. Prepare payment object
+  
     const payment = {
       sandbox: true,
-      merchant_id: "1231320", // replace
+      merchant_id: "1231320", // replace with real merchant_id
       return_url: "https://yourdomain.com/payment-success",
       cancel_url: "https://yourdomain.com/payment-cancel",
-      notify_url: "https://yourdomain.com/api/payhere-notify", // server-side
+      notify_url: "https://yourdomain.com/api/payhere-notify",
       order_id: orderId,
       items: "Rental Booking",
       amount: parseFloat(totalRental.toFixed(2)),
       currency: "USD",
       hash,
-      first_name: "formData.",
-      last_name: "Weerasinghe",
-      email: "email",
-      phone: "0768408835",
-      address: "Hapugahalanda,Pilihudugolla",
-      city: "Nula",
+      first_name: formValues.name,
+      last_name: "User",
+      email: formValues.email,
+      phone: formValues.whatsapp,
+      address: formValues.licenseAddress,
+      city: formValues.licenseCountry,
       country: "Sri Lanka",
     };
-
-    // 3. Trigger payment popup
-window.payhere.startPayment(payment);
+  
+    // 💳 START PAYMENT
+    window.payhere.startPayment(payment);
+  
+    // ✅ ON SUCCESS
+    window.payhere.onCompleted = async (completedOrderId: string) => {
+      console.log("✅ Payment successful with Order ID:", completedOrderId);
+  
+      const docRef = doc(db, "bookings", docId);
+  
+      const updates: Record<string, any> = {
+        RentalPrice: totalRental,
+        isBooked: true,
+        paymentOrderId: completedOrderId,
+      };
+  
+      if (appliedCoupon) {
+        updates.couponCode = couponCode.trim();
+        const couponRef = doc(db, "discounts", appliedCoupon.id);
+        await updateDoc(couponRef, {
+          currentUsers: increment(1),
+        });
+      }
+  
+      await updateDoc(docRef, updates);
+  
+      // ✉️ Send confirmation email
+      await fetch("/api/send-email/bookingEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formValues,
+          totalRental,
+        }),
+      });
+  
+      // ✅ Close modal
+      closeModal();
+    };
+  
+    window.payhere.onDismissed = () => {
+      console.warn("❌ Payment dismissed by user.");
+    };
+  
+    window.payhere.onError = (error: string) => {
+      console.error("🚨 Payment error:", error);
+    };
   };
+  
 
 
 
@@ -426,9 +469,17 @@ window.payhere.startPayment(payment);
           <div className="text-sm font-bold">
             {stepItem.number}. {stepItem.title}
           </div>
-          <div className="text-xs text-gray-200 hidden sm:block">
-            {stepItem.subtitle}
-          </div>
+<div
+  className={`text-xs font-medium hidden sm:block transition duration-200 ease-in-out ${
+    index <= step
+      ? "text-white" // ✅ for current AND completed steps
+      : "text-gray-600" // ❌ for upcoming steps
+  }`}
+>
+  {stepItem.subtitle}
+</div>
+
+
         </div>
       );
     })}
@@ -870,9 +921,43 @@ window.payhere.startPayment(payment);
       Final Total: ${totalRental.toFixed(2)}
     </p>
 
-    <button onClick={handlePayNow} className="bg-yellow-400 w-full py-2 font-semibold">
-          Pay Now
-        </button>
+    <button
+  onClick={handlePayNow}
+  disabled={loading}
+  className="bg-yellow-400 w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold text-black hover:bg-yellow-500 transition disabled:opacity-50"
+>
+  {loading ? (
+    <>
+      <svg
+        className="animate-spin h-5 w-5 text-black"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+        ></path>
+      </svg>
+      Processing...
+    </>
+  ) : (
+    <>
+      <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
+      Pay Now
+    </>
+  )}
+</button>
+
 
 
 <Script
@@ -911,40 +996,44 @@ window.payhere.startPayment(payment);
   Back
 </button>
 
-<button
-  onClick={handleNext}
-  disabled={loading}
-  className="px-4 py-2 rounded hover:opacity-80 flex items-center justify-center gap-2"
-  style={{
-    backgroundColor: "#F97316",  // fixed orange
-    color: "#1F2937",            // fixed dark text
-  }}
->
-  {loading ? (
-    <svg
-      className="animate-spin h-4 w-4 text-black"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      ></path>
-    </svg>
-  ) : (
-    <span>{step < 3 ? "Next" : "Book"}</span>
-  )}
-</button>
+
+{step < 3 && (
+  <button
+    onClick={handleNext}
+    disabled={loading}
+    className="px-4 py-2 rounded hover:opacity-80 flex items-center justify-center gap-2"
+    style={{
+      backgroundColor: "#F97316",
+      color: "#1F2937",
+    }}
+  >
+    {loading ? (
+      <svg
+        className="animate-spin h-4 w-4 text-black"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        ></path>
+      </svg>
+    ) : (
+      <span>Next</span>
+    )}
+  </button>
+)}
+
 
 
         </div>
