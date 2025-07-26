@@ -5,6 +5,7 @@ import { useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase"; // Adjust if your path is different
 
+
 export default function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");

@@ -10,6 +10,7 @@ export async function POST(req) {
   const merchant_id = "1231320";
   const merchant_secret = "NDA5MDU5MjE1OTQyNzU4NTk4Mjk3MTA5MTQ4NDEyNzEzODMyMTc1";
 
+  
   const formattedAmount = parseFloat(amount)
     .toLocaleString("en-US", { minimumFractionDigits: 2, useGrouping: false });
 
