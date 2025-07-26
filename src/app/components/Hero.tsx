@@ -97,7 +97,9 @@ export default function HeroBookingSection() {
     postalCode: "",
     licenseNumber: "",
     passportNumber: "",
-    uploadedDocs: [],
+    idpFiles: [],
+    passportFiles: [],
+    selfieWithLicense: [],
     isBooked: false,
     hasIDP: ""
   });
