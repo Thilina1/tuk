@@ -686,8 +686,7 @@ const BookingModal = ({
 <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
   <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
   <p><strong>Number of days:</strong> {rentalDays}</p>
-  <p><strong>Per day charge:</strong> $13</p>
-  <p><strong>Rental for the number of days:</strong> $13 × {rentalDays} = </p>
+  <strong>Rental for the number of days:</strong> $13 × {rentalDays} = ${13 * rentalDays}
   <p><strong>Local License:</strong> $35</p>
   <p><strong>License Charge:</strong> $35 × {formValues.licenseCount}</p>
   <p><strong>Extras Total:</strong> ${extrasTotal}</p>
