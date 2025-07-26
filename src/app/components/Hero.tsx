@@ -93,7 +93,7 @@ const payment = {
   cancel_url: "https://greentechstartups.com/cancel",
   notify_url: "https://greentechstartups.com/api/payhere-notify",
 
-  order_id: "ORDER1001",
+  order_id: "ORDER100111",
   items: "TukTuk Rental",
   amount: "10.00",
   currency: "USD",
