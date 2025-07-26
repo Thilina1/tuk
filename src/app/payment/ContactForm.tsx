@@ -62,7 +62,13 @@ window.payhere.startPayment(payment);
 
   return (
     <>
-      <Script src="https://www.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
+<Script
+  src="https://www.payhere.lk/lib/payhere.js"
+  strategy="afterInteractive"
+  onLoad={() => {
+    console.log("✅ PayHere SDK loaded");
+  }}
+/>
       <div className="p-8 bg-white shadow-lg max-w-lg mx-auto">
         <h2 className="text-xl font-bold mb-4 text-center text-yellow-500">Secure Payment</h2>
         <input

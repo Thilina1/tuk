@@ -875,7 +875,13 @@ window.payhere.startPayment(payment);
         </button>
 
 
-        <Script src="https://www.payhere.lk/lib/payhere.js" strategy="beforeInteractive" />
+<Script
+  src="https://www.payhere.lk/lib/payhere.js"
+  strategy="afterInteractive"
+  onLoad={() => {
+    console.log("✅ PayHere SDK loaded");
+  }}
+/>
 
 
 <p className="text-sm text-gray-600">
