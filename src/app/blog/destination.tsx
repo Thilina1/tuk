@@ -21,8 +21,8 @@ const destinations = [
   {
     name: "KANDY",
     description:
-      "Famous for the Temple of the Tooth, Kandy is a cultural capital surrounded by mountains.",
-    image: "/blog/blogPost/kandy.jpeg",
+      "Famous for the Temple of the Tooth, Kandy is a vibrant cultural capital surrounded by misty mountains.",
+    image: "/blog/kandyTemple.jpg",
   },
 ];
 

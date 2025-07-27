@@ -16,7 +16,7 @@ export default function ContactInfo() {
 
         <div className="mb-4 text-center">
           <Image
-            src="/blog/couple.jpg"
+            src="/logo/TukTukDrive-Logo-Footer.png"
             alt="Contact Illustration"
             width={300}
             height={200}

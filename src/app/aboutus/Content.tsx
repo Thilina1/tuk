@@ -6,6 +6,7 @@ import {
   FaClock,
   FaLeaf,
 } from "react-icons/fa";
+import InstagramEmbedSection from "./instaEmbeded";
 
 export default function AboutUs() {
   const features = [
@@ -102,6 +103,8 @@ travel experience.
           </div>
         </div>
       </div>
+
+      <InstagramEmbedSection />
 
       {/* CTA */}
       <div className="py-20 bg-gradient-to-r from-yellow-200 to-yellow-50 text-center">
