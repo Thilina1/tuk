@@ -44,6 +44,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
       alert("Failed to onboard.");
     } finally {
       setLoadingId(null);
+      window.location.reload();
     }
   };
 

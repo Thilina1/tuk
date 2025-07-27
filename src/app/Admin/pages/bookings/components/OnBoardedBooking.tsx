@@ -31,6 +31,7 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
       alert("Failed to complete trip.");
     } finally {
       setLoadingId(null);
+      window.location.reload();
     }
   };
 

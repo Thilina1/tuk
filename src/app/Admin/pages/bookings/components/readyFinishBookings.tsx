@@ -18,7 +18,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
     tomorrow.setHours(0, 0, 0, 0);
 
     const filtered = bookings.filter((b) => {
-      if (!b.pickupDate || b.status !== "assigned") {
+      if (!b.pickupDate || b.status !== "onboard") {
         return false; // Only show bookings that are assigned
       }
 
@@ -51,6 +51,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
       alert("Failed to onboard.");
     } finally {
       setLoadingId(null);
+      window.location.reload();
     }
   };
 

@@ -10,7 +10,7 @@ import AssignedBookings from "./components/AssignedBookings";
 import FinishedBookings from "./components/FinishedBookings";
 import OnBoardBookings from "./components/OnBoardBooking";
 import OnboardedBookings from "./components/OnBoardedBooking";
-import ReadyFinishBookings from "./components/OnBoardBooking";
+import ReadyFinishBookings from "./components/readyFinishBookings";
 
 
 

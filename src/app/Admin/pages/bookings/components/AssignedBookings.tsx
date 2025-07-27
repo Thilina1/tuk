@@ -31,6 +31,7 @@ export default function AssignedBookings({ bookings }: { bookings: BookingData[]
       alert("Failed to complete trip.");
     } finally {
       setLoadingId(null);
+      window.location.reload();
     }
   };
 
