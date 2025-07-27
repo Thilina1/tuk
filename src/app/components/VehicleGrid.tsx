@@ -20,7 +20,7 @@ export default function Vehicles() {
       name: "REGULAR TUK",
       price: "FROM $12/DAY",
       desc: "The classic. Simple, rugged, and built for local adventures across the island.",
-      image: "/tukTuk/RegularTukTuk.png",
+      image: "/tukTuk/RegularTuk.png",
     },
     {
       name: "ELECTRIC TUKTUK",
@@ -32,13 +32,13 @@ export default function Vehicles() {
       name: "CABRIO TUK",
       price: "FROM $16/DAY",
       desc: "Open-roof adventure tuk tuk — perfect for tropical vibes and panoramic views.",
-      image: "/tukTuk/convertETuk.png",
+      image: "/tukTuk/cabrio.png",
     },
     {
       name: "Bikes",
       price: "FROM $12/DAY",
       desc: "The freedom machine. Auto gear, reliable, and perfect for exploring every corner of the island.",
-      image: "/tukTuk/RegularTukTuk.png",
+      image: "/tukTuk/scuter.png",
     },
   ], []);
 
