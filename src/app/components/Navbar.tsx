@@ -13,17 +13,21 @@ export default function Navbar() {
     { title: "About Us", path: "/aboutus" },
     { title: "FAQ", path: "/faq" },
     { title: "Contact Us", path: "/contact" },
-    { title: "Payment", path: "/payment" },
   ];
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-center py-4 md:py-5">
-          {/* Logo */}
-          <Link href="/" className="text-2xl font-extrabold tracking-tight text-purple-600">
-            Logo
-          </Link>
+      <div className="flex justify-between items-center h-16 md:h-16">          {/* Logo */}
+
+      <Link href="/" className="inline-block flex-1">
+      <img
+    src="/hero/logo.png"
+    alt="Site logo"
+    className="w-14 h-auto md:w-30"
+  />
+</Link>
+
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center space-x-6">

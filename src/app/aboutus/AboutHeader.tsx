@@ -5,7 +5,7 @@ export default function AboutUsHeader() {
     <footer
       className="relative bg-cover bg-center text-white"
       style={{
-        backgroundImage: "url('/hero/island-life-desk-header.jpg')",
+        backgroundImage: "url('/hero/cardBackground.PNG')",
       }}
     >
       {/* Overlay for darker bottom gradient */}

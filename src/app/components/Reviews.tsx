@@ -92,20 +92,30 @@ support that make every trip unforgettable. ...
 
           {/* Social Icons */}
           <div className="flex justify-center md:justify-start gap-4 mt-6">
-            {[FaFacebookF, FaGoogle, FaTripadvisor, FaInstagram].map((Icon, i) => (
-              <div
-                key={i}
-                className="p-3 rounded-full shadow hover:scale-110 transition duration-200 ease-in-out cursor-pointer"
-                style={{
-                  backgroundColor: "#ffffff",
-                  color: "#0f766e",
-                  border: "2px solid rgba(15, 118, 110, 0.2)",
-                }}
-              >
-                <Icon size={20} />
-              </div>
-            ))}
-          </div>
+  {[ // your social links
+    { icon: FaFacebookF, href: "https://web.facebook.com/tuktukdrivesl?_rdc=1&_rdr#" },
+    { icon: FaGoogle, href: "https://google.com/YourPage" },
+    { icon: FaTripadvisor, href: "https://tripadvisor.com/YourPage" },
+    { icon: FaInstagram, href: "https://instagram.com/YourPage" },
+  ].map((social, i) => (
+    <a
+      key={i}
+      href={social.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-3 rounded-full shadow hover:scale-110 transition duration-200 ease-in-out cursor-pointer"
+      style={{
+        backgroundColor: "#ffffff",
+        color: "#0f766e",
+        border: "2px solid rgba(15, 118, 110, 0.2)",
+      }}
+      aria-label={`Visit us on ${social.href.split("//")[1].split(".")[0]}`}
+    >
+      <social.icon size={20} />
+    </a>
+  ))}
+</div>
+
         </motion.div>
 
         {/* Ratings Cards */}

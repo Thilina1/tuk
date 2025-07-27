@@ -6,7 +6,7 @@ export default function WhoWeAre() {
   return (
     <section
       className="relative min-h-screen bg-fixed bg-center bg-cover bg-no-repeat flex items-center justify-center px-6 sm:px-8"
-      style={{ backgroundImage: "url('/hero/hero5.jpg')" }}
+      style={{ backgroundImage: "url('/hero/header1 (5).jpeg')" }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70" />

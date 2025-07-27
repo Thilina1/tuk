@@ -8,28 +8,28 @@ const articles = [
   {
     link:"/blog/blogsContent/sigiriya",
     title: "🏯 Sigiriya – The Ancient Rock Fortress",
-    image: "/blog/friends.jpg",
+    image: "/blog/sigiriya.jpg",
     excerpt:
       "Climbing Sigiriya is like stepping into an ancient world. As you ascend past centuries-old frescoes and lion-paw carvings, the views get better with every step. From the summit, sweeping landscapes stretch out in every direction. It’s not just a hike — it’s a journey through Sri Lanka’s royal history.",
   },
   {
     link:"/blog/blogsContent/templeOfTooth",
     title: "🕍 Temple of the Sacred Tooth Relic – Kandy",
-    image: "/blog/wild.jpg",
+    image: "/blog/kandyTemple.jpg",
     excerpt:
       "This sacred temple in Kandy holds one of Sri Lanka’s most treasured relics — a tooth believed to belong to the Buddha. During the evening ceremonies, the sound of traditional drums and the scent of incense fill the air. It’s a deeply spiritual place that offers a unique glimpse into Buddhist culture.",
   },
   {
     link:"/blog/blogsContent/yala",
     title: "🐘 Yala National Park – Into the Wild",
-    image: "/blog/honey.jpg",
+    image: "/blog/yala.jpg",
     excerpt:
       "Get ready for one of the most thrilling wildlife experiences in Sri Lanka. Yala is home to elephants, crocodiles, sloth bears, and the elusive leopard. As you explore its mix of jungle and open plains, every moment feels like part of a real-life nature documentary.",
   },
   {
     link:"/blog/blogsContent/arugambay",
     title: "🌊 Arugam Bay – Surf, Chill, Repeat",
-    image: "/blog/beach.jpg",
+    image: "/blog/arugambay.jpg",
     excerpt:
       "With its world-famous waves and relaxed atmosphere, Arugam Bay is a surfer’s paradise. Even if you're not into surfing, you’ll love the beach cafés, yoga spots, and laid-back vibe. It’s the perfect place to slow down and soak up some sun.",
   },

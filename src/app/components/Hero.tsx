@@ -203,7 +203,7 @@ useEffect(() => {
       
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero/hero2.jpg"
+          src="/hero/header1 (3).jpeg"
           alt="Hero background"
           fill
           sizes="100vw"

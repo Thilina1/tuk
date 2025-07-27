@@ -4,7 +4,7 @@ export default function BlogHeader() {
     <footer
       className="relative bg-cover bg-center text-white"
       style={{
-        backgroundImage: "url('/hero/island-life-desk-header.jpg')",
+        backgroundImage: "url('/blog/esala perahara.jpg')",
       }}
     >
       {/* Overlay for darker bottom gradient */}
