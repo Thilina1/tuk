@@ -12,18 +12,7 @@ export async function POST(request) {
     //     pass: 'aklxqxdmgjwxrplz', // Use App Passwords, never real one in prod!
     //   },
     // });
-
-
     
-    // ✅ Format extras as HTML <li> list
-    const formattedExtras = data.extras
-      ? Object.entries(data.extras)
-          .filter(([qty]) => qty > 0)
-          .map(([item, qty]) => `<li>${item}: ${qty}</li>`)
-          .join("")
-      : "<li>No extras selected</li>";
-
-
 
     const transporter = nodemailer.createTransport({
       host: 'mail.tuktukdrive.com',
@@ -71,18 +60,6 @@ export async function POST(request) {
               <td style="padding: 8px; border: 1px solid #ccc;">No. of Licenses</td>
               <td style="padding: 8px; border: 1px solid #ccc;">${data.licenseCount}</td>
             </tr>
-            <tr>
-  <td style="padding: 8px; border: 1px solid #ccc;">Extras</td>
-  <td style="padding: 8px; border: 1px solid #ccc;">
-    <ul style="padding-left: 20px; margin: 0;">${formattedExtras}</ul>
-  </td>
-</tr>
-<tr>
-  <td style="padding: 8px; border: 1px solid #ccc;">Total Rental</td>
-  <td style="padding: 8px; border: 1px solid #ccc;"><strong>$${data.RentalPrice?.toFixed(2) || "0.00"}</strong></td>
-</tr>
-
-         
           </table>
     
           <p style="margin-top: 20px;">📱 We’ll reach out to you on WhatsApp & email soon</strong></p>
