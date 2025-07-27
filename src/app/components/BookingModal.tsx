@@ -197,10 +197,7 @@ const BookingModal = ({
   
       // ✅ Close modal
       closeModal();
-        // ✅ Reload page after short delay
-      setTimeout(() => {
-          window.location.reload();
-      }, 1500);
+      window.location.reload();
     };
   
     window.payhere.onDismissed = () => {

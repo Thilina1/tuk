@@ -36,8 +36,16 @@ export async function POST(request) {
           <h3 style="color: #023e8a; margin-top: 30px;">📅 Booking Details</h3>
           <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
             <tr>
+              <td style="padding: 8px; border: 1px solid #ccc;">Pickup Location</td>
+              <td style="padding: 8px; border: 1px solid #ccc;">${data.pickup}</td>
+            </tr>
+            <tr>
               <td style="padding: 8px; border: 1px solid #ccc;">Pickup Date & Time</td>
               <td style="padding: 8px; border: 1px solid #ccc;">${data.pickupDate} at ${data.pickupTime}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ccc;">Return Location</td>
+              <td style="padding: 8px; border: 1px solid #ccc;">${data.returnLoc}</td>
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ccc;">Return Date & Time</td>
@@ -50,6 +58,14 @@ export async function POST(request) {
             <tr>
               <td style="padding: 8px; border: 1px solid #ccc;">No. of Licenses</td>
               <td style="padding: 8px; border: 1px solid #ccc;">${data.licenseCount}</td>
+            </tr>
+             <tr>
+              <td style="padding: 8px; border: 1px solid #ccc;">No. of Licenses</td>
+              <td style="padding: 8px; border: 1px solid #ccc;">${data.extras}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ccc;">No. of Licenses</td>
+              <td style="padding: 8px; border: 1px solid #ccc;">${data.RentalPrice}</td>
             </tr>
           </table>
     
