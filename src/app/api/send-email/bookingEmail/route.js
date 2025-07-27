@@ -18,7 +18,7 @@ export async function POST(request) {
     // ✅ Format extras as HTML <li> list
     const formattedExtras = data.extras
       ? Object.entries(data.extras)
-          .filter(([_, qty]) => qty > 0)
+          .filter(([qty]) => qty > 0)
           .map(([item, qty]) => `<li>${item}: ${qty}</li>`)
           .join("")
       : "<li>No extras selected</li>";
