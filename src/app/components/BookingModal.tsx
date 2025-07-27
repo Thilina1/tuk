@@ -115,7 +115,6 @@ const BookingModal = ({
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
-  const [showThankYou, setShowThankYou] = useState(false);
 
 
   const handlePayNow = async () => {
@@ -198,7 +197,10 @@ const BookingModal = ({
   
       // ✅ Close modal
       closeModal();
-      setShowThankYou(true);
+        // ✅ Reload page after short delay
+      setTimeout(() => {
+          window.location.reload();
+      }, 1500);
     };
   
     window.payhere.onDismissed = () => {
@@ -456,24 +458,6 @@ const BookingModal = ({
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="relative bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 text-black shadow-2xl">
-      
-      
-      {showThankYou ? (
-    // ✅ Thank You Message UI inside the modal
-    <div className="flex flex-col items-center justify-center h-full text-center space-y-6 py-20">
-      <h2 className="text-3xl font-bold text-green-600">🎉 Thank You!</h2>
-      <p className="text-gray-700 text-lg max-w-md">
-        Your booking was successfully completed.
-        <br />
-        Our representative will contact you via email and WhatsApp shortly.
-      </p>
-    </div>
-  ) : (
-    <>
-      
-      
-      
-      
       <button
   onClick={closeModal}
   className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-500 text-gray-600 hover:text-white shadow transition"
@@ -1122,9 +1106,7 @@ const BookingModal = ({
 
 
         </div>
-      </>)}
-            </div>
-
+      </div>
     </div>
   );
 };
