@@ -10,6 +10,8 @@ import AssignedBookings from "./components/AssignedBookings";
 import FinishedBookings from "./components/FinishedBookings";
 import OnBoardBookings from "./components/OnBoardBooking";
 import OnboardedBookings from "./components/OnBoardedBooking";
+import ReadyFinishBookings from "./components/OnBoardBooking";
+
 
 
 export interface TrainTransfer {
@@ -59,14 +61,15 @@ export interface BookingData {
   };
 }
 
-type TabType = "complete" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded";
+type TabType = "complete" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded" | "ReadyFinish";
 
 const tabs: { label: string; value: TabType }[] = [
-  { label: "✅ New", value: "complete" },
   { label: "❌ Not Complete", value: "incomplete" },
+  { label: "✅ New", value: "complete" },
   { label: "🚖 Assigned", value: "assigned" },
   { label: "🛫 Ready to OnBoard", value: "OnBoard" },
   { label: "🛫 OnBoarded", value: "OnBoarded" },
+  { label: "🛫 Ready to Finish", value: "ReadyFinish" },
   { label: "🏁 Finished", value: "finished" },
 ];
 
@@ -98,7 +101,9 @@ export default function BookingsPage() {
         return <AssignedBookings bookings={bookings} />;
       case "OnBoarded":
         return <OnboardedBookings bookings={bookings} />;
-        case "finished":
+        case "ReadyFinish":
+          return <ReadyFinishBookings bookings={bookings} />;
+      case "finished":
           return <FinishedBookings bookings={bookings} />;
 
         default:

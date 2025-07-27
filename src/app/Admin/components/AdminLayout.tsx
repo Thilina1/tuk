@@ -10,8 +10,8 @@ const NAV_ITEMS = [
   { label: "Bookings", icon: "📅", href: "/Admin/pages/bookings" },
   { label: "TukTuks", icon: "🚖", href: "/Admin/pages/tuktuk" },
   { label: "Locations", icon: "📍", href: "/Admin/pages/Locations" },
-  { label: "Train Transfer", icon: "🚂", href: "/Admin/pages/TrainTransfer" },
-  { label: "Persons", icon: "👤", href: "/Admin/pages/persons" },
+ // { label: "Train Transfer", icon: "🚂", href: "/Admin/pages/TrainTransfer" },
+  { label: "Trainers", icon: "👤", href: "/Admin/pages/persons" },
   { label: "Discounts", icon: "💲", href: "/Admin/pages/discount" },
 ];
 

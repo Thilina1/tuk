@@ -20,7 +20,10 @@ export default function IncompleteBookings({ bookings }: { bookings: BookingData
             <th className="px-3 py-2 text-left">Name</th>
             <th className="px-3 py-2 text-left">Email</th>
             <th className="px-3 py-2 text-left">Whatsapp</th>
-            <th className="px-3 py-2 text-left">Pickup</th>
+            <th className="px-3 py-2 text-left">Pickup Location</th>
+            <th className="px-3 py-2 text-left">Pickup Time</th>
+            <th className="px-3 py-2 text-left">Return Location</th>
+            <th className="px-3 py-2 text-left">Return Time</th>
           </tr>
         </thead>
         <tbody>
@@ -34,6 +37,10 @@ export default function IncompleteBookings({ bookings }: { bookings: BookingData
               <td className="px-3 py-2">{booking.email}</td>
               <td className="px-3 py-2">+{booking.whatsapp}</td>
               <td className="px-3 py-2">{booking.pickup}</td>
+              <td className="px-3 py-2">{booking.pickupTime}</td>
+              <td className="px-3 py-2">{booking.returnLoc}</td>
+              <td className="px-3 py-2">{booking.returnTime}</td>
+
             </tr>
           ))}
         </tbody>

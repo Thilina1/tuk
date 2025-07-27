@@ -141,7 +141,7 @@ export default function PersonsPage() {
 <div className="p-6">
   {/* 🔷 Header */}
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-    <h2 className="text-2xl font-semibold text-gray-800">Persons</h2>
+    <h2 className="text-2xl font-semibold text-gray-800">Trainers</h2>
     <button
       onClick={() => setShowModal(true)}
       className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded shadow"

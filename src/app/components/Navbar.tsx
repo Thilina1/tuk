@@ -16,7 +16,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
+    <nav className="sticky top-0 z-50 bg-gray-50/90 backdrop-blur-md shadow-sm">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
       <div className="flex justify-between items-center h-16 md:h-16">          {/* Logo */}
 
@@ -61,13 +61,11 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link
-            href="/"
-            onClick={() => setIsOpen(false)}
-            className="text-2xl font-extrabold tracking-tight text-purple-600"
-          >
-            Logo
-          </Link>
+        <img
+    src="/hero/logo.png"
+    alt="Site logo"
+    className="w-14 h-auto md:w-30"
+  />
 
           <button
             onClick={() => setIsOpen(false)}
