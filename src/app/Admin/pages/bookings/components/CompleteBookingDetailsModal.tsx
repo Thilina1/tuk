@@ -27,7 +27,6 @@ const extrasList = [
   { name: "Surf-Board Rack", price: 1 },
   { name: "Bluetooth Speakers", price: 1 },
   { name: "Cooler Box", price: 1 },
-  { name: "Surfboard raks", price: 1 },
   { name: "Train Transfer", price: 30 },
   { name: "Hood Rack", price: 3 },
   { name: "Dash Cam", price: 1 },
