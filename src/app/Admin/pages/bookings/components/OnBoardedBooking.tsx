@@ -45,6 +45,10 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
       <th className="px-3 py-2 text-left">#</th>
       <th className="px-3 py-2 text-left">Name</th>
       <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
+      <th className="px-3 py-2 text-left">Return Person</th>
+      <th className="px-3 py-2 text-left">Return Date</th>
+      <th className="px-3 py-2 text-left">Return Location</th>
+      <th className="px-3 py-2 text-left">Return Time</th>
       <th className="px-3 py-2 text-left">Action</th>
     </tr>
   </thead>
@@ -57,6 +61,10 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
         <td className="px-3 py-2">{idx + 1}</td>
         <td className="px-3 py-2">{booking.name}</td>
         <td className="px-3 py-2">{booking.assignedTuks?.join(", ")}</td>
+        <th className="px-3 py-2">{booking.holdBackAssignedPerson}</th>
+        <td className="px-3 py-2">{booking.returnDate}</td>
+        <td className="px-3 py-2">{booking.returnLoc}</td>
+        <td className="px-3 py-2">{booking.returnTime}</td>
         <td className="px-3 py-2 flex gap-2 flex-wrap">
           <button
             onClick={() => setSelectedBooking(booking)}

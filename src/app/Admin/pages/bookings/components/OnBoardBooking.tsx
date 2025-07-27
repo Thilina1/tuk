@@ -62,13 +62,17 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
         <div className="overflow-x-auto shadow rounded-lg">
           <table className="min-w-full bg-white text-sm text-gray-800">
             <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
-              <tr>
-                <th className="px-3 py-2 text-left">#</th>
-                <th className="px-3 py-2 text-left">Name</th>
-                <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
-                <th className="px-3 py-2 text-left">Pickup Date</th>
-                <th className="px-3 py-2 text-left">Action</th>
-              </tr>
+            <tr>
+              <th className="px-3 py-2 text-left">#</th>
+              <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
+              <th className="px-3 py-2 text-left">Pickup Location</th>
+              <th className="px-3 py-2 text-left">Pickup Data</th>
+              <th className="px-3 py-2 text-left">Pick up time</th>
+              <th className="px-3 py-2 text-left">Return Data</th>
+              <th className="px-3 py-2 text-left">assigned Person</th>
+              <th className="px-3 py-2 text-left">Action</th>
+            </tr>
             </thead>
             <tbody>
               {onBoardBookings.map((booking, index) => {
@@ -90,7 +94,11 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
                     <td className="px-3 py-2">{index + 1}</td>
                     <td className="px-3 py-2">{booking.name}</td>
                     <td className="px-3 py-2">{booking.assignedTuks?.join(", ")}</td>
+                    <td className="px-3 py-2">{booking.pickup}</td>
                     <td className="px-3 py-2">{booking.pickupDate}</td>
+                    <td className="px-3 py-2">{booking.pickupTime}</td>
+                    <td className="px-3 py-2">{booking.returnDate}</td>
+                    <td className="px-3 py-2">{booking.assignedPerson}</td>
                     <td className="px-3 py-2 flex gap-2 flex-wrap">
                       <button
                         onClick={() => setSelectedBooking(booking)}

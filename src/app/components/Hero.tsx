@@ -174,19 +174,16 @@ useEffect(() => {
   setIsMounted(true);
 }, []);
 
-  const timeOptions = Array.from({ length: 15 }, (_, i) => {
-    const hour = i + 6;
-    const value = hour.toString().padStart(2, "0") + ":00";
-    return <option key={value} value={value}>{value}
-      <style jsx>{`
-    select option {
-      color: black !important;
-      background-color: white !important;
-    }
-  `}</style>
-    </option>;
-    
-  });
+const timeOptions = Array.from({ length: 10 }, (_, i) => {
+  const hour = i + 8; // 8 to 17
+  const value = hour.toString().padStart(2, "0") + ":00";
+  return (
+    <option key={value} value={value}>
+      {value}
+    </option>
+  );
+});
+
 
   return (
     <>

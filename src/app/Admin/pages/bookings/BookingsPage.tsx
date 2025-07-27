@@ -65,7 +65,7 @@ const tabs: { label: string; value: TabType }[] = [
   { label: "✅ New", value: "complete" },
   { label: "❌ Not Complete", value: "incomplete" },
   { label: "🚖 Assigned", value: "assigned" },
-  { label: "🛫 Readt to OnBoard", value: "OnBoard" },
+  { label: "🛫 Ready to OnBoard", value: "OnBoard" },
   { label: "🛫 OnBoarded", value: "OnBoarded" },
   { label: "🏁 Finished", value: "finished" },
 ];
