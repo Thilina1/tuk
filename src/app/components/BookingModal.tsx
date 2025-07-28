@@ -291,7 +291,21 @@ const BookingModal = ({
     : 1;
 
 
-  const perDayCharge = 13;
+const getPerDayCharge = (days: number) => {
+  if (days >= 121) return 8;
+  if (days >= 91) return 10;
+  if (days >= 36) return 11;
+  if (days >= 16) return 12;
+  if (days >= 8) return 14;
+  if (days >= 5) return 16;
+  if (days >= 1) return 21;
+  return 13; // fallback (should not happen)
+};
+
+const perDayCharge = getPerDayCharge(rentalDays);
+  
+  
+
   const licenseCharge = 35;
   const extrasTotal = extrasList.reduce(
     (sum, extra) => sum + (formValues.extras[extra.name] || 0) * extra.price,
@@ -695,7 +709,7 @@ const BookingModal = ({
 <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
   <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
   <p><strong>Number of days:</strong> {rentalDays}</p>
-  <strong>Rental for the number of days:</strong> $13 × {rentalDays} = ${13 * rentalDays}
+  <strong>Rental for the number of days:</strong> ${perDayCharge} × {rentalDays} = ${perDayCharge * rentalDays}
   <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
   <p>
   <strong>Pickup & Return Price:</strong>{" "}
@@ -768,7 +782,7 @@ const BookingModal = ({
 
 <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
   <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
-  <strong>Rental for the number of days:</strong> $13 × {rentalDays} = ${13 * rentalDays}
+  <strong>Rental for the number of days:</strong> ${perDayCharge} × {rentalDays} = ${perDayCharge * rentalDays}
   <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
   <p>
   <strong>Pickup & Return Price:</strong>{" "}

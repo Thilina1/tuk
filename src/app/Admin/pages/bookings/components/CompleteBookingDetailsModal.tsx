@@ -102,7 +102,19 @@ export default function EditBookingModal({ booking, onClose }: Props) {
           ) + 1
         : 1;
   
-    const perDayCharge = 13;
+    const getPerDayCharge = (days: number) => {
+          if (days >= 121) return 8;
+          if (days >= 91) return 10;
+          if (days >= 36) return 11;
+          if (days >= 16) return 12;
+          if (days >= 8) return 14;
+          if (days >= 5) return 16;
+          if (days >= 1) return 21;
+          return 13; // fallback (should not happen)
+    };
+        
+    const perDayCharge = getPerDayCharge(rentalDays);
+        
     const licenseCharge = 35;
   
     const extrasTotal = extrasList.reduce(
