@@ -12,7 +12,7 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  // Disable scroll when menu is open
+  // Disable scroll when mobile menu is open
   React.useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
@@ -69,12 +69,14 @@ export default function Navbar() {
       {/* Mobile Fullscreen Menu */}
       {mounted && isOpen && (
         <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-white dark:bg-gray-900 flex flex-col">
-          {/* Top Row: Logo + Close */}
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <img src="/hero/logo.png" alt="Site logo" className="w-14 h-auto" />
+          {/* Top Row: Centered Logo & Close Button */}
+          <div className="relative flex items-center justify-center px-6 py-4">
+            <img src="/hero/logo.png" alt="Site logo" 
+              width={100}
+              height={100} />
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 dark:text-gray-200 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="absolute right-6 text-gray-700 dark:text-gray-200 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               aria-label="Close menu"
             >
               <X className="w-6 h-6" />
