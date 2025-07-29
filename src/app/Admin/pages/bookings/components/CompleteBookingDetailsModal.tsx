@@ -135,7 +135,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
       extrasTotal +
       trainTransferCost +
       pickupPrice +
-      returnPrice
+      returnPrice + 50
     );
   };
   

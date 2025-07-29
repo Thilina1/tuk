@@ -312,6 +312,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
     0
   );
   
+  const deposit = 50;
   const orderId = `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
   const totalRental = useMemo(() => {
     let total =
@@ -319,7 +320,8 @@ const perDayCharge = getPerDayCharge(rentalDays);
       formValues.licenseCount * licenseCharge +
       extrasTotal +
       (formValues.pickupPrice || 0) +
-      (formValues.returnPrice || 0) ;
+      (formValues.returnPrice || 0) +
+      deposit;
   
     if (appliedCoupon) {
       if (appliedCoupon.discountMode === "percentage") {
@@ -717,6 +719,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
      {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
   </p>  
   <p><strong>Extras Total:</strong> ${extrasTotal}</p>
+  <p><strong>Deposite Price(Refundable):</strong> ${deposit}</p>
   <p className="text-lg font-bold mt-2 text-emerald-600">
     Total Rentals: ${totalRental}
   </p>
@@ -790,6 +793,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
      {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
   </p>  
   <p><strong>Extras Total:</strong> ${extrasTotal}</p>
+  <p><strong>Deposite Price(Refundable):</strong> ${deposit}</p>
   <p className="text-lg font-bold mt-2 text-emerald-600">
     Total Rentals: ${totalRental}
   </p>
