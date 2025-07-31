@@ -534,9 +534,12 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 {showThankYou ? (
   <div className="flex flex-col items-center justify-center min-h-[300px]">
-    <h2 className="text-2xl font-bold text-emerald-600 mb-4">🎉 Thank You!</h2>
+    <h2 className="text-2xl font-bold text-emerald-600 mb-4">🛺🎉 Woohoo! Your Tuk-Tuk Awaits!</h2>
     <p className="text-gray-700 mb-6 text-center">
-      Your booking has been confirmed. A confirmation email has been sent.
+    
+Thanks for booking with us — your tuk-tuk ride is officially confirmed!
+We’ve sent all the details to your email and our representative will be in touch with you via WhatsApp shortly.
+Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
     </p>
     <button
       onClick={() => {
