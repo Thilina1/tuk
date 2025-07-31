@@ -29,7 +29,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
+    <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -47,7 +47,7 @@ export default function Navbar() {
               <li key={idx}>
                 <Link
                   href={item.path}
-                  className="relative font-medium text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200"
+                  className="relative font-medium text-black hover:text-purple-600 transition-colors duration-200"
                 >
                   {item.title}
                 </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden text-gray-700 dark:text-gray-200 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            className="md:hidden text-black p-2 rounded hover:bg-gray-100 transition"
             aria-label="Open menu"
           >
             <Menu className="w-6 h-6" />
@@ -68,15 +68,13 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Menu */}
       {mounted && isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-white dark:bg-gray-900 flex flex-col">
-          {/* Top Row: Centered Logo & Close Button */}
+        <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-white text-black flex flex-col">
+          {/* Top: Logo + Close */}
           <div className="relative flex items-center justify-center px-6 py-4">
-            <img src="/hero/logo.png" alt="Site logo" 
-              width={100}
-              height={100} />
+            <img src="/hero/logo.png" alt="Site logo" width={100} height={100} />
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-6 text-gray-700 dark:text-gray-200 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="absolute right-6 text-black p-2 rounded hover:bg-gray-100 transition"
               aria-label="Close menu"
             >
               <X className="w-6 h-6" />
@@ -90,7 +88,7 @@ export default function Navbar() {
                 <Link
                   href={item.path}
                   onClick={() => setIsOpen(false)}
-                  className="text-xl font-semibold text-gray-700 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition"
+                  className="text-xl font-semibold text-black hover:text-purple-600 transition"
                 >
                   {item.title}
                 </Link>
