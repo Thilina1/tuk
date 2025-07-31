@@ -493,29 +493,47 @@ const perDayCharge = getPerDayCharge(rentalDays);
       const isActiveOrCompleted = index <= step;
 
       return (
-        <div
-          key={index}
-          className={`flex-1 text-center py-2 px-1 rounded-md shadow-sm
-            ${isActiveOrCompleted
-              ? "bg-green-600 text-white"
-              : "bg-gray-100 text-gray-700"
-            }`}
-        >
-          <div className="text-sm font-bold">
-            {stepItem.number}. {stepItem.title}
-          </div>
+        
 <div
-  className={`text-xs font-medium hidden sm:block transition duration-200 ease-in-out ${
-    index <= step
-      ? "text-white" // ✅ for current AND completed steps
-      : "text-gray-600" // ❌ for upcoming steps
-  }`}
+  key={index}
+  style={{
+    flex: 1,
+    textAlign: 'center',
+    padding: '0.5rem 0.5rem',
+    borderRadius: '0.5rem',
+    transition: 'all 0.3s ease',
+    backgroundColor: isActiveOrCompleted
+      ? '#22C55E' // orange-500
+      : isActiveOrCompleted
+      ? '#22C55E' // green-500
+      : 'var(--bg-color)',
+    color: isActiveOrCompleted || isActiveOrCompleted
+      ? '#FFFFFF'
+      : 'var(--text-color)',
+  }}
 >
-  {stepItem.subtitle}
+  <style jsx>{`
+    div {
+      --bg-color: #E5E7EB;
+      --text-color: #1F2937;
+    }
+    @media (prefers-color-scheme: dark) {
+      div {
+        --bg-color: #374151; /* gray-700 */
+        --text-color: #E5E7EB; /* gray-200 */
+      }
+    }
+  `}</style>
+
+  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+    {stepItem.number}. {stepItem.title}
+  </div>
+  <div style={{ fontSize: '0.75rem', fontWeight: 500 }}>
+    {stepItem.subtitle}
+  </div>
 </div>
 
 
-        </div>
       );
     })}
   </div>
@@ -533,24 +551,29 @@ const perDayCharge = getPerDayCharge(rentalDays);
 </div>
 
 {showThankYou ? (
-  <div className="flex flex-col items-center justify-center min-h-[300px]">
-    <h2 className="text-2xl font-bold text-emerald-600 mb-4">🛺🎉 Woohoo! Your Tuk-Tuk Awaits!</h2>
-    <p className="text-gray-700 mb-6 text-center">
-    
-Thanks for booking with us — your tuk-tuk ride is officially confirmed!
-We’ve sent all the details to your email and our representative will be in touch with you via WhatsApp shortly.
-Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
-    </p>
-    <button
-      onClick={() => {
-        closeModal();
-        window.location.reload();
-      }}
-      className="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
-    >
-      Close
-    </button>
-  </div>
+  <div className="flex flex-col items-center justify-center min-h-[300px] bg-white dark:bg-gray-900 rounded-lg p-6">
+  <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">
+    🛺🎉 Woohoo! Your Tuk-Tuk Awaits!
+  </h2>
+
+  <p className="text-gray-700 dark:text-gray-200 mb-6 text-center max-w-xl">
+    Thanks for booking with us — your tuk-tuk ride is officially confirmed! <br />
+    We’ve sent all the details to your email, and our representative will be in touch with you via WhatsApp shortly.  
+    <br />
+    Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
+  </p>
+
+  <button
+    onClick={() => {
+      closeModal();
+      window.location.reload();
+    }}
+    className="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+  >
+    Close
+  </button>
+</div>
+
 ) : (
   <>
 
@@ -985,21 +1008,19 @@ Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
 
 
 {step === 3 && (
-  <div className="space-y-6 p-6 rounded-xl bg-white shadow-lg border border-gray-200">
-  <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+  <div className="space-y-6 p-6 rounded-xl bg-white dark:bg-gray-900 shadow-lg border border-gray-200 dark:border-gray-700">
+  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
     💳 Payment & Confirmation
   </h3>
 
-  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
-    <div className="flex justify-between text-gray-700">
-      
-      
+  <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-4 space-y-3">
+    <div className="flex justify-between text-gray-700 dark:text-gray-200">
       <span className="font-medium">Rental Price</span>
       <span>${totalRental.toFixed(2)}</span>
     </div>
 
     {appliedCoupon && (
-      <div className="text-green-700 text-sm bg-green-50 p-2 rounded-md border border-green-200">
+      <div className="text-green-700 dark:text-green-400 text-sm bg-green-50 dark:bg-green-900 p-2 rounded-md border border-green-200 dark:border-green-700">
         ✅ Coupon <strong>{couponCode}</strong> applied:
         {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
       </div>
@@ -1011,23 +1032,23 @@ Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
         value={couponCode}
         onChange={(e) => setCouponCode(e.target.value)}
         placeholder="Enter coupon code"
-        className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
+        className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-black dark:text-white bg-white dark:bg-gray-800 focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-500"
       />
       <button
         onClick={handleApplyCoupon}
-        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm"
+        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm transition"
       >
         Apply
       </button>
     </div>
 
     {couponError && (
-      <p className="text-sm text-red-600 mt-1">{couponError}</p>
+      <p className="text-sm text-red-600 dark:text-red-400 mt-1">{couponError}</p>
     )}
   </div>
 
   <div className="text-right">
-    <p className="text-lg font-bold text-emerald-700">
+    <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">
       Final Total: ${totalRental.toFixed(2)}
     </p>
   </div>
@@ -1077,10 +1098,11 @@ Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
     }}
   />
 
-  <p className="text-sm text-gray-500 text-center pt-2">
+  <p className="text-sm text-gray-500 dark:text-gray-400 text-center pt-2">
     By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
   </p>
 </div>
+
 
 )}
 
