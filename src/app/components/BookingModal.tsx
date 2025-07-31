@@ -199,7 +199,6 @@ const BookingModal = ({
   
       // ✅ Close modal
       setShowThankYou(true);
-      window.location.reload();
     };
   
     window.payhere.onDismissed = () => {
