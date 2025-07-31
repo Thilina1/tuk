@@ -116,6 +116,8 @@ const BookingModal = ({
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
 
+  const [showThankYou, setShowThankYou] = useState(false);
+
 
   const handlePayNow = async () => {
     const response = await fetch("/api/payhere/checkout/api", {
@@ -196,7 +198,7 @@ const BookingModal = ({
       });
   
       // ✅ Close modal
-      closeModal();
+      setShowThankYou(true);
       window.location.reload();
     };
   
@@ -532,6 +534,28 @@ const perDayCharge = getPerDayCharge(rentalDays);
 </div>
 
 </div>
+
+{showThankYou ? (
+  <div className="flex flex-col items-center justify-center min-h-[300px]">
+    <h2 className="text-2xl font-bold text-emerald-600 mb-4">🎉 Thank You!</h2>
+    <p className="text-gray-700 mb-6 text-center">
+      Your booking has been confirmed. A confirmation email has been sent.
+    </p>
+    <button
+      onClick={() => {
+        closeModal();
+        window.location.reload();
+      }}
+      className="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+    >
+      Close
+    </button>
+  </div>
+) : (
+  <>
+
+
+
         {step === 0 && validationError && (
           <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
               {validationError}
@@ -1121,6 +1145,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 
         </div>
+        </>)} 
       </div>
     </div>
   );
