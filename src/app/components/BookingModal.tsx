@@ -157,26 +157,17 @@ const BookingModal = ({
     // ✅ ON SUCCESS
     window.payhere.onCompleted = async (completedOrderId: string) => {
       console.log("✅ Payment successful with Order ID:", completedOrderId);
-  
+    
+      setShowThankYou(true); // ✅ Show thank you right away
+    
       const docRef = doc(db, "bookings", docId);
-  
-
-      type BookingUpdatePayload = {
-        RentalPrice?: number;
-        isBooked?: boolean;
-        paymentOrderId?: string;
-        couponCode?: string;
-      };
-      
-
-
+    
       const updates: BookingUpdatePayload = {
         RentalPrice: totalRental,
         isBooked: true,
         paymentOrderId: completedOrderId,
       };
-      
-  
+    
       if (appliedCoupon) {
         updates.couponCode = couponCode.trim();
         const couponRef = doc(db, "discounts", appliedCoupon.id);
@@ -184,10 +175,9 @@ const BookingModal = ({
           currentUsers: increment(1),
         });
       }
-  
+    
       await updateDoc(docRef, updates);
-  
-      // ✉️ Send confirmation email
+    
       await fetch("/api/send-email/bookingEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -196,10 +186,8 @@ const BookingModal = ({
           totalRental,
         }),
       });
-  
-      // ✅ Close modal
-      setShowThankYou(true);
     };
+    
   
     window.payhere.onDismissed = () => {
       console.warn("❌ Payment dismissed by user.");
