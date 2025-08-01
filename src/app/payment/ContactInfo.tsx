@@ -2,6 +2,8 @@
 
 import React from "react";
 import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
+import Link from "next/link";
+
 
 export default function PricingDetails() {
   const perDayCharges = [
@@ -149,12 +151,12 @@ export default function PricingDetails() {
 
         {/* CTA */}
         <div className="text-center">
-          <a
-            href="/#book"
-            className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
-          >
-            🚀 Book Your TukTuk Now
-          </a>
+        <Link
+  href="/#book"
+  className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
+>
+  🚀 Book Your TukTuk Now
+</Link>
           <p className="text-sm text-gray-500 mt-2">No upfront payment required to get started.</p>
         </div>
       </div>

@@ -20,8 +20,9 @@ export default function ContactHeader() {
         </h1>
 
         <p className="mt-4 text-base md:text-lg max-w-2xl text-gray-100 drop-shadow-md">
-          Here's a transparent summary of all charges for your tuk-tuk adventure. No hidden fees — just pure travel freedom.
-        </p>
+  Here&rsquo;s a transparent summary of all charges for your tuk-tuk adventure. No hidden fees — just pure travel freedom.
+</p>
+
 
         {/* Breadcrumb */}
         <div className="mt-4 text-sm text-yellow-300 flex items-center gap-2 drop-shadow-sm">
