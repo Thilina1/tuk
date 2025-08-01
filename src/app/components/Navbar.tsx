@@ -23,9 +23,11 @@ export default function Navbar() {
   const menus = [
     { title: "Home", path: "/" },
     { title: "Blog", path: "/blog" },
+    { title: "Pricing Summary", path: "/payment" },
     { title: "About Us", path: "/aboutus" },
     { title: "FAQ", path: "/faq" },
     { title: "Contact Us", path: "/contact" },
+
   ];
 
   return (

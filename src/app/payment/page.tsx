@@ -3,7 +3,6 @@ import Footer from "../components/Footer";
 
 import Header from "./ContactHeader";
 import ContactInfo from "./ContactInfo";
-import ContactForm from "./ContactForm";
 import ContactCTA from "../components/ContactCTA";
 
 export default function ContactUsPage() {
@@ -11,12 +10,8 @@ export default function ContactUsPage() {
     <main className="bg-white text-gray-800">
       <Navbar />
       <Header />
-      <section className="py-16 px-4 max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
         <ContactInfo />
-        <ContactForm />
-      </section>
-
-      <ContactCTA />
+        <ContactCTA />
       <Footer />
     </main>
   );

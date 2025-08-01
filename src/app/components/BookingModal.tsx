@@ -294,11 +294,12 @@ const getPerDayCharge = (days: number) => {
   if (days >= 121) return 8;
   if (days >= 91) return 10;
   if (days >= 36) return 11;
-  if (days >= 16) return 12;
-  if (days >= 8) return 14;
+  if (days >= 20) return 12;
+  if (days >= 16) return 13;
+  if (days >= 9) return 15;
   if (days >= 5) return 16;
-  if (days >= 1) return 21;
-  return 13; // fallback (should not happen)
+  if (days >= 1) return 23;
+  return 23; // fallback (should not happen)
 };
 
 const perDayCharge = getPerDayCharge(rentalDays);

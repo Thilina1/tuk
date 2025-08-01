@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function ContactHeader() {
   return (
     <header
@@ -9,16 +11,24 @@ export default function ContactHeader() {
       }}
     >
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 z-0"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 z-0" />
 
-      {/* Text Section */}
-      <section className="relative min-h-[270px] flex flex-col items-center justify-center text-center z-10 px-4">
-        <h1 className="text-3xl md:text-4xl font-bold drop-shadow-md">Contact Us</h1>
-        <p className="mt-2 text-sm md:text-base drop-shadow-md max-w-xl">
-          Discover Sri Lanka at your own pace with TukTuk Drive — your partner in
-          adventure, freedom, and unforgettable road trips.
+      {/* Text Content */}
+      <section className="relative min-h-[300px] flex flex-col items-center justify-center text-center z-10 px-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+          🧾 Payment Cost Breakdown
+        </h1>
+
+        <p className="mt-4 text-base md:text-lg max-w-2xl text-gray-100 drop-shadow-md">
+          Here's a transparent summary of all charges for your tuk-tuk adventure. No hidden fees — just pure travel freedom.
         </p>
-        <p className="text-xs text-yellow-400 mt-1 drop-shadow-md">Home &gt; Contact Us</p>
+
+        {/* Breadcrumb */}
+        <div className="mt-4 text-sm text-yellow-300 flex items-center gap-2 drop-shadow-sm">
+          <Link href="/" className="hover:underline hover:text-yellow-100 transition">Home</Link>
+          <span>&gt;</span>
+          <span className="text-yellow-400 font-medium">Payment</span>
+        </div>
       </section>
     </header>
   );

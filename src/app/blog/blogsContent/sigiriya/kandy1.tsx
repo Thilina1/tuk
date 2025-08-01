@@ -13,15 +13,14 @@ export default function Kandy() {
       <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
+          🏰 Sigiriya Rock Fortress
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            A Journey Through Kandy’s Cultural Heart
+          Sigiriya: The Lion Rock of Sri Lanka
           </h1>
           <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-            Discover the sacred city of Kandy — home to timeless traditions,
-            spiritual serenity, and stunning natural beauty nestled in Sri
-            Lanka’s hill country.
+          Discover the legendary rock fortress of Sigiriya, an ancient engineering marvel, royal citadel, and UNESCO World Heritage Site — nestled in the cultural heart of Sri Lanka.
+
           </p>
         </div>
       </section>
@@ -31,12 +30,7 @@ export default function Kandy() {
         {/* Main content */}
         <article className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Kandy, the last royal capital of Sri Lanka, stands as a living
-            testament to the island’s rich heritage. Its spiritual center is
-            the Temple of the Sacred Tooth Relic, which draws thousands of
-            pilgrims each year. The atmosphere is one of reverence, with
-            colorful offerings, rhythmic drumming, and the scent of incense
-            filling the air.
+          Sigiriya, often dubbed the Eighth Wonder of the World, is a majestic rock fortress rising nearly 200 meters (660 feet) above the surrounding plains. Located in the heart of Sri Lanka, this UNESCO World Heritage Site is famed for its historical significance, architectural brilliance, and breathtaking views.
           </p>
 
           <Image
@@ -47,33 +41,24 @@ export default function Kandy() {
             className="rounded-xl shadow-md my-8"
           />
 
-          <p>
-            Walking around the tranquil Kandy Lake, created by the last king of
-            Kandy in 1807, you’ll find yourself immersed in the soothing sights
-            and sounds of nature. Beyond the lake, narrow streets lead to
-            bustling markets full of spices, handicrafts, and street food that
-            showcase Sri Lanka’s vibrant daily life.
+<p>
+            The fortress was constructed by King Kashyapa I in the 5th century AD as a royal palace and military stronghold. The site includes remarkable features such as the Mirror Wall, which was once so polished it reflected the king himself, and the world-famous frescoes known as the Sigiriya Damsels — paintings of graceful women with intricate jewelry and flowing garments.
           </p>
 
-          <h2>The Sacred Festivals</h2>
+          <h2>Architectural Brilliance</h2>
           <p>
-            If you visit in July or August, you may witness the Esala Perahera
-            — a grand cultural parade featuring elephants, dancers, drummers,
-            and fire-breathers. It’s an unforgettable experience that embodies
-            centuries of tradition.
+            Sigiriya’s layout reflects advanced urban planning with symmetrical water gardens, terraced landscapes, and an ingenious hydraulic system. The Lion’s Gate, flanked by two massive lion paws carved into the rock, leads to a stairway that ascends to the summit. At the top, visitors find the remains of a royal palace complex complete with bathing pools and panoramic views.
           </p>
 
-          <h2>Botanical Beauty</h2>
+
+
+          <h2>A Living Legacy</h2>
           <p>
-            Just outside the city, the Royal Botanic Gardens of Peradeniya
-            offer lush landscapes and rare plant species, a peaceful escape
-            into nature’s splendor.
+            Today, Sigiriya stands as a symbol of Sri Lanka’s rich cultural history and enduring spirit. It continues to attract travelers, archaeologists, and history lovers from around the world, drawn by its mystery, beauty, and the tale of ambition carved into stone.
           </p>
 
           <p>
-            Whether you come for the history, the culture, or the serene
-            landscapes, Kandy promises a journey like no other — one that
-            leaves a lasting impression on your soul.
+            Whether you’re climbing to the top for the view or exploring the ancient stories that linger in its walls, Sigiriya offers an unforgettable glimpse into the island’s royal past.
           </p>
         </article>
 
