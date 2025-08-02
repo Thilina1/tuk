@@ -8,6 +8,9 @@ import {
 } from "react-icons/fa";
 import InstagramEmbedSection from "./instaEmbeded";
 
+import Link from "next/link";
+
+
 export default function AboutUs() {
   const features = [
     {
@@ -128,15 +131,16 @@ export default function AboutUs() {
         <p className="mt-4 text-gray-700">
           Book your TukTuk today and explore Sri Lanka your way.
         </p>
-        <a
-          href="/#book"
-          className="mt-6 inline-block px-6 py-3 rounded-full font-semibold text-white shadow hover:scale-105 transition"
-          style={{
-            background: "linear-gradient(to right, #facc15, #fde047)",
-          }}
-        >
-          Book Now
-        </a>
+        <Link
+  href="/#book"
+  className="mt-6 inline-block px-6 py-3 rounded-full font-semibold text-white shadow hover:scale-105 transition"
+  style={{
+    background: "linear-gradient(to right, #facc15, #fde047)",
+  }}
+>
+  Book Now
+</Link>
+
       </div>
     </section>
   );
