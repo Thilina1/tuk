@@ -4,7 +4,6 @@ import React from "react";
 import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
 import Link from "next/link";
 
-
 export default function PricingDetails() {
   const perDayCharges = [
     { range: "1–4 days", price: 23 },
@@ -33,20 +32,19 @@ export default function PricingDetails() {
       className="min-h-screen bg-cover bg-center py-12 px-4 sm:px-6 lg:px-8"
       style={{ backgroundImage: "url('/hero/coconut-bg.jpg')" }}
     >
-      <div className="max-w-6xl mx-auto bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 space-y-12">
-        {/* Title */}
-        <h2 className="text-4xl font-extrabold text-center text-gray-800">📊 TukTuk Rental Pricing Guide</h2>
+      <div className="max-w-6xl mx-auto bg-white backdrop-blur-md rounded-2xl shadow-xl p-8 space-y-12 text-gray-800">
+        <h2 className="text-4xl font-extrabold text-center">📊 TukTuk Rental Pricing Guide</h2>
         <p className="text-center text-gray-600 max-w-2xl mx-auto">
           Transparent pricing, no hidden charges. Plan your ride with ease.
         </p>
 
-        {/* Per Day Charges */}
-        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-orange-50 via-white to-emerald-50">
+        {/* Daily Rental */}
+        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-[#FFF7ED] via-white to-[#F0FFF4] !bg-white">
           <h3 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
             <FaMoneyBillWave /> Daily Rental Rates
           </h3>
-          <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden">
-            <thead className="bg-orange-100 text-gray-700">
+          <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden bg-white">
+            <thead className="bg-[#FFEDD5] text-gray-700">
               <tr>
                 <th className="px-4 py-2 border-b">Duration</th>
                 <th className="px-4 py-2 border-b">Price / Day</th>
@@ -63,26 +61,26 @@ export default function PricingDetails() {
           </table>
         </section>
 
-        {/* 🪪 LICENSE FEE */}
+        {/* License Fee */}
         <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
           <h3 className="text-2xl font-bold text-emerald-600 mb-4">🪪 License Fee</h3>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-sm leading-relaxed">
             Every driver must hold a valid license. If you are a foreign visitor, we strongly recommend carrying an International Driving Permit (IDP).
           </p>
-          <ul className="list-disc pl-6 mt-2 text-sm text-gray-700 space-y-1">
+          <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
             <li><strong>$35 per license</strong> is charged to process and validate each license.</li>
             <li>This fee covers digital verification, support, and insurance eligibility.</li>
             <li>All drivers must be 18 years or older and comply with Sri Lankan road regulations.</li>
           </ul>
         </section>
 
-        {/* ➕ OPTIONAL EXTRAS */}
-        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-green-50 via-white to-yellow-50">
+        {/* Extras */}
+        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-[#F0FFF4] via-white to-[#FFFBEB] !bg-white">
           <h3 className="text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
             <FaTags /> Optional Extras
           </h3>
-          <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden">
-            <thead className="bg-amber-100 text-gray-700">
+          <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden bg-white">
+            <thead className="bg-[#FEF3C7] text-gray-700">
               <tr>
                 <th className="px-4 py-2 border-b">Extra</th>
                 <th className="px-4 py-2 border-b">Price</th>
@@ -101,26 +99,26 @@ export default function PricingDetails() {
           </table>
         </section>
 
-        {/* 💰 REFUNDABLE DEPOSIT */}
+        {/* Deposit */}
         <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
           <h3 className="text-2xl font-bold text-blue-600 mb-4">💰 Refundable Deposit</h3>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-sm leading-relaxed">
             A one-time <strong>$50 security deposit</strong> will be collected during your booking. This is fully refundable and ensures vehicle protection.
           </p>
-          <ul className="list-disc pl-6 mt-2 text-sm text-gray-700 space-y-1">
+          <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
             <li>Returned within 3–5 business days after your trip ends.</li>
             <li>No deductions if the tuk-tuk is returned undamaged and on time.</li>
             <li>In case of minor damages or rule violations, partial deductions may apply.</li>
           </ul>
         </section>
 
-        {/* 🏷️ COUPON DISCOUNTS */}
-        <section className="rounded-xl border border-amber-300 shadow-sm p-6 bg-gradient-to-br from-yellow-50 via-white to-orange-50">
+        {/* Coupons */}
+        <section className="rounded-xl border border-amber-300 shadow-sm p-6 bg-gradient-to-br from-[#FFFBEB] via-white to-[#FFF7ED] !bg-white">
           <h3 className="text-2xl font-bold text-orange-600 mb-4">🏷️ Discount Coupons</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm leading-relaxed">
             We frequently offer promo codes to help you save on your adventures! Apply your coupon during checkout and enjoy automatic savings.
           </p>
-          <ul className="list-disc pl-6 mt-2 text-sm text-gray-700 space-y-1">
+          <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
             <li><strong>Percentage-based:</strong> e.g., 10% off your total booking.</li>
             <li><strong>Fixed amount:</strong> e.g., $20 off your rental.</li>
             <li>Coupons must be valid, active, and within user limits.</li>
@@ -129,8 +127,8 @@ export default function PricingDetails() {
           </ul>
         </section>
 
-        {/* 💡 COST FORMULA */}
-        <section className="rounded-xl border border-dashed border-emerald-400 p-6 bg-emerald-50 text-sm">
+        {/* Cost Formula */}
+        <section className="rounded-xl border border-dashed border-emerald-400 p-6 bg-[#F0FFF4] text-sm">
           <h3 className="text-xl font-bold text-emerald-800 mb-2">🧮 Cost Calculation Formula</h3>
           <code className="text-gray-700 block">
             Total = (Tuk Count × Days × Per Day Rate) + (License Count × $35) + Pickup/Return + Extras + $50 (Deposit) - Coupon Discount
@@ -138,11 +136,11 @@ export default function PricingDetails() {
         </section>
 
         {/* FAQ */}
-        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-sky-50 via-white to-lime-50">
+        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-[#F0F9FF] via-white to-[#F7FEE7] !bg-white">
           <h3 className="text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2">
             <FaQuestionCircle /> Frequently Asked
           </h3>
-          <ul className="text-sm text-gray-700 list-disc pl-6 space-y-2">
+          <ul className="text-sm list-disc pl-6 space-y-2">
             <li><strong>Is insurance included?</strong> – Yes, basic coverage is included.</li>
             <li><strong>Can I rent without a license?</strong> – No, a valid license or IDP is mandatory.</li>
             <li><strong>Are discounts stackable?</strong> – Only one coupon can be used per booking.</li>
@@ -153,10 +151,14 @@ export default function PricingDetails() {
         <div className="text-center">
         <Link
   href="/#book"
-  className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
+  className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 !bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
+  style={{
+    backgroundImage: 'linear-gradient(to right, #fb923c, #fbbf24)', // fallback to hardcoded gradient
+  }}
 >
   🚀 Book Your TukTuk Now
 </Link>
+
           <p className="text-sm text-gray-500 mt-2">No upfront payment required to get started.</p>
         </div>
       </div>

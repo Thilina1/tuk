@@ -552,29 +552,32 @@ const perDayCharge = getPerDayCharge(rentalDays);
 </div>
 
 {showThankYou ? (
-  <div className="flex flex-col items-center justify-center min-h-[300px] bg-white dark:bg-gray-900 rounded-lg p-6">
-  <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">
-    🛺🎉 Woohoo! Your Tuk-Tuk Awaits!
-  </h2>
+  <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg p-6 shadow-md text-gray-800">
+    <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">
+      🛺🎉 Woohoo! Your Tuk-Tuk Awaits!
+    </h2>
 
-  <p className="text-gray-700 dark:text-gray-200 mb-6 text-center max-w-xl">
-    Thanks for booking with us — your tuk-tuk ride is officially confirmed! <br />
-    We’ve sent all the details to your email, and our representative will be in touch with you via WhatsApp shortly.  
-    <br />
-    Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
-  </p>
+    <p className="text-gray-700 mb-6 text-center max-w-xl">
+      Thanks for booking with us — your tuk-tuk ride is officially confirmed!
+      <br />
+      We’ve sent all the details to your email, and our representative will be in touch with you via WhatsApp shortly.
+      <br />
+      Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
+    </p>
 
-  <button
-    onClick={() => {
-      closeModal();
-      window.location.reload();
-    }}
-    className="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
-  >
-    Close
-  </button>
-</div>
-
+    <button
+      onClick={() => {
+        closeModal();
+        window.location.reload();
+      }}
+      className="px-5 py-2 rounded-lg text-white font-semibold shadow transition hover:scale-105"
+      style={{
+        background: "linear-gradient(to right, #fb923c, #f97316)", // from-orange-400 to-orange-500
+      }}
+    >
+      Close
+    </button>
+  </div>
 ) : (
   <>
 
@@ -1009,106 +1012,106 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 
 {step === 3 && (
-  <div className="space-y-6 p-6 rounded-xl bg-white dark:bg-gray-900 shadow-lg border border-gray-200 dark:border-gray-700">
-  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-    💳 Payment & Confirmation
-  </h3>
+  <div className="space-y-6 p-6 rounded-xl bg-white shadow-lg border border-gray-200 text-gray-800">
+    <h3 className="text-xl font-semibold flex items-center gap-2">
+      💳 Payment & Confirmation
+    </h3>
 
-  <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-4 space-y-3">
-    <div className="flex justify-between text-gray-700 dark:text-gray-200">
-      <span className="font-medium">Rental Price</span>
-      <span>${totalRental.toFixed(2)}</span>
-    </div>
-
-    {appliedCoupon && (
-      <div className="text-green-700 dark:text-green-400 text-sm bg-green-50 dark:bg-green-900 p-2 rounded-md border border-green-200 dark:border-green-700">
-        ✅ Coupon <strong>{couponCode}</strong> applied:
-        {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
+    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
+      <div className="flex justify-between text-gray-700">
+        <span className="font-medium">Rental Price</span>
+        <span>${totalRental.toFixed(2)}</span>
       </div>
-    )}
 
-    <div className="flex gap-2 mt-2">
-      <input
-        type="text"
-        value={couponCode}
-        onChange={(e) => setCouponCode(e.target.value)}
-        placeholder="Enter coupon code"
-        className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-black dark:text-white bg-white dark:bg-gray-800 focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-500"
-      />
-      <button
-        onClick={handleApplyCoupon}
-        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm transition"
-      >
-        Apply
-      </button>
+      {appliedCoupon && (
+        <div className="text-green-700 text-sm bg-green-50 p-2 rounded-md border border-green-200">
+          ✅ Coupon <strong>{couponCode}</strong> applied:
+          {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
+        </div>
+      )}
+
+      <div className="flex gap-2 mt-2">
+        <input
+          type="text"
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+          placeholder="Enter coupon code"
+          className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm text-black bg-white focus:ring-2 focus:ring-orange-400"
+        />
+        <button
+          onClick={handleApplyCoupon}
+          className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm transition"
+        >
+          Apply
+        </button>
+      </div>
+
+      {couponError && (
+        <p className="text-sm text-red-600 mt-1">{couponError}</p>
+      )}
     </div>
 
-    {couponError && (
-      <p className="text-sm text-red-600 dark:text-red-400 mt-1">{couponError}</p>
-    )}
-  </div>
+    <div className="text-right">
+      <p className="text-lg font-bold text-emerald-700">
+        Final Total: ${totalRental.toFixed(2)}
+      </p>
+    </div>
 
-  <div className="text-right">
-    <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">
-      Final Total: ${totalRental.toFixed(2)}
+    <button
+      onClick={handlePayNow}
+      disabled={loading}
+      className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold
+                 text-white shadow transition hover:opacity-90"
+      style={{
+        background: "linear-gradient(to right, #fbbf24, #f97316)", // amber-400 to orange-500
+      }}
+    >
+      {loading ? (
+        <>
+          <svg
+            className="animate-spin h-5 w-5 text-black"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+            />
+          </svg>
+          <span>Processing...</span>
+        </>
+      ) : (
+        <>
+          <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
+          <span>Pay Now</span>
+        </>
+      )}
+    </button>
+
+    <Script
+      src="https://www.payhere.lk/lib/payhere.js"
+      strategy="afterInteractive"
+      onLoad={() => {
+        console.log("✅ PayHere SDK loaded");
+      }}
+    />
+
+    <p className="text-sm text-gray-500 text-center pt-2">
+      By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
     </p>
   </div>
-
-  <button
-  onClick={handlePayNow}
-  disabled={loading}
-  className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold
-             bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:opacity-90
-             dark:bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:opacity-90"
->
-  {loading ? (
-    <>
-      <svg
-        className="animate-spin h-5 w-5 text-black"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        />
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-        />
-      </svg>
-      <span>Processing...</span>
-    </>
-  ) : (
-    <>
-      <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
-      <span>Pay Now</span>
-    </>
-  )}
-</button>
-
-
-  <Script
-    src="https://www.payhere.lk/lib/payhere.js"
-    strategy="afterInteractive"
-    onLoad={() => {
-      console.log("✅ PayHere SDK loaded");
-    }}
-  />
-
-  <p className="text-sm text-gray-500 dark:text-gray-400 text-center pt-2">
-    By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
-  </p>
-</div>
-
-
 )}
+
 
 
 

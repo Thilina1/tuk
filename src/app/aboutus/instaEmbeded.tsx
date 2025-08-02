@@ -28,7 +28,7 @@ export default function InstagramEmbedSection() {
     const timer = setTimeout(() => {
       if (window?.instgrm?.Embeds?.process) {
         window.instgrm.Embeds.process();
-        setLoaded(true); // mark all loaded after embed script processes
+        setLoaded(true);
       }
     }, 2000);
 
@@ -36,9 +36,18 @@ export default function InstagramEmbedSection() {
   }, []);
 
   return (
-    <section className="bg-gradient-to-br from-white/40 to-white/10 backdrop-blur-md py-16 px-4 text-center">
-      <h3 className="text-3xl font-extrabold text-gray-900 mb-2">See the Journey on Instagram</h3>
-      <p className="text-gray-700 mb-10">Explore real moments shared by travelers like you</p>
+    <section
+      className="py-16 px-4 text-center"
+      style={{
+        background: "linear-gradient(to bottom right, #ffffff, #fefefe)",
+      }}
+    >
+      <h3 className="text-3xl font-extrabold text-gray-800 mb-2">
+        See the Journey on Instagram
+      </h3>
+      <p className="text-gray-600 mb-10">
+        Explore real moments shared by travelers like you
+      </p>
 
       {/* Spinner */}
       {!loaded && (
@@ -48,11 +57,15 @@ export default function InstagramEmbedSection() {
       )}
 
       {/* Instagram Cards */}
-      <div className={`grid ${loaded ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3" : "hidden"} gap-6 max-w-7xl mx-auto`}>
+      <div
+        className={`grid ${
+          loaded ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3" : "hidden"
+        } gap-6 max-w-7xl mx-auto`}
+      >
         {instagramEmbeds.map((url, index) => (
           <div
             key={index}
-            className="rounded-xl overflow-hidden shadow-md bg-white/70 backdrop-blur-sm flex items-center justify-center min-h-[460px]"
+            className="rounded-xl overflow-hidden shadow-md bg-white flex items-center justify-center min-h-[460px]"
           >
             <div
               dangerouslySetInnerHTML={{
@@ -72,10 +85,13 @@ export default function InstagramEmbedSection() {
             href="https://www.instagram.com/tuktukdrive"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-white bg-gradient-to-r from-pink-500 to-yellow-500 px-5 py-3 rounded-full shadow-lg hover:scale-105 transition"
+            className="inline-flex items-center gap-2 text-white font-semibold px-5 py-3 rounded-full shadow-lg hover:scale-105 transition"
+            style={{
+              background: "linear-gradient(to right, #ec4899, #facc15)", // pink to yellow
+            }}
           >
             <FaInstagram size={20} />
-            <span className="font-semibold">More on Instagram</span>
+            <span>More on Instagram</span>
           </a>
         </div>
       )}

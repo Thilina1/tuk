@@ -18,7 +18,7 @@ export default function AboutUs() {
     {
       icon: <FaGlobeAsia className="text-blue-500 text-4xl" />,
       title: "Authentic Local Experiences",
-      desc: "Venture into villages, scenic landscapes, and hidden gems you won t find in a guidebook.",
+      desc: "Venture into villages, scenic landscapes, and hidden gems you won’t find in a guidebook.",
     },
     {
       icon: <FaClock className="text-pink-500 text-4xl" />,
@@ -33,20 +33,25 @@ export default function AboutUs() {
   ];
 
   return (
-    <section className="bg-white">
+    <section className="bg-white text-gray-800">
       {/* Hero */}
-      <div className="relative bg-gradient-to-r from-yellow-50 via-white to-yellow-100 py-20 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h3 className=" md:text-4xl font-extrabold text-gray-900 leading-tight">
-            Who Are We?.
+      <div
+        className="relative py-20 text-center"
+        style={{
+          background: "linear-gradient(to right, #FEF9C3, #ffffff, #FEF3C7)",
+        }}
+      >
+        <div className="max-w-4xl mx-auto px-4">
+          <h3 className="md:text-4xl font-extrabold leading-tight">
+            Who Are We?
           </h3>
-          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-          At TukTukDrive.com, we believe in the power of community-driven tourism. Our
-mission is to empower local TukTuk owners by connecting them with adventurous
-travelers seeking unique, self-drive experiences across the stunning landscapes of Sri
-Lanka. By choosing to ride with us, you are not just getting a fun and eco-friendly way to
-explore; you are contributing to the local economy and supporting communities who call
-this island home.
+          <p className="mt-6 text-lg text-gray-700 max-w-2xl mx-auto">
+            At TukTukDrive.com, we believe in the power of community-driven tourism. Our
+            mission is to empower local TukTuk owners by connecting them with adventurous
+            travelers seeking unique, self-drive experiences across the stunning landscapes of Sri
+            Lanka. By choosing to ride with us, you are not just getting a fun and eco-friendly way to
+            explore; you are contributing to the local economy and supporting communities who call
+            this island home.
           </p>
         </div>
       </div>
@@ -54,36 +59,40 @@ this island home.
       {/* Mission & Story */}
       <div className="py-20 bg-white">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6">
-          <div className="bg-yellow-50 rounded-xl shadow p-8 hover:shadow-lg transition">
-            <h2 className="text-3xl font-bold text-gray-800 ">Our Mission</h2>
-            <p className="text-gray-600 leading-relaxed">
-Our goal is simple: to provide an unforgettable, eco-conscious, and enriching
-journey through Sri Lanka, all while boosting the livelihoods of local TukTuk owners.
-We offer a self-drive experience that brings you closer to the heart of Sri Lanka, allowing
-you to explore the island in a way that is personal, immersive, and adventurous.        
+          <div className="bg-[#FFFBEB] rounded-xl shadow p-8 hover:shadow-lg transition">
+            <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
+            <p className="text-gray-700 leading-relaxed">
+              Our goal is simple: to provide an unforgettable, eco-conscious, and enriching
+              journey through Sri Lanka, all while boosting the livelihoods of local TukTuk owners.
+              We offer a self-drive experience that brings you closer to the heart of Sri Lanka, allowing
+              you to explore the island in a way that is personal, immersive, and adventurous.
             </p>
           </div>
-          <div className="bg-yellow-50 rounded-xl shadow p-8 hover:shadow-lg transition">
-            <h2 className="text-3xl font-bold text-gray-800 ">Our Story</h2>
-            <p className="text-gray-600 leading-relaxed">
-            Born out of a love for adventure and a commitment to sustainable tourism,
-TukTukDrive.com started with a single vision: to empower local TukTuk owners while
-offering travelers the chance to explore Sri Lanka in a truly authentic and fun way. What
-started as a small initiative has grown into a community-driven platform that brings
-travelers and locals together, promoting a more eco-friendly, inclusive, and enriching
-travel experience.
-
+          <div className="bg-[#FFFBEB] rounded-xl shadow p-8 hover:shadow-lg transition">
+            <h2 className="text-3xl font-bold mb-4">Our Story</h2>
+            <p className="text-gray-700 leading-relaxed">
+              Born out of a love for adventure and a commitment to sustainable tourism,
+              TukTukDrive.com started with a single vision: to empower local TukTuk owners while
+              offering travelers the chance to explore Sri Lanka in a truly authentic and fun way. What
+              started as a small initiative has grown into a community-driven platform that brings
+              travelers and locals together, promoting a more eco-friendly, inclusive, and enriching
+              travel experience.
             </p>
           </div>
         </div>
       </div>
 
       {/* Features */}
-      <div className="py-20 bg-gradient-to-b from-white to-yellow-50">
+      <div
+        className="py-20"
+        style={{
+          background: "linear-gradient(to bottom, #ffffff, #FEF9C3)",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-4">
-            <h3 className="text-4xl font-bold text-gray-900">Why Choose TukTukDrive?</h3>
-            <p className="mt-4 text-gray-600">
+          <div className="text-center mb-10">
+            <h3 className="text-4xl font-bold">Why Choose TukTukDrive?</h3>
+            <p className="mt-4 text-gray-700">
               Here is what makes your journey with us truly unforgettable.
             </p>
           </div>
@@ -97,7 +106,7 @@ travel experience.
                 <h4 className="text-xl font-semibold text-gray-800 mb-2">
                   {item.title}
                 </h4>
-                <p className="text-gray-500 text-sm">{item.desc}</p>
+                <p className="text-gray-600 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -107,16 +116,27 @@ travel experience.
       <InstagramEmbedSection />
 
       {/* CTA */}
-      <div className="py-20 bg-gradient-to-r from-yellow-200 to-yellow-50 text-center">
+      <div
+        className="py-20 text-center"
+        style={{
+          background: "linear-gradient(to right, #FEF3C7, #FFFBEB)",
+        }}
+      >
         <h3 className="text-3xl font-bold text-gray-900">
           Ready to Start Your Journey?
         </h3>
-        <p className="mt-4 text-gray-600">
+        <p className="mt-4 text-gray-700">
           Book your TukTuk today and explore Sri Lanka your way.
         </p>
-        <button className="mt-6 px-6 py-3 bg-yellow-500 text-white rounded-full font-semibold shadow hover:bg-yellow-600 transition">
+        <a
+          href="/#book"
+          className="mt-6 inline-block px-6 py-3 rounded-full font-semibold text-white shadow hover:scale-105 transition"
+          style={{
+            background: "linear-gradient(to right, #facc15, #fde047)",
+          }}
+        >
           Book Now
-        </button>
+        </a>
       </div>
     </section>
   );
