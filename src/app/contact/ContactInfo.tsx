@@ -25,7 +25,7 @@ export default function ContactInfo() {
         </div>
 
         <ul className="space-y-4 text-sm text-black text-center">
-          <li>📧 <strong>Email:</strong> info@tuktukrental.com</li>
+          <li>📧 <strong>Email:</strong> info@tuktukdrive.com</li>
           <li>📲 <strong>Phone / Whatsapp:</strong> (+94) 77 006 3780</li>
           <li>🏢 <strong>Head Office:</strong> No. 06, Ambasewanagama, Kengalla. (Kandy) Sri Lanka </li>
         </ul>

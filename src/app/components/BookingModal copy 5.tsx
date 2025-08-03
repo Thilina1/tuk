@@ -120,26 +120,28 @@ const BookingModal = ({
 
 
   const handlePayNow = async () => {
-    const orderId = `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
-    const docRef = doc(db, "bookings", docId);
-  
-    // Save the total and order ID before redirecting
-    await updateDoc(docRef, {
-      RentalPrice: totalRental,
-      paymentOrderId: orderId,
+    const response = await fetch("/api/payhere/checkout/api", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: totalRental.toFixed(2),
+        orderId: orderId,
+        currency: "USD",
+      }),
     });
   
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "https://sandbox.webxpay.com/index.php";
-    form.style.display = "none";
+    const { hash } = await response.json();
   
-    const fields = {
-      merchant_id: "ZCjaVcSHYe",
+    const payment = {
+      sandbox: true,
+      merchant_id: "1231320", // replace with real merchant_id
+      return_url: "https://yourdomain.com/payment-success",
+      cancel_url: "https://yourdomain.com/payment-cancel",
+      notify_url: "https://yourdomain.com/api/payhere-notify",
       order_id: orderId,
-      amount: totalRental.toFixed(2),
-      currency: "LKR",
-      items: "Tuk Tuk Rental",
+      items: "Rental Booking",
+      amount: parseFloat(totalRental.toFixed(2)),
+      currency: "USD",
+      hash,
       first_name: formValues.name,
       last_name: "User",
       email: formValues.email,
@@ -147,23 +149,69 @@ const BookingModal = ({
       address: formValues.licenseAddress,
       city: formValues.licenseCountry,
       country: "Sri Lanka",
-      return_url: `https://www.greentechstartups.com/payment-success?orderId=${orderId}`, // ✅ updated
-      cancel_url: "https://www.greentechstartups.com/payment-cancel",
-      notify_url: "https://www.greentechstartups.com/api/webxpay-notify",
     };
   
-    Object.entries(fields).forEach(([key, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = value.toString();
-      form.appendChild(input);
-    });
+    // 💳 START PAYMENT
+    window.payhere.startPayment(payment);
   
-    document.body.appendChild(form);
-    form.submit();
+    // ✅ ON SUCCESS
+    window.payhere.onCompleted = async (completedOrderId: string) => {
+      console.log("✅ Payment successful with Order ID:", completedOrderId);
+    
+      setShowThankYou(true); // ✅ Show thank you right away
+    
+      const docRef = doc(db, "bookings", docId);
+    
+      type BookingUpdatePayload = {
+        RentalPrice?: number;
+        isBooked?: boolean;
+        paymentOrderId?: string;
+        couponCode?: string;
+      };
+      
+
+
+      const updates: BookingUpdatePayload = {
+        RentalPrice: totalRental,
+        isBooked: true,
+        paymentOrderId: completedOrderId,
+      };
+      
+    
+      if (appliedCoupon) {
+        updates.couponCode = couponCode.trim();
+        const couponRef = doc(db, "discounts", appliedCoupon.id);
+        await updateDoc(couponRef, {
+          currentUsers: increment(1),
+        });
+      }
+    
+      await updateDoc(docRef, updates);
+    
+      await fetch("/api/send-email/bookingEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formValues,
+          totalRental,
+        }),
+      });
+    };
+    
+  
+    window.payhere.onDismissed = () => {
+      console.warn("❌ Payment dismissed by user.");
+    };
+  
+    window.payhere.onError = (error: string) => {
+      console.error("🚨 Payment error:", error);
+    };
   };
   
+
+
+
+
 
   
 
@@ -1050,7 +1098,13 @@ const perDayCharge = getPerDayCharge(rentalDays);
       )}
     </button>
 
-
+    <Script
+      src="https://www.payhere.lk/lib/payhere.js"
+      strategy="afterInteractive"
+      onLoad={() => {
+        console.log("✅ PayHere SDK loaded");
+      }}
+    />
 
     <p className="text-sm text-gray-500 text-center pt-2">
       By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
