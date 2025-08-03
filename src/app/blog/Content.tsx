@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Destination from "./destination";
+import Link from "next/link";
 
 export default function BlogContent() {
   return (
@@ -53,7 +54,8 @@ export default function BlogContent() {
               <p className="text-sm text-gray-600 mb-5">
               In the hill capital of Kandy, one of Asia’s most vibrant cultural celebrations comes to life — the Esala Perahera. Held in honor of the Sacred Tooth Relic of Lord Buddha, this breathtaking event blends spirituality, tradition, and performance into an unforgettable procession.
               </p>
-              <button
+<Link href="/blog/blogsContent/EsalaPerahara">
+<button
   className="text-sm font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300"
   style={{
     backgroundColor: "#facc15", // yellow-400
@@ -63,6 +65,7 @@ export default function BlogContent() {
 >
   Visit Post
 </button>
+</Link>
 
             </div>
           </div>
@@ -76,6 +79,8 @@ export default function BlogContent() {
                 tag: "Tea Country",
                 title: "Harvest of Ceylon",
                 desc: "High in the misty highlands of Sri Lanka, the rhythm of life slows down. Here, amid emerald carpets of tea bushes and winding mountain roads, begins the story of Ceylon Tea — a brew that has captivated the world for generations.",
+                link: "/blog/blogsContent/tea"
+
               },
               {
                 img: "/blog/blogPost/north.jpeg",
@@ -83,6 +88,7 @@ export default function BlogContent() {
                 tag: "Hidden",
                 title: "Discovering the North",
                 desc: "Tucked away from the typical tourist trail, Sri Lanka’s North offers a journey into a region steeped in resilience, history, and raw, untouched beauty. From the sacred ruins of Anuradhapura to the quiet charm of Jaffna’s temples, this part of the island feels like stepping into a different rhythm of life.",
+                link: "/blog/blogsContent/north"
               },
             ].map((item, i) => (
               <div
@@ -108,6 +114,7 @@ export default function BlogContent() {
                     <p className="text-sm text-gray-600">{item.desc}</p>
                   </div>
                   <div className="mt-4">
+                  <Link href={item.link}>
                   <button
   className="text-sm font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300"
   style={{
@@ -118,6 +125,7 @@ export default function BlogContent() {
 >
   Visit Post
 </button>
+</Link>
 
                   </div>
                 </div>

@@ -41,7 +41,7 @@ export default function TempleOfTheTooth() {
           </p>
 
           <Image
-            src="/blog/blogPost/kandy_lake.jpeg"
+            src="/blog/kandyTemple.jpg"
             width={1200}
             height={700}
             alt="Kandy Lake"

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   FaXTwitter,
@@ -6,133 +8,122 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 
-export default function Kandy() {
+export default function NorthernSriLanka() {
   return (
     <main className="bg-white min-h-screen font-sans text-gray-800">
-      {/* Hero */}
-      <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-r from-orange-100 to-yellow-50 py-12 px-4 text-center shadow-sm">
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
+          <p className="text-xs tracking-widest uppercase text-orange-700">
+            🌾 Northern Sri Lanka
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            A Journey Through Kandy’s Cultural Heart
+            Discover Northern Sri Lanka – Culture, Resilience & Untouched Beauty
           </h1>
-          <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-            Discover the sacred city of Kandy — home to timeless traditions,
-            spiritual serenity, and stunning natural beauty nestled in Sri
-            Lanka’s hill country.
+          <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
+            Explore a region rich in Tamil heritage, historic spirit, and peaceful coastal charm.
           </p>
         </div>
       </section>
 
-      {/* Main layout */}
+      {/* Layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-8 py-12 px-4 md:px-8">
-        {/* Main content */}
+        {/* Content */}
         <article className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Kandy, the last royal capital of Sri Lanka, stands as a living
-            testament to the island’s rich heritage. Its spiritual center is
-            the Temple of the Sacred Tooth Relic, which draws thousands of
-            pilgrims each year. The atmosphere is one of reverence, with
-            colorful offerings, rhythmic drumming, and the scent of incense
-            filling the air.
+            Northern Sri Lanka feels like a world apart — a soulful region shaped by Tamil culture,
+            layered history, and quiet strength. Far from the bustling south and hill country,
+            the North moves to its own rhythm. It’s where ancient temples echo with devotion,
+            colonial forts whisper stories of the past, and long stretches of coastline invite peaceful reflection.
           </p>
 
           <Image
-            src="/blog/blogPost/kandy_lake.jpeg"
+            src="/blog/blogPost/north.jpeg"
             width={1200}
             height={700}
-            alt="Kandy Lake"
+            alt="Nallur Kandaswamy Temple in Jaffna"
             className="rounded-xl shadow-md my-8"
           />
 
           <p>
-            Walking around the tranquil Kandy Lake, created by the last king of
-            Kandy in 1807, you’ll find yourself immersed in the soothing sights
-            and sounds of nature. Beyond the lake, narrow streets lead to
-            bustling markets full of spices, handicrafts, and street food that
-            showcase Sri Lanka’s vibrant daily life.
-          </p>
-
-          <h2>The Sacred Festivals</h2>
-          <p>
-            If you visit in July or August, you may witness the Esala Perahera
-            — a grand cultural parade featuring elephants, dancers, drummers,
-            and fire-breathers. It’s an unforgettable experience that embodies
-            centuries of tradition.
-          </p>
-
-          <h2>Botanical Beauty</h2>
-          <p>
-            Just outside the city, the Royal Botanic Gardens of Peradeniya
-            offer lush landscapes and rare plant species, a peaceful escape
-            into nature’s splendor.
+            At the heart of it all is Jaffna, the cultural capital of the Northern Province.
+            With its vibrant markets, warm community, and deeply rooted Hindu traditions,
+            it’s the perfect starting point to experience Tamil heritage firsthand.
+            The iconic Nallur Kandaswamy Temple, with its towering golden gopuram,
+            stands as a spiritual and architectural marvel — a symbol of pride and devotion.
+            Around it, the city pulses with life: fragrant dosas sizzling on street corners,
+            young dancers practicing Bharatanatyam, and families gathering for festivals like Thai Pongal and Deepavali.
           </p>
 
           <p>
-            Whether you come for the history, the culture, or the serene
-            landscapes, Kandy promises a journey like no other — one that
-            leaves a lasting impression on your soul.
+            Travel beyond Jaffna and you’ll uncover even more layers. Kilinochchi and Mullaitivu,
+            once shaped by conflict, now offer stories of survival and healing. Vavuniya blends traditions
+            at the edge of the North, while Mannar surprises with colonial forts, Catholic churches, and sweeping salt flats.
+            The nearby Delft Island is a time capsule of its own — home to coral walls, wild ponies, and windswept silence.
+          </p>
+
+          <p>
+            Northern cuisine is bold and unforgettable. From spicy Jaffna crab curry to the traditional
+            seafood stew Odiyal Kool, the flavors are as rich as the region’s history.
+            And while Tamil is the language of the land, you’ll find that smiles and hospitality
+            cross all borders here.
+          </p>
+
+          <p>
+            Must-visit spots include the serene Casuarina Beach, the mystical Keerimalai Springs,
+            and Point Pedro, the northernmost tip of the island. A ferry ride to Nagadeepa or Delft Island
+            reveals a peaceful, spiritual world — far from tourist crowds, yet deeply rewarding.
+          </p>
+
+          <p className="text-amber-700 font-semibold text-xl mt-6">
+            The North isn't just a destination — it's an awakening.
           </p>
         </article>
 
-        {/* Right Sidebar */}
+        {/* Sidebar */}
         <aside className="space-y-6">
-          {/* Share */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
-  <h3 className="text-sm font-semibold text-amber-900 mb-4">
-    Share this story
-  </h3>
+          {/* Share Section */}
+          <div className="rounded-2xl bg-gradient-to-br from-orange-100 via-yellow-50 to-orange-100 shadow p-6 text-center border border-orange-200">
+            <h3 className="text-sm font-semibold text-orange-900 mb-4">Share this story</h3>
+            <div className="flex justify-center gap-4">
+              {[FaXTwitter, FaFacebookF, FaLinkedinIn, FaWhatsapp].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  aria-label="Share"
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-orange-200/40 text-orange-800 shadow hover:bg-orange-300/60 hover:scale-105 transition"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
+          </div>
 
-  <div className="flex justify-center gap-4">
-    {[
-      { icon: <FaXTwitter />, label: "Twitter" },
-      { icon: <FaFacebookF />, label: "Facebook" },
-      { icon: <FaLinkedinIn />, label: "LinkedIn" },
-      { icon: <FaWhatsapp />, label: "WhatsApp" },
-    ].map(({ icon, label }, i) => (
-      <a
-        key={i}
-        href="#"
-        aria-label={label}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
-      >
-        {icon}
-      </a>
-    ))}
-  </div>
-</div>
-
-
-          {/* Booking promo */}
-          <div className="rounded-xl bg-amber-50 shadow-sm p-6 flex flex-col justify-between">
+          {/* Booking Promo */}
+          <div className="rounded-xl bg-orange-50 shadow-sm p-6 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-amber-800">
-                🚗 Ready to Explore?
-              </h3>
+              <h3 className="text-lg font-bold text-orange-800">🧭 Explore with Ease</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Book your tuk tuk today and experience Kandy like a local — at
-                your own pace, with the wind in your hair!
+                Ready to explore Sri Lanka’s untouched North? Discover life off the beaten path
+                with a tuk tuk at your side.
               </p>
             </div>
             <a
               href="/book"
-              className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
+              className="mt-4 inline-block text-center font-semibold bg-orange-400 text-orange-900 px-4 py-2 rounded-full shadow hover:bg-orange-300 transition"
             >
               Book Now →
             </a>
           </div>
 
-          {/* Tips */}
+          {/* Pro Tips */}
           <div className="rounded-xl bg-white shadow-sm p-6">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
-              🌟 Pro Tips
-            </h4>
+            <h4 className="text-sm font-semibold text-gray-700 mb-2">🌟 Pro Tips</h4>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>Arrive early to beat crowds at the Temple.</li>
-              <li>Try local snacks at the market stalls.</li>
-              <li>Take a boat ride on the lake for sunset views.</li>
+              <li>Respect temple dress codes (cover shoulders & knees).</li>
+              <li>Learn a few Tamil phrases — it goes a long way.</li>
+              <li>Try local dishes — they’re unforgettable.</li>
+              <li>Keep cash on hand for island ferry rides and local markets.</li>
             </ul>
           </div>
         </aside>

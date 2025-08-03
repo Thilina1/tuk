@@ -270,7 +270,7 @@ const BookingModal = ({
     { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 1, type:" per unit" },
     { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 1, type:" per unit" },
     { name: "Cooler Box", icon: "/icons/cooler.png", price: 1, type:" per unit" },
-    { name: "Dash Cam", icon: "/icons/cooler.png", price: 1, type:" per unit" },
+    { name: "Dash Cam", icon: "/icons/License.png", price: 1, type:" per unit" },
     { name: "Baby Seat", icon: "/icons/babyseat.png", price: 2, type:" per unit" },
     { name: "Hood Rack", icon: "/icons/babyseat.png", price: 3, type:" per unit" },
 

@@ -1,4 +1,9 @@
+"use client";
+
+import { useEffect } from "react";
+import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import {
   FaXTwitter,
   FaFacebookF,
@@ -6,137 +11,164 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 
-export default function Kandy() {
+export default function CeylonTeaHarvestPage() {
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+    document.body.classList.remove("dark");
+    document.body.style.colorScheme = "light";
+  }, []);
+
   return (
-    <main className="bg-white min-h-screen font-sans text-gray-800">
-      {/* Hero */}
-      <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
-          </p>
-          <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            A Journey Through Kandy’s Cultural Heart
-          </h1>
-          <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-            Discover the sacred city of Kandy — home to timeless traditions,
-            spiritual serenity, and stunning natural beauty nestled in Sri
-            Lanka’s hill country.
-          </p>
-        </div>
-      </section>
+    <>
+      <Head>
+        <meta name="color-scheme" content="light only" />
+        <title>Harvest of Ceylon Tea | Tuk Tuk Drive</title>
+      </Head>
 
-      {/* Main layout */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-8 py-12 px-4 md:px-8">
-        {/* Main content */}
-        <article className="prose prose-lg max-w-none text-gray-700">
-          <p>
-            Kandy, the last royal capital of Sri Lanka, stands as a living
-            testament to the island’s rich heritage. Its spiritual center is
-            the Temple of the Sacred Tooth Relic, which draws thousands of
-            pilgrims each year. The atmosphere is one of reverence, with
-            colorful offerings, rhythmic drumming, and the scent of incense
-            filling the air.
-          </p>
-
-          <Image
-            src="/blog/blogPost/kandy_lake.jpeg"
-            width={1200}
-            height={700}
-            alt="Kandy Lake"
-            className="rounded-xl shadow-md my-8"
-          />
-
-          <p>
-            Walking around the tranquil Kandy Lake, created by the last king of
-            Kandy in 1807, you’ll find yourself immersed in the soothing sights
-            and sounds of nature. Beyond the lake, narrow streets lead to
-            bustling markets full of spices, handicrafts, and street food that
-            showcase Sri Lanka’s vibrant daily life.
-          </p>
-
-          <h2>The Sacred Festivals</h2>
-          <p>
-            If you visit in July or August, you may witness the Esala Perahera
-            — a grand cultural parade featuring elephants, dancers, drummers,
-            and fire-breathers. It’s an unforgettable experience that embodies
-            centuries of tradition.
-          </p>
-
-          <h2>Botanical Beauty</h2>
-          <p>
-            Just outside the city, the Royal Botanic Gardens of Peradeniya
-            offer lush landscapes and rare plant species, a peaceful escape
-            into nature’s splendor.
-          </p>
-
-          <p>
-            Whether you come for the history, the culture, or the serene
-            landscapes, Kandy promises a journey like no other — one that
-            leaves a lasting impression on your soul.
-          </p>
-        </article>
-
-        {/* Right Sidebar */}
-        <aside className="space-y-6">
-          {/* Share */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
-  <h3 className="text-sm font-semibold text-amber-900 mb-4">
-    Share this story
-  </h3>
-
-  <div className="flex justify-center gap-4">
-    {[
-      { icon: <FaXTwitter />, label: "Twitter" },
-      { icon: <FaFacebookF />, label: "Facebook" },
-      { icon: <FaLinkedinIn />, label: "LinkedIn" },
-      { icon: <FaWhatsapp />, label: "WhatsApp" },
-    ].map(({ icon, label }, i) => (
-      <a
-        key={i}
-        href="#"
-        aria-label={label}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
-      >
-        {icon}
-      </a>
-    ))}
-  </div>
-</div>
-
-
-          {/* Booking promo */}
-          <div className="rounded-xl bg-amber-50 shadow-sm p-6 flex flex-col justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-amber-800">
-                🚗 Ready to Explore?
-              </h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Book your tuk tuk today and experience Kandy like a local — at
-                your own pace, with the wind in your hair!
+      <div className="light bg-white text-gray-800">
+        <main className="bg-white text-gray-800 min-h-screen font-sans">
+          {/* Hero */}
+          <section
+            className="relative py-12 px-4 text-center shadow-sm"
+            style={{
+              background: "linear-gradient(to right, #dcfce7, #bbf7d0, #86efac)",
+            }}
+          >
+            <div className="max-w-3xl mx-auto">
+              <p className="text-xs tracking-widest uppercase text-green-700">
+                🍃 Ceylon Tea Harvest
+              </p>
+              <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
+                Harvesting Ceylon Tea: A Journey Through Sri Lanka’s Lush Hills
+              </h1>
+              <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
+                Discover the story behind Sri Lanka’s world-famous tea — from hand-plucked leaves to your perfect cup.
               </p>
             </div>
-            <a
-              href="/book"
-              className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
-            >
-              Book Now →
-            </a>
-          </div>
+          </section>
 
-          {/* Tips */}
-          <div className="rounded-xl bg-white shadow-sm p-6">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
-              🌟 Pro Tips
-            </h4>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>Arrive early to beat crowds at the Temple.</li>
-              <li>Try local snacks at the market stalls.</li>
-              <li>Take a boat ride on the lake for sunset views.</li>
-            </ul>
+          {/* Layout */}
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-8 py-12 px-4 md:px-8">
+            {/* Main content */}
+            <article className="prose prose-lg max-w-none text-gray-700">
+              <h2>🏞️ A Landscape Built for Tea</h2>
+              <p>
+                Ceylon tea flourishes in Sri Lanka’s misty highlands — places like Nuwara Eliya,
+                Ella, Haputale, and Hatton. These regions produce high-grown teas known for
+                their bright, crisp character.
+              </p>
+
+              <Image
+                src="/blog/blogPost/tea_land.jpeg"
+                width={1200}
+                height={700}
+                alt="Ceylon tea estate"
+                className="rounded-xl shadow-md my-8"
+              />
+
+              <h2>👩🏽‍🌾 The Harvesting Ritual</h2>
+              <p>
+                Tea plucking is done entirely by hand — typically by Tamil women in vibrant saris.
+                With baskets on their backs, they carefully pluck the top two leaves and a bud,
+                ensuring only the best go into your brew.
+              </p>
+
+              <h2>🏡 Visit a Tea Estate</h2>
+              <p>
+                Visit estates like Pedro, Dambatenne, or Mackwoods to walk through the gardens,
+                witness tea processing, and taste a fresh cup of Ceylon’s finest.
+              </p>
+
+              <h2>📸 Cultural Vibes & Experiences</h2>
+              <p>
+                Explore the colonial-era history of tea, try plucking with locals, or take
+                scenic train rides through endless green hills. Every step reveals the deep
+                cultural connection Sri Lanka shares with tea.
+              </p>
+
+              <h2>📅 Best Time for the Harvest</h2>
+              <p>
+                March–May and August–October are peak harvesting seasons in the central hills.
+                Weather’s pleasant, views are epic, and activity is in full swing.
+              </p>
+
+              <h2>🌍 More Than a Drink</h2>
+              <p>
+                Ceylon tea supports over a million Sri Lankans. From pickers to tasters, every
+                cup represents generations of skill, hard work, and national pride.
+              </p>
+
+              <Link href="/blog/blogsContent/templeOfTooth">
+                <button
+                  className="text-sm font-semibold px-6 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300"
+                  style={{
+                    backgroundColor: "#facc15",
+                    color: "#1f2937",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  Visit Post
+                </button>
+              </Link>
+            </article>
+
+            {/* Sidebar */}
+            <aside className="space-y-6">
+              <div
+                className="rounded-2xl shadow p-6 text-center border border-green-200"
+                style={{
+                  background: "linear-gradient(to bottom right, #bbf7d0, #ecfdf5, #d1fae5)",
+                }}
+              >
+                <h3 className="text-sm font-semibold text-green-900 mb-4">
+                  Share this story
+                </h3>
+                <div className="flex justify-center gap-4">
+                  {[FaXTwitter, FaFacebookF, FaLinkedinIn, FaWhatsapp].map((Icon, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      aria-label="Share"
+                      className="w-10 h-10 rounded-full flex items-center justify-center bg-green-300 text-green-900 shadow hover:bg-green-400 hover:scale-105 transition"
+                    >
+                      <Icon />
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="text-center bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl p-6 shadow-lg">
+                <Link
+                  href="/#book"
+                  className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
+                  style={{
+                    backgroundImage: "linear-gradient(to right, #22c55e, #10b981)",
+                  }}
+                >
+                  🍃 Book Your Tea Trail
+                </Link>
+                <p className="text-sm text-white mt-2">
+                  Taste the legacy with no upfront cost.
+                </p>
+              </div>
+
+              <div
+                className="rounded-xl shadow-sm p-6"
+                style={{ backgroundColor: "#ecfdf5" }}
+              >
+                <h4 className="text-sm font-semibold text-gray-800 mb-2">
+                  🌟 Pro Tips
+                </h4>
+                <ul className="text-sm text-gray-700 space-y-1 list-disc pl-5">
+                  <li><strong>Travel by train 🚂</strong> – Best views from Kandy to Ella.</li>
+                  <li><strong>Pack a light jacket 🧥</strong> – Hill country gets chilly in the evening.</li>
+                  <li><strong>Talk to locals 🗣️</strong> – Learn real stories from pickers and estate workers.</li>
+                </ul>
+              </div>
+            </aside>
           </div>
-        </aside>
+        </main>
       </div>
-    </main>
+    </>
   );
 }

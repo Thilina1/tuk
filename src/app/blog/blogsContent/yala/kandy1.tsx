@@ -44,7 +44,7 @@ export default function Yala() {
           </p>
 
           <Image
-            src="/blog/blogPost/yala_elephant.jpeg"
+            src="/blog/yala.jpg"
             width={1200}
             height={700}
             alt="Elephant at Yala National Park"

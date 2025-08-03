@@ -17,11 +17,11 @@ export async function POST(request) {
       port: 465,
       secure: true, // SSL/TLS
       auth: {
-        // user: 'test@tuktukdrive.com',
-        // pass: 'F6{X_jks2D[#',
+        user: 'test@tuktukdrive.com',
+        pass: 'F6{X_jks2D[#',
        
-        user: 'info@tuktukdrive.com',
-        pass: 'Rd#RhOyBa^jy',
+        // user: 'info@tuktukdrive.com',
+        // pass: 'Rd#RhOyBa^jy',
       },
     });
 
