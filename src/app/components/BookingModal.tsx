@@ -263,7 +263,6 @@ const perDayCharge = getPerDayCharge(rentalDays);
   );
   
   const deposit = 50;
-  const orderId = `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
   const totalRental = useMemo(() => {
     let total =
       rentalDays * formValues.tukCount * perDayCharge +
