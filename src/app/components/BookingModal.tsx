@@ -5,7 +5,6 @@ import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firest
 import { db } from "../../config/firebase";
 import Image from "next/image";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-import Script from "next/script";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa"; // top of your file
 
 
@@ -116,7 +115,6 @@ const BookingModal = ({
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState("");
 
-  const [showThankYou, setShowThankYou] = useState(false);
 
 
   const handlePayNow = async () => {
@@ -503,34 +501,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 </div>
 
-{showThankYou ? (
-  <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg p-6 shadow-md text-gray-800">
-    <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">
-      🛺🎉 Woohoo! Your Tuk-Tuk Awaits!
-    </h2>
 
-    <p className="text-gray-700 mb-6 text-center max-w-xl">
-      Thanks for booking with us — your tuk-tuk ride is officially confirmed!
-      <br />
-      We’ve sent all the details to your email, and our representative will be in touch with you via WhatsApp shortly.
-      <br />
-      Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
-    </p>
-
-    <button
-      onClick={() => {
-        closeModal();
-        window.location.reload();
-      }}
-      className="px-5 py-2 rounded-lg text-white font-semibold shadow transition hover:scale-105"
-      style={{
-        background: "linear-gradient(to right, #fb923c, #f97316)", // from-orange-400 to-orange-500
-      }}
-    >
-      Close
-    </button>
-  </div>
-) : (
   <>
 
 
@@ -1120,7 +1091,7 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 
         </div>
-        </>)} 
+        </> 
       </div>
     </div>
   );
