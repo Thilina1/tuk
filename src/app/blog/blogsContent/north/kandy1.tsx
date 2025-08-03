@@ -18,7 +18,7 @@ export default function NorthernSriLanka() {
             🌾 Northern Sri Lanka
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            Discover Northern Sri Lanka – Culture, Resilience & Untouched Beauty
+            Discover Northern Sri Lanka – Culture, Resilience &amp; Untouched Beauty
           </h1>
           <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
             Explore a region rich in Tamil heritage, historic spirit, and peaceful coastal charm.
@@ -33,7 +33,7 @@ export default function NorthernSriLanka() {
           <p>
             Northern Sri Lanka feels like a world apart — a soulful region shaped by Tamil culture,
             layered history, and quiet strength. Far from the bustling south and hill country,
-            the North moves to its own rhythm. It’s where ancient temples echo with devotion,
+            the North moves to its own rhythm. It&rsquo;s where ancient temples echo with devotion,
             colonial forts whisper stories of the past, and long stretches of coastline invite peaceful reflection.
           </p>
 
@@ -48,7 +48,7 @@ export default function NorthernSriLanka() {
           <p>
             At the heart of it all is Jaffna, the cultural capital of the Northern Province.
             With its vibrant markets, warm community, and deeply rooted Hindu traditions,
-            it’s the perfect starting point to experience Tamil heritage firsthand.
+            it&rsquo;s the perfect starting point to experience Tamil heritage firsthand.
             The iconic Nallur Kandaswamy Temple, with its towering golden gopuram,
             stands as a spiritual and architectural marvel — a symbol of pride and devotion.
             Around it, the city pulses with life: fragrant dosas sizzling on street corners,
@@ -56,7 +56,7 @@ export default function NorthernSriLanka() {
           </p>
 
           <p>
-            Travel beyond Jaffna and you’ll uncover even more layers. Kilinochchi and Mullaitivu,
+            Travel beyond Jaffna and you&rsquo;ll uncover even more layers. Kilinochchi and Mullaitivu,
             once shaped by conflict, now offer stories of survival and healing. Vavuniya blends traditions
             at the edge of the North, while Mannar surprises with colonial forts, Catholic churches, and sweeping salt flats.
             The nearby Delft Island is a time capsule of its own — home to coral walls, wild ponies, and windswept silence.
@@ -64,8 +64,8 @@ export default function NorthernSriLanka() {
 
           <p>
             Northern cuisine is bold and unforgettable. From spicy Jaffna crab curry to the traditional
-            seafood stew Odiyal Kool, the flavors are as rich as the region’s history.
-            And while Tamil is the language of the land, you’ll find that smiles and hospitality
+            seafood stew Odiyal Kool, the flavors are as rich as the region&rsquo;s history.
+            And while Tamil is the language of the land, you&rsquo;ll find that smiles and hospitality
             cross all borders here.
           </p>
 
@@ -76,7 +76,7 @@ export default function NorthernSriLanka() {
           </p>
 
           <p className="text-amber-700 font-semibold text-xl mt-6">
-            The North isn't just a destination — it's an awakening.
+            The North isn&rsquo;t just a destination — it&rsquo;s an awakening.
           </p>
         </article>
 
@@ -104,7 +104,7 @@ export default function NorthernSriLanka() {
             <div>
               <h3 className="text-lg font-bold text-orange-800">🧭 Explore with Ease</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Ready to explore Sri Lanka’s untouched North? Discover life off the beaten path
+                Ready to explore Sri Lanka&rsquo;s untouched North? Discover life off the beaten path
                 with a tuk tuk at your side.
               </p>
             </div>
@@ -120,9 +120,9 @@ export default function NorthernSriLanka() {
           <div className="rounded-xl bg-white shadow-sm p-6">
             <h4 className="text-sm font-semibold text-gray-700 mb-2">🌟 Pro Tips</h4>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>Respect temple dress codes (cover shoulders & knees).</li>
+              <li>Respect temple dress codes (cover shoulders &amp; knees).</li>
               <li>Learn a few Tamil phrases — it goes a long way.</li>
-              <li>Try local dishes — they’re unforgettable.</li>
+              <li>Try local dishes — they&rsquo;re unforgettable.</li>
               <li>Keep cash on hand for island ferry rides and local markets.</li>
             </ul>
           </div>

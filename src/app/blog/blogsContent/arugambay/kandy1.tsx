@@ -27,7 +27,7 @@ export default function ArugamBay() {
             Ride the Waves &amp; Embrace the Coastal Vibes
           </h1>
           <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
-            A surfer&#39;s paradise and a peaceful beachside retreat — Arugam Bay is where the rhythm of the ocean meets Sri Lanka&#39;s east coast charm.
+            A surfer&rsquo;s paradise and a peaceful beachside retreat — Arugam Bay is where the rhythm of the ocean meets Sri Lanka&rsquo;s east coast charm.
           </p>
         </div>
       </section>
@@ -37,12 +37,12 @@ export default function ArugamBay() {
         {/* Main content */}
         <article className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Arugam Bay isn’t just about surfing — it's an adventure basecamp surrounded by raw beauty, rich biodiversity, and hidden cultural gems waiting to be explored.
+            Arugam Bay isn&rsquo;t just about surfing — it&rsquo;s an adventure basecamp surrounded by raw beauty, rich biodiversity, and hidden cultural gems waiting to be explored.
           </p>
 
           <h2>🏄‍♀️ Surf All Day</h2>
           <p>
-            Whether you're a beginner or a pro, the waves at Arugam Bay cater to all levels. Surf hotspots like **Main Point**, **Peanut Farm**, and **Whiskey Point** offer different styles of breaks and crowd levels. Sunrise sessions are especially magical with soft light and glassy waves.
+            Whether you&rsquo;re a beginner or a pro, the waves at Arugam Bay cater to all levels. Surf hotspots like <strong>Main Point</strong>, <strong>Peanut Farm</strong>, and <strong>Whiskey Point</strong> offer different styles of breaks and crowd levels. Sunrise sessions are especially magical with soft light and glassy waves.
           </p>
 
           <Image
@@ -55,15 +55,15 @@ export default function ArugamBay() {
 
           <h2>🌿 Explore the Wild Side</h2>
           <p>
-            Just a short tuk-tuk ride away, **Kumana National Park** (Yala East) offers a quieter safari experience. Home to elephants, leopards, crocs, and hundreds of bird species, it's ideal for wildlife lovers seeking an off-the-beaten-path adventure.
+            Just a short tuk-tuk ride away, <strong>Kumana National Park</strong> (Yala East) offers a quieter safari experience. Home to elephants, leopards, crocs, and hundreds of bird species, it&rsquo;s ideal for wildlife lovers seeking an off-the-beaten-path adventure.
           </p>
           <p>
-            Nearby, the **Lahugala Kitulana National Park** is a hidden gem where herds of elephants gather around the tank during dry season evenings — a sight few tourists get to see.
+            Nearby, the <strong>Lahugala Kitulana National Park</strong> is a hidden gem where herds of elephants gather around the tank during dry season evenings — a sight few tourists get to see.
           </p>
 
           <h2>🛶 Pottuvil Lagoon Safari</h2>
           <p>
-            Drift through a maze of mangroves at golden hour. With calm waters reflecting the sky and monkeys swinging overhead, a **canoe safari on Pottuvil Lagoon** is serene, surreal, and unforgettable. Keep your eyes open for water monitors, eagles, and even elephants near the edge.
+            Drift through a maze of mangroves at golden hour. With calm waters reflecting the sky and monkeys swinging overhead, a <strong>canoe safari on Pottuvil Lagoon</strong> is serene, surreal, and unforgettable. Keep your eyes open for water monitors, eagles, and even elephants near the edge.
           </p>
 
           <Image
@@ -76,12 +76,12 @@ export default function ArugamBay() {
 
           <h2>⛰️ Elephant Rock Cliff Hike</h2>
           <p>
-            This one’s for the explorers. Take a short hike up **Elephant Rock**, especially around sunrise or sunset. The 360° coastal view is jaw-dropping. It’s also a good spot to watch surfers from above or chill in solitude with a breeze.
+            This one&rsquo;s for the explorers. Take a short hike up <strong>Elephant Rock</strong>, especially around sunrise or sunset. The 360° coastal view is jaw-dropping. It&rsquo;s also a good spot to watch surfers from above or chill in solitude with a breeze.
           </p>
 
           <h2>🛕 Hidden History at Muhudu Maha Viharaya</h2>
           <p>
-            Just outside Pottuvil lies **Muhudu Maha Viharaya**, a coastal Buddhist temple partially buried in sand dunes. Ancient ruins, weathered statues, and coastal legends make it a peaceful yet powerful stop for cultural explorers.
+            Just outside Pottuvil lies <strong>Muhudu Maha Viharaya</strong>, a coastal Buddhist temple partially buried in sand dunes. Ancient ruins, weathered statues, and coastal legends make it a peaceful yet powerful stop for cultural explorers.
           </p>
 
           <Image
@@ -94,11 +94,11 @@ export default function ArugamBay() {
 
           <h2>🧘‍♀️ Start Slow, Stay Present</h2>
           <p>
-            Begin your mornings with **beachside yoga**, then explore local village roads by bicycle or tuk-tuk. You'll find scenic rice fields, wild peacocks, and genuine smiles from the local community. Arugam Bay is where you slow down, breathe deep, and reconnect.
+            Begin your mornings with <strong>beachside yoga</strong>, then explore local village roads by bicycle or tuk-tuk. You&rsquo;ll find scenic rice fields, wild peacocks, and genuine smiles from the local community. Arugam Bay is where you slow down, breathe deep, and reconnect.
           </p>
 
           <p className="font-semibold text-xl mt-8 text-sky-800">
-            Arugam Bay isn’t just a beach — it’s a lifestyle. 🌴
+            Arugam Bay isn&rsquo;t just a beach — it&rsquo;s a lifestyle. 🌴
           </p>
         </article>
 
