@@ -14,7 +14,7 @@ export default function Kandy() {
       <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
+            🏝️ Kandy World Heritages
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
             A Journey Through Kandy’s Cultural Heart
@@ -81,7 +81,7 @@ export default function Kandy() {
         {/* Right Sidebar */}
         <aside className="space-y-6">
           {/* Share */}
-          <div className="rounded-xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
+          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
             <h3 className="text-sm font-semibold text-amber-900 mb-4">
               Share this story
             </h3>

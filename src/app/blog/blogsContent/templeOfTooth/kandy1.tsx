@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   FaXTwitter,
@@ -6,22 +8,22 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 
-export default function Kandy() {
+export default function TempleOfTheTooth() {
   return (
-    <main className="bg-white min-h-screen font-sans text-gray-800">
+    <main className="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-100 min-h-screen font-sans text-amber-900">
       {/* Hero */}
-      <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
+      <section className="relative bg-gradient-to-br from-yellow-100 via-orange-100 to-amber-200 py-12 px-4 text-center shadow-sm">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
+            🛕 Sacred Temple of the Tooth
           </p>
-          <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            A Journey Through Kandy’s Cultural Heart
+          <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-amber-900">
+            Discover Sri Lanka’s Holiest Buddhist Shrine
           </h1>
-          <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-            Discover the sacred city of Kandy — home to timeless traditions,
-            spiritual serenity, and stunning natural beauty nestled in Sri
-            Lanka’s hill country.
+          <p className="mt-4 text-amber-800 text-sm md:text-base leading-relaxed">
+            The Temple of the Sacred Tooth Relic, nestled in the heart of Kandy,
+            is a spiritual beacon for Buddhists worldwide and a symbol of
+            Sri Lanka’s cultural heritage.
           </p>
         </div>
       </section>
@@ -29,14 +31,12 @@ export default function Kandy() {
       {/* Main layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-8 py-12 px-4 md:px-8">
         {/* Main content */}
-        <article className="prose prose-lg max-w-none text-gray-700">
+        <article className="prose prose-lg max-w-none text-amber-900">
           <p>
-            Kandy, the last royal capital of Sri Lanka, stands as a living
-            testament to the island’s rich heritage. Its spiritual center is
-            the Temple of the Sacred Tooth Relic, which draws thousands of
-            pilgrims each year. The atmosphere is one of reverence, with
-            colorful offerings, rhythmic drumming, and the scent of incense
-            filling the air.
+            Known as "Sri Dalada Maligawa," this revered temple enshrines the
+            relic of the tooth of the Buddha — a sacred symbol of sovereignty
+            and spiritual significance. The temple is not just a site of worship,
+            but a cornerstone of Sri Lankan identity.
           </p>
 
           <Image
@@ -48,91 +48,100 @@ export default function Kandy() {
           />
 
           <p>
-            Walking around the tranquil Kandy Lake, created by the last king of
-            Kandy in 1807, you’ll find yourself immersed in the soothing sights
-            and sounds of nature. Beyond the lake, narrow streets lead to
-            bustling markets full of spices, handicrafts, and street food that
-            showcase Sri Lanka’s vibrant daily life.
+            As you step inside, you’re greeted by drummers, flickering oil lamps,
+            and the scent of jasmine and incense. Devotees dressed in white offer
+            lotus flowers and prayers, creating a peaceful and moving atmosphere.
           </p>
 
-          <h2>The Sacred Festivals</h2>
+          <h2 className="text-amber-900">Cultural Legacy</h2>
           <p>
-            If you visit in July or August, you may witness the Esala Perahera
-            — a grand cultural parade featuring elephants, dancers, drummers,
-            and fire-breathers. It’s an unforgettable experience that embodies
-            centuries of tradition.
+            The temple complex also houses the Royal Palace and Museum, offering
+            visitors a glimpse into ancient Kandyan architecture, rituals, and
+            artistry. Be sure to witness the daily Thevava ceremony — a
+            rhythmic devotional offering that brings the temple to life.
           </p>
 
-          <h2>Botanical Beauty</h2>
+          <h2 className="text-amber-900">Esala Perahera Festival</h2>
           <p>
-            Just outside the city, the Royal Botanic Gardens of Peradeniya
-            offer lush landscapes and rare plant species, a peaceful escape
-            into nature’s splendor.
+            If you visit during July or August, you’ll witness the spectacular
+            Esala Perahera procession, where the tooth relic is paraded on a
+            tusker’s back through candle-lit streets with dancers, drummers,
+            and fire performers.
           </p>
 
           <p>
-            Whether you come for the history, the culture, or the serene
-            landscapes, Kandy promises a journey like no other — one that
-            leaves a lasting impression on your soul.
+            A visit to the Temple of the Tooth is not just a sightseeing
+            experience — it’s a spiritual journey into Sri Lanka’s heart and soul.
           </p>
         </article>
 
         {/* Right Sidebar */}
         <aside className="space-y-6">
           {/* Share */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
-  <h3 className="text-sm font-semibold text-amber-900 mb-4">
-    Share this story
-  </h3>
+          <div className="rounded-xl bg-gradient-to-br from-yellow-100 via-orange-100 to-amber-200 shadow p-6 text-center border border-amber-300">
+            <h3 className="text-sm font-semibold text-amber-900 mb-4">
+              Share this story
+            </h3>
 
-  <div className="flex justify-center gap-4">
-    {[
-      { icon: <FaXTwitter />, label: "Twitter" },
-      { icon: <FaFacebookF />, label: "Facebook" },
-      { icon: <FaLinkedinIn />, label: "LinkedIn" },
-      { icon: <FaWhatsapp />, label: "WhatsApp" },
-    ].map(({ icon, label }, i) => (
-      <a
-        key={i}
-        href="#"
-        aria-label={label}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
-      >
-        {icon}
-      </a>
-    ))}
-  </div>
-</div>
-
+            <div className="flex justify-center gap-4">
+              {[
+                { icon: <FaXTwitter />, label: "Twitter" },
+                { icon: <FaFacebookF />, label: "Facebook" },
+                { icon: <FaLinkedinIn />, label: "LinkedIn" },
+                { icon: <FaWhatsapp />, label: "WhatsApp" },
+              ].map(({ icon, label }, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  aria-label={label}
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-300 text-amber-900 shadow hover:bg-amber-400 hover:scale-105 transition"
+                >
+                  {icon}
+                </a>
+              ))}
+            </div>
+          </div>
 
           {/* Booking promo */}
-          <div className="rounded-xl bg-amber-50 shadow-sm p-6 flex flex-col justify-between">
+          <div className="rounded-xl bg-gradient-to-br from-amber-200 to-amber-300 shadow-sm p-6 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-amber-800">
-                🚗 Ready to Explore?
+              <h3 className="text-lg font-bold text-amber-900">
+                🛺 Visiting Kandy?
               </h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Book your tuk tuk today and experience Kandy like a local — at
-                your own pace, with the wind in your hair!
+              <p className="mt-2 text-sm text-amber-800">
+                Rent a tuk tuk and explore Kandy’s rich heritage and nearby
+                sights at your own pace — flexible, fun, and local!
               </p>
             </div>
             <a
-              href="/book"
-              className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
+              href="/#book"
+              className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
+              style={{
+                backgroundImage: "linear-gradient(to right, #34d399, #10b981)",
+              }}
             >
-              Book Now →
+              🚀 Book Your TukTuk
             </a>
           </div>
 
-          {/* Tips */}
+          {/* Pro Tips */}
           <div className="rounded-xl bg-white shadow-sm p-6">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+            <h4 className="text-sm font-semibold text-amber-900 mb-2">
               🌟 Pro Tips
             </h4>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>Arrive early to beat crowds at the Temple.</li>
-              <li>Try local snacks at the market stalls.</li>
-              <li>Take a boat ride on the lake for sunset views.</li>
+            <ul className="text-sm text-amber-800 space-y-1 list-disc pl-5">
+              <li>
+                <strong>Arrive early ⏰</strong> – Beat the morning crowd and catch
+                the Thevava ceremony for an authentic spiritual moment.
+              </li>
+              <li>
+                <strong>Dress respectfully 🕊️</strong> – White attire is ideal.
+                Shoulders and knees must be covered to enter the temple.
+              </li>
+              <li>
+                <strong>Explore nearby 🏞️</strong> – After the temple, stroll
+                around Kandy Lake or visit the nearby Royal Palace Museum.
+              </li>
             </ul>
           </div>
         </aside>

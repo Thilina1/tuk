@@ -10,26 +10,26 @@ export default function ContactHeader() {
         backgroundImage: "url('/hero/island-life-desk-header.jpg')",
       }}
     >
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 z-0" />
+      {/* Stronger bottom gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/70 to-black z-0" />
 
-      {/* Text Content */}
-      <section className="relative min-h-[300px] flex flex-col items-center justify-center text-center z-10 px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+      {/* Extra dark overlay for high contrast */}
+      <div className="absolute inset-0 bg-black opacity-40 z-0" />
+
+      {/* Text Section */}
+      <section className="relative min-h-[200px] md:min-h-[270px] flex flex-col items-center justify-center text-center px-4 z-10">
+        <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-md">
           🧾 Payment Cost Breakdown
         </h1>
 
-        <p className="mt-4 text-base md:text-lg max-w-2xl text-gray-100 drop-shadow-md">
-  Here&rsquo;s a transparent summary of all charges for your tuk-tuk adventure. No hidden fees — just pure travel freedom.
-</p>
+        <p className="mt-2 text-sm md:text-base drop-shadow-md max-w-xl">
+          Here&rsquo;s a transparent summary of all charges for your tuk-tuk adventure.
+          No hidden fees — just pure travel freedom.
+        </p>
 
-
-        {/* Breadcrumb */}
-        <div className="mt-4 text-sm text-yellow-300 flex items-center gap-2 drop-shadow-sm">
-          <Link href="/" className="hover:underline hover:text-yellow-100 transition">Home</Link>
-          <span>&gt;</span>
-          <span className="text-yellow-400 font-medium">Payment</span>
-        </div>
+        <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
+          <Link href="/" className="hover:underline hover:text-yellow-100 transition">Home</Link> &gt; Payment
+        </p>
       </section>
     </header>
   );

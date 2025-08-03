@@ -8,27 +8,28 @@ export default function AboutUsHeader() {
         backgroundImage: "url('/hero/cardBackground.PNG')",
       }}
     >
-      {/* Overlay for darker bottom gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900"></div>
+      {/* Stronger bottom gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/70 to-black"></div>
 
-      {/* Optional Top Message */}
-<section className="relative min-h-[270px] flex flex-col items-center justify-center text-center text-white">
-  {/* Optional dark transparent overlay if needed */}
-  <div className="absolute inset-0 bg-opacity-40 z-0" />
+      {/* Content Section */}
+      <section className="relative min-h-[200px] md:min-h-[270px] flex flex-col items-center justify-center text-center px-4">
+        {/* Extra dark overlay for more contrast */}
+        <div className="absolute inset-0 bg-black opacity-40 z-0" />
 
-  {/* Text Content */}
-  <div className="relative z-10">
-  <h1 className="text-3xl font-bold">About Us</h1>
-  <p className="mt-2 text-sm drop-shadow-md">
-      Discover Sri Lanka at your own pace with TukTuk Drive — your partner in
-      adventure, freedom, and unforgettable road trips.
-    </p>
-    <p className="text-xs text-yellow-400 mt-1 drop-shadow-md">
-      Home &gt; About Us
-    </p>
-  </div>
-</section>
-
+        {/* Text Content */}
+        <div className="relative z-10">
+          <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-md">
+            About Us
+          </h1>
+          <p className="mt-2 text-sm md:text-base drop-shadow-md max-w-xl mx-auto">
+            Discover Sri Lanka at your own pace with TukTuk Drive — your partner in
+            adventure, freedom, and unforgettable road trips.
+          </p>
+          <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
+            Home &gt; About Us
+          </p>
+        </div>
+      </section>
     </footer>
   );
 }

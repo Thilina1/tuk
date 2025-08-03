@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   FaXTwitter,
@@ -6,133 +8,137 @@ import {
   FaWhatsapp,
 } from "react-icons/fa6";
 
-export default function Kandy() {
+export default function Yala() {
   return (
     <main className="bg-white min-h-screen font-sans text-gray-800">
       {/* Hero */}
-      <section className="relative bg-gradient-to-r from-amber-100 to-orange-50 py-12 px-4 text-center shadow-sm">
+      <section
+        className="relative py-12 px-4 text-center shadow-sm"
+        style={{
+          background: "linear-gradient(to right, #d1fae5, #a7f3d0, #6ee7b7)",
+        }}
+      >
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs tracking-widest uppercase text-amber-700">
-            🏞️ Kandy World Heritage
+          <p className="text-xs tracking-widest uppercase text-green-700">
+            🐘 Yala National Park
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold mt-2 text-gray-800">
-            A Journey Through Kandy’s Cultural Heart
+            Into the Wild: Sri Lanka’s Untamed Treasure
           </h1>
-          <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-            Discover the sacred city of Kandy — home to timeless traditions,
-            spiritual serenity, and stunning natural beauty nestled in Sri
-            Lanka’s hill country.
+          <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
+            Explore Yala National Park — where leopards roam, elephants thunder,
+            and nature speaks in its purest form.
           </p>
         </div>
       </section>
 
-      {/* Main layout */}
+      {/* Layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-8 py-12 px-4 md:px-8">
         {/* Main content */}
         <article className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Kandy, the last royal capital of Sri Lanka, stands as a living
-            testament to the island’s rich heritage. Its spiritual center is
-            the Temple of the Sacred Tooth Relic, which draws thousands of
-            pilgrims each year. The atmosphere is one of reverence, with
-            colorful offerings, rhythmic drumming, and the scent of incense
-            filling the air.
+            Yala, Sri Lanka’s second-largest and most visited national park, is a sprawling wilderness
+            of dry forests, grasslands, and lagoons. It’s the ultimate safari destination for anyone
+            seeking a close encounter with Sri Lanka’s rich wildlife.
           </p>
 
           <Image
-            src="/blog/blogPost/kandy_lake.jpeg"
+            src="/blog/blogPost/yala_elephant.jpeg"
             width={1200}
             height={700}
-            alt="Kandy Lake"
+            alt="Elephant at Yala National Park"
             className="rounded-xl shadow-md my-8"
           />
 
           <p>
-            Walking around the tranquil Kandy Lake, created by the last king of
-            Kandy in 1807, you’ll find yourself immersed in the soothing sights
-            and sounds of nature. Beyond the lake, narrow streets lead to
-            bustling markets full of spices, handicrafts, and street food that
-            showcase Sri Lanka’s vibrant daily life.
+            Home to one of the highest leopard densities in the world, Yala also shelters sloth bears,
+            crocodiles, peacocks, spotted deer, and herds of majestic elephants. Early morning or late
+            afternoon safaris increase your chances of spotting these elusive creatures.
           </p>
 
-          <h2>The Sacred Festivals</h2>
+          <h2>Beyond the Safari</h2>
           <p>
-            If you visit in July or August, you may witness the Esala Perahera
-            — a grand cultural parade featuring elephants, dancers, drummers,
-            and fire-breathers. It’s an unforgettable experience that embodies
-            centuries of tradition.
+            Yala isn’t just about the big game. Explore its sacred Buddhist ruins like Sithulpawwa
+            Rock Temple, or enjoy birdwatching at the coastal lagoons and salt pans that attract
+            flamingos and painted storks.
           </p>
 
-          <h2>Botanical Beauty</h2>
+          <h2>Unplug & Reconnect</h2>
           <p>
-            Just outside the city, the Royal Botanic Gardens of Peradeniya
-            offer lush landscapes and rare plant species, a peaceful escape
-            into nature’s splendor.
+            With limited connectivity, Yala invites you to disconnect from the digital world and
+            reconnect with nature. The rustle of the trees, the call of the wild, and the golden
+            sunsets over the plains create an experience that stays with you long after the journey ends.
           </p>
 
           <p>
-            Whether you come for the history, the culture, or the serene
-            landscapes, Kandy promises a journey like no other — one that
-            leaves a lasting impression on your soul.
+            Whether you're a wildlife enthusiast or a curious explorer, Yala offers raw, untamed adventure
+            — a glimpse into nature’s majestic rhythm.
           </p>
         </article>
 
-        {/* Right Sidebar */}
+        {/* Sidebar */}
         <aside className="space-y-6">
           {/* Share */}
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-100 shadow p-6 text-center border border-amber-200">
-  <h3 className="text-sm font-semibold text-amber-900 mb-4">
-    Share this story
-  </h3>
-
-  <div className="flex justify-center gap-4">
-    {[
-      { icon: <FaXTwitter />, label: "Twitter" },
-      { icon: <FaFacebookF />, label: "Facebook" },
-      { icon: <FaLinkedinIn />, label: "LinkedIn" },
-      { icon: <FaWhatsapp />, label: "WhatsApp" },
-    ].map(({ icon, label }, i) => (
-      <a
-        key={i}
-        href="#"
-        aria-label={label}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-200/40 text-amber-800 shadow hover:bg-amber-300/60 hover:scale-105 transition transform duration-200 ease-out"
-      >
-        {icon}
-      </a>
-    ))}
-  </div>
-</div>
-
-
-          {/* Booking promo */}
-          <div className="rounded-xl bg-amber-50 shadow-sm p-6 flex flex-col justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-amber-800">
-                🚗 Ready to Explore?
-              </h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Book your tuk tuk today and experience Kandy like a local — at
-                your own pace, with the wind in your hair!
-              </p>
+          <div
+            className="rounded-2xl shadow p-6 text-center border border-green-200"
+            style={{
+              background: "linear-gradient(to bottom right, #d1fae5, #f0fdf4, #bbf7d0)",
+            }}
+          >
+            <h3 className="text-sm font-semibold text-green-900 mb-4">
+              Share this story
+            </h3>
+            <div className="flex justify-center gap-4">
+              {[FaXTwitter, FaFacebookF, FaLinkedinIn, FaWhatsapp].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  aria-label="Share"
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-green-300 text-green-900 shadow hover:bg-green-400 hover:scale-105 transition"
+                >
+                  <Icon />
+                </a>
+              ))}
             </div>
-            <a
-              href="/book"
-              className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
-            >
-              Book Now →
-            </a>
           </div>
 
-          {/* Tips */}
-          <div className="rounded-xl bg-white shadow-sm p-6">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+          {/* Book Now */}
+          <div className="text-center bg-gradient-to-r from-emerald-400 to-green-500 rounded-xl p-6 shadow-lg">
+            <a
+              href="/#book"
+              className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
+              style={{
+                backgroundImage: "linear-gradient(to right, #34d399, #10b981)",
+              }}
+            >
+              🚀 Book Your TukTuk
+            </a>
+            <p className="text-sm text-white mt-2">
+              Rent a tuk tuk and ride to explore Yala!
+            </p>
+          </div>
+
+          {/* Pro Tips */}
+          <div
+            className="rounded-xl shadow-sm p-6"
+            style={{ backgroundColor: "#f0fdf4" }}
+          >
+            <h4 className="text-sm font-semibold text-gray-800 mb-2">
               🌟 Pro Tips
             </h4>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>Arrive early to beat crowds at the Temple.</li>
-              <li>Try local snacks at the market stalls.</li>
-              <li>Take a boat ride on the lake for sunset views.</li>
+            <ul className="text-sm text-gray-700 space-y-1 list-disc pl-5">
+              <li>
+                <strong>Book your safari early 🕖</strong> – Morning and evening
+                drives offer the best wildlife sightings and cooler temps.
+              </li>
+              <li>
+                <strong>Pack light but smart 🎒</strong> – Bring sunscreen, a hat,
+                binoculars, and a camera with zoom.
+              </li>
+              <li>
+                <strong>Respect the wild 🐾</strong> – Stay inside your vehicle,
+                follow park rules, and never feed the animals.
+              </li>
             </ul>
           </div>
         </aside>
