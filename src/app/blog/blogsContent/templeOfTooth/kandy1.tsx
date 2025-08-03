@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link"; // ✅ Added to fix navigation
 import {
   FaXTwitter,
   FaFacebookF,
@@ -33,7 +34,7 @@ export default function TempleOfTheTooth() {
         {/* Main content */}
         <article className="prose prose-lg max-w-none text-amber-900">
           <p>
-            Known as "Sri Dalada Maligawa," this revered temple enshrines the
+            Known as &quot;Sri Dalada Maligawa,&quot; this revered temple enshrines the
             relic of the tooth of the Buddha — a sacred symbol of sovereignty
             and spiritual significance. The temple is not just a site of worship,
             but a cornerstone of Sri Lankan identity.
@@ -113,7 +114,7 @@ export default function TempleOfTheTooth() {
                 sights at your own pace — flexible, fun, and local!
               </p>
             </div>
-            <a
+            <Link
               href="/#book"
               className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
               style={{
@@ -121,7 +122,7 @@ export default function TempleOfTheTooth() {
               }}
             >
               🚀 Book Your TukTuk
-            </a>
+            </Link>
           </div>
 
           {/* Pro Tips */}

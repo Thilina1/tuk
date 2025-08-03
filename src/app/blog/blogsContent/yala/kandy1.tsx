@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   FaXTwitter,
   FaFacebookF,
@@ -71,7 +72,7 @@ export default function Yala() {
           </p>
 
           <p>
-            Whether you're a wildlife enthusiast or a curious explorer, Yala offers raw, untamed adventure
+            Whether you&apos;re a wildlife enthusiast or a curious explorer, Yala offers raw, untamed adventure
             — a glimpse into nature’s majestic rhythm.
           </p>
         </article>
@@ -104,7 +105,7 @@ export default function Yala() {
 
           {/* Book Now */}
           <div className="text-center bg-gradient-to-r from-emerald-400 to-green-500 rounded-xl p-6 shadow-lg">
-            <a
+            <Link
               href="/#book"
               className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
               style={{
@@ -112,7 +113,7 @@ export default function Yala() {
               }}
             >
               🚀 Book Your TukTuk
-            </a>
+            </Link>
             <p className="text-sm text-white mt-2">
               Rent a tuk tuk and ride to explore Yala!
             </p>
