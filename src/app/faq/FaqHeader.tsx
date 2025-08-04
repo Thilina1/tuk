@@ -22,7 +22,7 @@ export default function FaqHeader() {
           adventure, freedom, and unforgettable road trips.
         </p>
         <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
-          Home &gt; FAQ
+          TukTuk Drive &gt; FAQ
         </p>
       </section>
     </footer>

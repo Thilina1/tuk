@@ -26,7 +26,7 @@ export default function AboutUsHeader() {
             adventure, freedom, and unforgettable road trips.
           </p>
           <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
-            Home &gt; About Us
+            TukTuk Drive &gt; About Us
           </p>
         </div>
       </section>

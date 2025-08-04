@@ -123,7 +123,7 @@ export default function Vehicles() {
             </h4>
             <h2 className="text-3xl font-bold text-slate-900 mt-2">Tuk Tuk Extras</h2>
             <p className="text-slate-600 max-w-2xl mx-auto mt-4">
-              Customize your tuk tuk rental experience with extras that enhance
+              Customize your tuk tuk drive experience with extras that enhance
               convenience, comfort, and fun — all designed to make your journey
               unforgettable.
             </p>

@@ -18,9 +18,9 @@ export default function ContactHeader() {
 
       {/* Text Section */}
       <section className="relative min-h-[200px] md:min-h-[270px] flex flex-col items-center justify-center text-center px-4 z-10">
-        <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-md">
-          🧾 Payment Cost Breakdown
-        </h1>
+        <h2 className="text-3xl md:text-4xl font-extrabold drop-shadow-md">
+          Payment Cost Breakdown
+        </h2>
 
         <p className="mt-2 text-sm md:text-base drop-shadow-md max-w-xl">
           Here&rsquo;s a transparent summary of all charges for your tuk-tuk adventure.
@@ -28,7 +28,7 @@ export default function ContactHeader() {
         </p>
 
         <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
-          <Link href="/" className="hover:underline hover:text-yellow-100 transition">Home</Link> &gt; Payment
+          <Link href="/" className="hover:underline hover:text-yellow-100 transition">TukTuk Drive</Link> &gt; Payment
         </p>
       </section>
     </header>
