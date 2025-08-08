@@ -38,7 +38,7 @@ export async function POST(request) {
       api_username: "ZCjaVcSHYe",
       api_password: "pVb5FOf07y",
       secret_key: "8a0e4a29-194c-454a-926d-ecdcbd46adb2",
-      payment_gateway_id: "15", // Replace with correct ID from WebXPay dashboard
+      payment_gateway_id: "521577257252", // Replace with correct ID from WebXPay dashboard
       response_url: "https://greentechstartups.com/thank-you",
       cancel_url: "https://greentechstartups.com/cancel",
       ...paymentData,
