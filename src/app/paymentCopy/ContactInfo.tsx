@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
 import Link from "next/link";
-import { initiateWebXPayPayment } from "../../app/api/payhere/checkout/api2/route"; // Import from apipay.js
 
 export default function PricingDetails() {
   const [cartMessage, setCartMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     // Sample item: Regular Tuk for 1 day
     const item = {
       name: "Regular Tuk Rental",
@@ -19,26 +19,66 @@ export default function PricingDetails() {
 
     // Show confirmation message
     setCartMessage("Regular Tuk added to cart!");
+    setError("");
     setTimeout(() => setCartMessage(""), 2000);
 
-    // Prepare WebXPay payment data
+    // Prepare payment data (no sensitive credentials)
     const paymentData = {
-      api_username: "ZCjaVcSHYe",
-      api_password: "pVb5FOf07y",
-      secret_key: "8a0e4a29-194c-454a-926d-ecdcbd46adb2",
       amount: item.price,
       currency: item.currency,
       item_name: item.name,
-      response_url: "https://greentechstartups.com/thank-you",
-      cancel_url: "https://greentechstartups.com/cancel",
       first_name: "Test",
-      last_name: "Customer", // Required, non-empty
+      last_name: "Customer",
       email: "test@tuktukdrive.com",
-      payment_gateway_id: "15", // Replace with correct ID from WebXPay docs
+      contact_number: "1234567890", // Required by WebXPay
     };
 
-    // Initiate WebXPay payment
-    initiateWebXPayPayment(paymentData);
+    try {
+      // Call the API route
+      const response = await fetch("/api/payhere/checkout/api2", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentData),
+      });
+
+      // Check if response is valid
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP error: ${response.status}`);
+      }
+
+      // Parse JSON response
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        throw new Error("Invalid JSON response from server");
+      }
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to initiate payment");
+      }
+
+      // Create form for WebXPay submission
+      const { redirectUrl, paymentData: webXPayData } = result;
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = redirectUrl;
+
+      for (const key in webXPayData) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = webXPayData[key];
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    } catch (err) {
+      console.error("Payment initiation error:", err);
+      setError("Failed to process payment. Please try again.");
+    }
   };
 
   return (
@@ -222,6 +262,9 @@ export default function PricingDetails() {
           <p className="text-sm text-gray-500 mt-2">No upfront payment required to get started.</p>
           {cartMessage && (
             <p className="text-sm text-green-600 mt-2">{cartMessage}</p>
+          )}
+          {error && (
+            <p className="text-sm text-red-600 mt-2">{error}</p>
           )}
         </div>
       </div>
