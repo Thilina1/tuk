@@ -52,7 +52,7 @@ export default function PricingDetails() {
       try {
         result = await response.json();
       } catch (jsonError) {
-        throw new Error( jsonError "Invalid JSON response from server");
+        throw new Error(`Invalid JSON response from server: ${JSON.stringify(jsonError)}`);
       }
 
       if (!result.success) {
