@@ -9,11 +9,14 @@ export async function POST(req: NextRequest) {
 
     const { amount, name, email, phone, currency = "USD" } = data;
 
-    // 🔒 Use inline secrets for testing only
+    // 🔐 TESTING ONLY: Inline PayHere credentials
     const merchant_id = "1231320";
     const merchant_secret = "MjE4OTI2OTczOTM3MjY5NjM0MzA0MTkxNzI5NTY2MjE0NjA3NDMwNg==";
+    const return_url = "https://tuktukdrive.com/payment-success";
+    const cancel_url = "https://tuktukdrive.com/payment-cancel";
+    const notify_url = "https://tuktukdrive.com/api/payhere/notify";
 
-    // ✅ Basic validation
+    // ✅ Validation
     if (!amount || isNaN(amount) || !name || !email || !phone) {
       return NextResponse.json(
         { error: "Missing or invalid required fields" },
@@ -31,7 +34,7 @@ export async function POST(req: NextRequest) {
     const rawHash = merchant_id + order_id + amountFormatted + currency + hashedSecret;
     const hash = CryptoJS.MD5(rawHash).toString().toUpperCase();
 
-    // ✅ Store in Firestore
+    // ✅ Store payment data in Firestore
     const ref = doc(collection(db, "payments"), order_id);
     await setDoc(ref, {
       order_id,
@@ -50,13 +53,13 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-    // ✅ Return PayHere HTML form
+    // ✅ Generate HTML form to auto-submit to PayHere
     const htmlForm = `
       <form id="payhere_form" method="post" action="https://sandbox.payhere.lk/pay/checkout">
         <input type="hidden" name="merchant_id" value="${merchant_id}" />
-        <input type="hidden" name="return_url" value="https://tuktukdrive.com/payment-success" />
-        <input type="hidden" name="cancel_url" value="https://tuktukdrive.com/payment-cancel" />
-        <input type="hidden" name="notify_url" value="https://tuktukdrive.com/api/payhere/notify" />
+        <input type="hidden" name="return_url" value="${return_url}" />
+        <input type="hidden" name="cancel_url" value="${cancel_url}" />
+        <input type="hidden" name="notify_url" value="${notify_url}" />
         <input type="hidden" name="order_id" value="${order_id}" />
         <input type="hidden" name="items" value="Tuk Tuk Rental" />
         <input type="hidden" name="amount" value="${amountFormatted}" />
