@@ -27,6 +27,7 @@ export default function Navbar() {
     { title: "About Us", path: "/aboutus" },
     { title: "FAQ", path: "/faq" },
     { title: "Contact Us", path: "/contact" },
+    { title: "Pay", path: "/paymentCopy" },
 
   ];
 

@@ -168,7 +168,7 @@ export default function BlogContent() {
               title: "The Sigiriya Rock Fortress (UNESCO Site)",
               tag: "📍 Sigiriya",
               subtag: "🏛️ Culture",
-              link: "/blogsContent/sigiriya",
+              link: "/blog/blogsContent/sigiriya",
             },
             {
               image: "/blog/blogPost/ella_hike.jpeg",
@@ -176,7 +176,7 @@ export default function BlogContent() {
               title: "Trek in the Ella",
               tag: "⛰️ Ella",
               subtag: "🧭 Adventure",
-              link: "/blogsContent/ella",
+              link: "/blog/blogsContent/ella",
             },
           ].map((card, index) => (
             <div
