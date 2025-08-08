@@ -68,8 +68,8 @@ it+/W++K17N6Qh6IPwIDAQAB
       secret_key: "8a0e4a29-194c-454a-926d-ecdcbd46adb2",
       payment_gateway_id: "15", // REPLACE WITH CORRECT ID FROM WEBXPAY SUPPORT
       multiple_payment_gateway_ids: "", // Optional: Add pipe-separated IDs if needed
-      response_url: "https://greentechstartups.com/thank-you",
-      cancel_url: "https://greentechstartups.com/cancel",
+      response_url: "https://greentechstartups.com/paymentCopy/thank-you",
+      cancel_url: "https://greentechstartups.com/paymentCopy/cancel",
       order_id: orderId,
       payment: payment,
       custom_fields: customFields,
