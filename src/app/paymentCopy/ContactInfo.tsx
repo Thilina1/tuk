@@ -52,7 +52,7 @@ export default function PricingDetails() {
       try {
         result = await response.json();
       } catch (jsonError) {
-        throw new Error("Invalid JSON response from server");
+        throw new Error("Invalid JSON response from server", { cause: jsonError });
       }
 
       if (!result.success) {
@@ -77,7 +77,6 @@ export default function PricingDetails() {
       form.submit();
     } catch (err) {
       console.error("Payment initiation error:", err);
-      setError(err.message || "Failed to process payment. Please try again.");
     }
   };
 
