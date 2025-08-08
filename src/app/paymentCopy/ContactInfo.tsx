@@ -12,9 +12,9 @@ export default function PricingDetails() {
     // Sample item: Regular Tuk for 1 day
     const item = {
       name: "Regular Tuk Rental",
-      price: 12.0, // From document: $12/day
+      price: 12.0, // $12/day (sent as float, converted to cents in route.js)
       quantity: 1,
-      currency: "USD",
+      currency: "USD", // Note: WebXPay may require LKR in production
     };
 
     // Show confirmation message
@@ -22,7 +22,7 @@ export default function PricingDetails() {
     setError("");
     setTimeout(() => setCartMessage(""), 2000);
 
-    // Prepare payment data (no sensitive credentials)
+    // Prepare payment data
     const paymentData = {
       amount: item.price,
       currency: item.currency,
@@ -30,12 +30,12 @@ export default function PricingDetails() {
       first_name: "Test",
       last_name: "Customer",
       email: "test@tuktukdrive.com",
-      contact_number: "1234567890", // Required by WebXPay
+      contact_number: "1234567890",
     };
 
     try {
       // Call the API route
-      const response = await fetch("/api/payhere/checkout/api2", {
+      const response = await fetch("/api/webxpay/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(paymentData),
@@ -52,7 +52,7 @@ export default function PricingDetails() {
       try {
         result = await response.json();
       } catch (jsonError) {
-        throw new Error(`Invalid JSON response from server: ${JSON.stringify(jsonError)}`);
+        throw new Error("Invalid JSON response from server");
       }
 
       if (!result.success) {
@@ -77,7 +77,7 @@ export default function PricingDetails() {
       form.submit();
     } catch (err) {
       console.error("Payment initiation error:", err);
-      setError("Failed to process payment. Please try again.");
+      setError(err.message || "Failed to process payment. Please try again.");
     }
   };
 
@@ -245,7 +245,7 @@ export default function PricingDetails() {
             href="/#book"
             className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 !bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
             style={{
-              backgroundImage: 'linear-gradient(to right, #fb923c, #fbbf24)', // fallback to hardcoded gradient
+              backgroundImage: 'linear-gradient(to right, #fb923c, #fbbf24)',
             }}
           >
             🚀 Book Your TukTuk Now
@@ -254,7 +254,7 @@ export default function PricingDetails() {
             onClick={handleAddToCart}
             className="inline-block bg-gradient-to-r from-green-400 to-emerald-500 !bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
             style={{
-              backgroundImage: 'linear-gradient(to right, #4ade80, #10b981)', // Green gradient for Add to Cart
+              backgroundImage: 'linear-gradient(to right, #4ade80, #10b981)',
             }}
           >
             🛒 Add to Cart
