@@ -3,28 +3,32 @@
 
 export const runtime = "nodejs";
 
-// Define a type for WhatsApp template components
+// Define parameter types for WhatsApp template components
+type Parameter =
+  | { type: "text"; text: string }
+  | { type: "image"; image: { url: string; caption?: string } }
+  | { type: "video"; video: { url: string; caption?: string } }
+  | { type: "document"; document: { url: string; filename?: string } }
+  | { type: "currency"; currency: { amount_1000: number; code: string } }
+  | { type: "date_time"; date_time: { timestamp: string | number } };
+
 type Component = {
   type: "header" | "body" | "button"; // Common component types
-  parameters?: Array<{
-    type: "text" | "image" | "video" | "document" | "currency" | "date_time";
-    [key: string]: any; // Allow specific parameter fields (e.g., text, image.url)
-  }>;
-  // Add more specific fields as needed based on your templates
+  parameters?: Parameter[]; // Specific parameter types
 };
 
 type TemplatePayload = {
-  name: string;            // e.g. "hello_world" or your template name
-  language: string;        // e.g. "en_US" or "en"
+  name: string; // e.g. "hello_world" or your template name
+  language: string; // e.g. "en_US" or "en"
   components?: Component[]; // Use specific Component type
 };
 
 export async function POST(req: Request) {
   try {
     const {
-      to,                    // E.164 digits only, e.g. "94711650060"
-      text,                  // optional (free-form session text)
-      template,              // optional (to send template)
+      to, // E.164 digits only, e.g. "94711650060"
+      text, // optional (free-form session text)
+      template, // optional (to send template)
       // For testing, we hardcode these; you can still override from client if needed.
       phoneNumberId,
       apiVersion,
@@ -53,24 +57,23 @@ export async function POST(req: Request) {
 
     const url = `https://graph.facebook.com/${API_VERSION}/${WABA_PHONE_ID}/messages`;
 
-    const body =
-      template
-        ? {
-            messaging_product: "whatsapp",
-            to,
-            type: "template",
-            template: {
-              name: template.name,
-              language: { code: template.language },
-              ...(template.components ? { components: template.components } : {}),
-            },
-          }
-        : {
-            messaging_product: "whatsapp",
-            to,
-            type: "text",
-            text: { body: text || "", preview_url: true },
-          };
+    const body = template
+      ? {
+          messaging_product: "whatsapp",
+          to,
+          type: "template",
+          template: {
+            name: template.name,
+            language: { code: template.language },
+            ...(template.components ? { components: template.components } : {}),
+          },
+        }
+      : {
+          messaging_product: "whatsapp",
+          to,
+          type: "text",
+          text: { body: text || "", preview_url: true },
+        };
 
     const res = await fetch(url, {
       method: "POST",
