@@ -8,7 +8,6 @@ export async function POST(request) {
     const {
       name,
       email,
-      whatsapp,
       pickup,
       pickupDate,
       pickupTime,
