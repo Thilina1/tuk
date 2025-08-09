@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { BookingData } from "@/app/Admin/pages/bookings/BookingsPage";
-import BookingDetailsModal from "../components/CompleteBookingDetailsModal";
+import BookingPaymentDetailsModal from "./CompletePaymentDetailsModal";
 
 interface Props {
   bookings: BookingData[];
@@ -15,10 +15,13 @@ export default function CompleteBookingsTab({ bookings }: Props) {
   const closeModal = () => setSelectedBooking(null);
 
   const filteredBookings = bookings
-    .filter((booking) => booking.isBooked && booking.status=="PAID")
-    .sort(
-      (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime()
-    );
+  .filter(
+    (booking) => booking.isBooked && booking.status == "PENDING_PAYMENT"
+  )
+  .sort(
+    (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime()
+  );
+
 
   return (
     <div className="overflow-x-auto shadow rounded-lg">
@@ -33,6 +36,8 @@ export default function CompleteBookingsTab({ bookings }: Props) {
               <th className="px-3 py-2 text-left">Return</th>
               <th className="px-3 py-2 text-left">Return Date</th>
               <th className="px-3 py-2 text-left">Booked Date</th>
+              <th className="px-3 py-2 text-left">Price</th> 
+              <th className="px-3 py-2 text-left">Mobile Number</th> 
               <th className="px-3 py-2 text-left">Action</th>
             </tr>
           </thead>
@@ -63,6 +68,8 @@ export default function CompleteBookingsTab({ bookings }: Props) {
                     <span className="text-red-500">Invalid date</span>
                   )}
                 </td>
+                <th className="px-3 py-2 text-left">{booking.whatsapp}</th> 
+                <td className="px-3 py-2">{booking.RentalPrice}</td>
                 <td className="px-3 py-2">
                   <button
                     onClick={() => openModal(booking)}
@@ -82,7 +89,7 @@ export default function CompleteBookingsTab({ bookings }: Props) {
       )}
 
       {selectedBooking && (
-        <BookingDetailsModal booking={selectedBooking} onClose={closeModal} />
+        <BookingPaymentDetailsModal booking={selectedBooking} onClose={closeModal} />
       )}
     </div>
   );

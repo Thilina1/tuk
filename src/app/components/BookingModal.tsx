@@ -119,94 +119,74 @@ const BookingModal = ({
   const [showThankYou, setShowThankYou] = useState(false);
 
 
-  const handlePayNow = async () => {
-    const response = await fetch("/api/payhere/checkout/api", {
-      method: "POST",
-      body: JSON.stringify({
-        amount: totalRental.toFixed(2),
-        orderId: orderId,
-        currency: "USD",
-      }),
-    });
-  
-    const { hash } = await response.json();
-  
-    const payment = {
-      sandbox: true,
-      merchant_id: "1231320", // replace with real merchant_id
-      return_url: "https://yourdomain.com/payment-success",
-      cancel_url: "https://yourdomain.com/payment-cancel",
-      notify_url: "https://yourdomain.com/api/payhere-notify",
-      order_id: orderId,
-      items: "Rental Booking",
-      amount: parseFloat(totalRental.toFixed(2)),
-      currency: "USD",
-      hash,
-      first_name: formValues.name,
-      last_name: "User",
-      email: formValues.email,
-      phone: formValues.whatsapp,
-      address: formValues.licenseAddress,
-      city: formValues.licenseCountry,
-      country: "Sri Lanka",
-    };
-  
-    // 💳 START PAYMENT
-    window.payhere.startPayment(payment);
-  
-    // ✅ ON SUCCESS
-    window.payhere.onCompleted = async (completedOrderId: string) => {
-      console.log("✅ Payment successful with Order ID:", completedOrderId);
-    
-      setShowThankYou(true); // ✅ Show thank you right away
-    
+  const handleConfirmBooking = async () => {
+    setLoading(true);
+    try {
       const docRef = doc(db, "bookings", docId);
-    
-      type BookingUpdatePayload = {
-        RentalPrice?: number;
-        isBooked?: boolean;
-        paymentOrderId?: string;
-        couponCode?: string;
-      };
-      
-
-
-      const updates: BookingUpdatePayload = {
-        RentalPrice: totalRental,
+  
+      const baseUpdates = {
+        orderId,
+        RentalPrice: Number(totalRental.toFixed(2)),
         isBooked: true,
-        paymentOrderId: completedOrderId,
+        status: "PENDING_PAYMENT",
+        // include couponCode ONLY if we actually have one
+        ...(appliedCoupon && couponCode.trim() ? { couponCode: couponCode.trim() } : {}),
+        billBreakdown: {
+          perDayCharge,
+          rentalDays,
+          licenseChargePer: licenseCharge,
+          extrasTotal,
+          pickupPrice: formValues.pickupPrice || 0,
+          returnPrice: formValues.returnPrice || 0,
+          deposit,
+        },
       };
+
+      const pruneUndefined = <T extends object>(obj: T): T =>
+        Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as T;
       
-    
+  
+      await updateDoc(docRef, pruneUndefined(baseUpdates));
+  
       if (appliedCoupon) {
-        updates.couponCode = couponCode.trim();
         const couponRef = doc(db, "discounts", appliedCoupon.id);
-        await updateDoc(couponRef, {
-          currentUsers: increment(1),
-        });
+        await updateDoc(couponRef, { currentUsers: increment(1) });
       }
-    
-      await updateDoc(docRef, updates);
-    
+  
       await fetch("/api/send-email/bookingEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formValues,
           totalRental,
+          orderId,
+          mode: "PENDING_PAYMENT",
+          messageType: "GUEST_CONFIRMATION",
         }),
       });
-    };
-    
   
-    window.payhere.onDismissed = () => {
-      console.warn("❌ Payment dismissed by user.");
-    };
+      await fetch("/api/send-email/opsNotify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          docId,
+          orderId,
+          totalRental,
+          customer: { name: formValues.name, email: formValues.email, whatsapp: formValues.whatsapp },
+          pickup: { date: formValues.pickupDate, time: formValues.pickupTime, loc: formValues.pickup },
+          return: { date: formValues.returnDate, time: formValues.returnTime, loc: formValues.returnLoc },
+          status: "PENDING_PAYMENT",
+        }),
+      }).catch(() => {});
   
-    window.payhere.onError = (error: string) => {
-      console.error("🚨 Payment error:", error);
-    };
+      setShowThankYou(true);
+    } catch (e) {
+      console.error("❌ Confirm booking failed:", e);
+    } finally {
+      setLoading(false);
+    }
   };
+  
   
 
 
@@ -1012,105 +992,84 @@ const perDayCharge = getPerDayCharge(rentalDays);
 
 
 {step === 3 && (
-  <div className="space-y-6 p-6 rounded-xl bg-white shadow-lg border border-gray-200 text-gray-800">
-    <h3 className="text-xl font-semibold flex items-center gap-2">
-      💳 Payment & Confirmation
-    </h3>
+              <div className="space-y-6 p-6 rounded-xl bg-white shadow-lg border border-gray-200 text-gray-800">
+                <h3 className="text-xl font-semibold flex items-center gap-2">💳 Bill & Confirmation</h3>
 
-    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
-      <div className="flex justify-between text-gray-700">
-        <span className="font-medium">Rental Price</span>
-        <span>${totalRental.toFixed(2)}</span>
-      </div>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
+                  <div className="flex justify-between text-gray-700">
+                    <span className="font-medium">Rental Price</span>
+                    <span>${totalRental.toFixed(2)}</span>
+                  </div>
 
-      {appliedCoupon && (
-        <div className="text-green-700 text-sm bg-green-50 p-2 rounded-md border border-green-200">
-          ✅ Coupon <strong>{couponCode}</strong> applied:
-          {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
-        </div>
-      )}
+                  {appliedCoupon && (
+                    <div className="text-green-700 text-sm bg-green-50 p-2 rounded-md border border-green-200">
+                      ✅ Coupon <strong>{couponCode}</strong> applied:
+                      {` ${appliedCoupon.discountMode} ${appliedCoupon.discountValue}`}
+                    </div>
+                  )}
 
-      <div className="flex gap-2 mt-2">
-        <input
-          type="text"
-          value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value)}
-          placeholder="Enter coupon code"
-          className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm text-black bg-white focus:ring-2 focus:ring-orange-400"
-        />
-        <button
-          onClick={handleApplyCoupon}
-          className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm transition"
-        >
-          Apply
-        </button>
-      </div>
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm text-black bg-white focus:ring-2 focus:ring-orange-400"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm transition"
+                    >
+                      Apply
+                    </button>
+                  </div>
 
-      {couponError && (
-        <p className="text-sm text-red-600 mt-1">{couponError}</p>
-      )}
-    </div>
+                  {couponError && <p className="text-sm text-red-600 mt-1">{couponError}</p>}
+                </div>
 
-    <div className="text-right">
-      <p className="text-lg font-bold text-emerald-700">
-        Final Total: ${totalRental.toFixed(2)}
-      </p>
-    </div>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-emerald-700">Final Total: ${totalRental.toFixed(2)}</p>
+                </div>
 
-    <button
-      onClick={handlePayNow}
-      disabled={loading}
-      className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold
-                 text-white shadow transition hover:opacity-90"
-      style={{
-        background: "linear-gradient(to right, #fbbf24, #f97316)", // amber-400 to orange-500
-      }}
-    >
-      {loading ? (
-        <>
-          <svg
-            className="animate-spin h-5 w-5 text-black"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-            />
-          </svg>
-          <span>Processing...</span>
-        </>
-      ) : (
-        <>
-          <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
-          <span>Pay Now</span>
-        </>
-      )}
-    </button>
+                {/* New primary CTA */}
+                <button
+                  onClick={handleConfirmBooking}
+                  disabled={loading}
+                  className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold
+                           text-white shadow transition hover:opacity-90"
+                  style={{ background: "linear-gradient(to right, #fbbf24, #f97316)" }}
+                >
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-black"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+                        />
+                      </svg>
+                      <span>Submitting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={20} height={20} />
+                      <span>Confirm Booking (No Payment Now)</span>
+                    </>
+                  )}
+                </button>
 
-    <Script
-      src="https://www.payhere.lk/lib/payhere.js"
-      strategy="afterInteractive"
-      onLoad={() => {
-        console.log("✅ PayHere SDK loaded");
-      }}
-    />
-
-    <p className="text-sm text-gray-500 text-center pt-2">
-      By clicking <strong>Pay Now</strong>, your booking will be confirmed and a confirmation email will be sent.
-    </p>
-  </div>
-)}
+                <p className="text-sm text-gray-500 text-center pt-2">
+                  After confirming, we’ll email your bill. Our team will contact you via WhatsApp & email with a secure
+                  payment link. If you need changes, we’ll update the booking first — then you pay. Easy.
+                </p>
+              </div>
+            )}
 
 
 

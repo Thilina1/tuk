@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
+import PaymentPendingBookings from "./components/PaymentPendingBookings";
 import CompleteBookings from "./components/CompleteBookings";
 import IncompleteBookings from "./components/IncompleteBookings";
 import AssignedBookings from "./components/AssignedBookings";
@@ -61,10 +62,11 @@ export interface BookingData {
   };
 }
 
-type TabType = "complete" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded" | "ReadyFinish";
+type TabType = "complete" | "pending" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded" | "ReadyFinish";
 
 const tabs: { label: string; value: TabType }[] = [
   { label: "❌ Not Complete", value: "incomplete" },
+  {label: "💰 Pending", value: "pending"},
   { label: "✅ New", value: "complete" },
   { label: "🚖 Assigned", value: "assigned" },
   { label: "🛫 Ready to OnBoard", value: "OnBoard" },
@@ -93,6 +95,8 @@ export default function BookingsPage() {
     switch (activeTab) {
       case "complete":
         return <CompleteBookings bookings={bookings} />;
+      case "pending":
+          return <PaymentPendingBookings bookings={bookings} />;
       case "incomplete":
         return <IncompleteBookings bookings={bookings} />;
       case "OnBoard":
