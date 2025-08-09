@@ -27,10 +27,7 @@ interface LocationOption {
   status?: string;
 }
 
-interface TukTukOption {
-  label: string;
-  value: string;
-}
+
 
 interface PersonOption {
   label: string;
@@ -55,11 +52,7 @@ const extrasList = [
   { name: "Dash Cam", price: 1 },
 ];
 
-interface TukTukDoc {
-  vehicleNumber: string;
-  district?: string;
-  active: boolean;
-}
+
 
 interface LocationDoc {
   name: string;
@@ -67,47 +60,12 @@ interface LocationDoc {
   status: string;
 }
 
-interface PersonDoc {
-  name: string;
-  district: string;
-}
-
-interface TrainTransferDoc {
-  from: string;
-  to: string;
-  pickupTime: string;
-  downTime: string;
-  price: number;
-  status: string;
-}
 
 // WhatsApp helper (Click-to-Chat)
 const buildWhatsAppLink = (phoneE164: string, text: string) =>
   `https://wa.me/${phoneE164.replace(/[^\d]/g, "")}?text=${encodeURIComponent(text)}`;
 
-// react-select styles with proper types
-const selectStyles: StylesConfig<LocationOption | PersonOption | TrainTransferOption, false> = {
-  control: (base, state) => ({
-    ...base,
-    borderRadius: 10,
-    borderColor: state.isFocused ? "#fb923c" : "var(--tw-color-border)",
-    boxShadow: state.isFocused ? "0 0 0 2px rgba(251,146,60,.25)" : "none",
-    backgroundColor: "var(--tw-color-card)",
-    minHeight: 44,
-  }),
-  menu: (base) => ({
-    ...base,
-    borderRadius: 12,
-    overflow: "hidden",
-    backgroundColor: "var(--tw-color-card)",
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isFocused ? "rgba(251,146,60,.12)" : "transparent",
-    color: "inherit",
-    cursor: "pointer",
-  }),
-};
+
 
 // Dark/light CSS vars scoped to the modal
 const DarkVars = () => (
@@ -400,10 +358,11 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                         ? activeLocations.find((loc) => loc.value === formValues.pickup) || null
                         : null
                     }
-                    onChange={(selected: SingleValue<LocationOption>, _action: ActionMeta<LocationOption>) => {
+                    onChange={(selected: SingleValue<LocationOption>) => {
                       handleChange("pickup", selected?.value || "");
                       handleChange("pickupPrice", selected?.price || 0);
                     }}
+                    
                     isClearable
                     placeholder="Select pickup location"
                     className="text-[var(--tw-color-text)]"
@@ -418,10 +377,11 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                         ? activeLocations.find((loc) => loc.value === formValues.returnLoc) || null
                         : null
                     }
-                    onChange={(selected: SingleValue<LocationOption>, _action: ActionMeta<LocationOption>) => {
+                    onChange={(selected: SingleValue<LocationOption>) => {
                       handleChange("returnLoc", selected?.value || "");
                       handleChange("returnPrice", selected?.price || 0);
                     }}
+                    
                     isClearable
                     placeholder="Select return location"
                     className="text-[var(--tw-color-text)]"
