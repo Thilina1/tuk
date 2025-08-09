@@ -203,32 +203,32 @@ export default function EditBookingModal({ booking, onClose }: Props) {
 
       await updateDoc(docRef, updatedData);
 
-      await fetch("/api/send-email/assignEmail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formValues.name,
-          email: formValues.email,
-          whatsapp: formValues.whatsapp,
-          pickup: formValues.pickup,
-          pickupDate: formValues.pickupDate,
-          pickupTime: formValues.pickupTime,
-          returnLoc: formValues.returnLoc,
-          returnDate: formValues.returnDate,
-          returnTime: formValues.returnTime,
-          tukCount: formValues.tukCount,
-          licenseCount: formValues.licenseCount,
-          extras: formValues.extras,
-          assignedTuks: formValues.assignedTuks,
-          holdBackAssignedPerson: formValues.holdBackAssignedPerson,
-          assignedPerson: formValues.assignedPerson,
-          trainTransferAssignedPerson: formValues.trainTransferAssignedPerson,
-          trainTransfer: formValues.trainTransfer,
-          rentalPrice: enableRecalculation ? calculateTotal() : booking.RentalPrice,
-        }),
-      });
+      // await fetch("/api/send-email/assignEmail", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     name: formValues.name,
+      //     email: formValues.email,
+      //     whatsapp: formValues.whatsapp,
+      //     pickup: formValues.pickup,
+      //     pickupDate: formValues.pickupDate,
+      //     pickupTime: formValues.pickupTime,
+      //     returnLoc: formValues.returnLoc,
+      //     returnDate: formValues.returnDate,
+      //     returnTime: formValues.returnTime,
+      //     tukCount: formValues.tukCount,
+      //     licenseCount: formValues.licenseCount,
+      //     extras: formValues.extras,
+      //     assignedTuks: formValues.assignedTuks,
+      //     holdBackAssignedPerson: formValues.holdBackAssignedPerson,
+      //     assignedPerson: formValues.assignedPerson,
+      //     trainTransferAssignedPerson: formValues.trainTransferAssignedPerson,
+      //     trainTransfer: formValues.trainTransfer,
+      //     rentalPrice: enableRecalculation ? calculateTotal() : booking.RentalPrice,
+      //   }),
+      // });
 
-      console.log("✅ Email sent after assignment");
+      // console.log("✅ Email sent after assignment");
       onClose();
       window.location.reload();
     } catch (err) {

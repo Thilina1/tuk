@@ -36,8 +36,8 @@ export default function CompleteBookingsTab({ bookings }: Props) {
               <th className="px-3 py-2 text-left">Return</th>
               <th className="px-3 py-2 text-left">Return Date</th>
               <th className="px-3 py-2 text-left">Booked Date</th>
-              <th className="px-3 py-2 text-left">Price</th> 
               <th className="px-3 py-2 text-left">Mobile Number</th> 
+              <th className="px-3 py-2 text-left">Price</th> 
               <th className="px-3 py-2 text-left">Action</th>
             </tr>
           </thead>
