@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 
-// --------------------------
-// 🔒 Sandbox secrets inline (server-only)
-// --------------------------
+// WebXPay endpoint + enc method flag
 const WEBXPAY_ACTION = "https://webxpay.com/index.php?route=checkout/billing";
 const ENC_METHOD = "JCs3J+6oSz4V0LgE0zi/Bg==";
 
+// Sandbox public key (OK server-side)
 const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDurbser5BU/dfw5cVfDun+JuRo
 RQRqL6jNeoJrIlR0nPjFcUfU7mYdkw9r3Yeh68PchP/E3SgB1uuED1dIQ3pyPucB
@@ -14,15 +13,12 @@ m0sWPCfyDtGAQsq+22nexH/bl1vbEOhfAZ8chLCuzE0DTtrEZZXPPNuIwrdeB8yS
 it+/W++K17N6Qh6IPwIDAQAB
 -----END PUBLIC KEY-----`;
 
-const SANDBOX_SECRET_KEY = "8a0e4a29-194c-454a-926d-ecdcbd46adb2";
-const SANDBOX_API_USERNAME = "ZCjaVcSHYe";
-const SANDBOX_API_PASSWORD = "pVb5FOf07y";
-
-// Optional
+// Your sandbox merchant + return paths
 const MERCHANT_ID = "521577257252";
-const RETURN_URL = "https://www.greentechstartups.com/paymentCopy/thank-you";
-const CANCEL_URL = "https://www.greentechstartups.com/paymentCopy/cancel";
-const NOTIFY_URL = ""; // leave empty if not using
+const RETURN_URL  = "https://www.greentechstartups.com/paymentCopy/thank-you";
+const CANCEL_URL  = "https://www.greentechstartups.com/paymentCopy/cancel";
+// Optional IPN (set only if configured at WebXPay)
+const NOTIFY_URL  = ""; // e.g. "https://your.domain/api/webxpay/ipn"
 
 const b64 = (s: string) => Buffer.from(s, "utf8").toString("base64");
 
@@ -35,53 +31,70 @@ function rsaEncryptBase64(plaintext: string): string {
   return encrypted.toString("base64");
 }
 
+function errMsg(e: unknown): string {
+  return e instanceof Error ? e.message : "Server error";
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
-    const amount = Number(body.amount ?? 12.0);
-    const currency = String(body.currency ?? "LKR");
-    const meta = body.meta ?? {};
 
-    const uniqueOrderId = `TTD-${Date.now()}`;
-    const amountStr = amount.toFixed(2);
+    // Inputs from client (with safe defaults)
+    const amount = Number(body.amount ?? 1000); // LKR 1000.00
+    const currency = String(body.currency ?? "LKR"); // keep same as encrypted amount
+    const itemName = String(body.item_name ?? "Regular Tuk Rental");
+    const gatewayId = body.payment_gateway_id ? String(body.payment_gateway_id) : ""; // e.g. "1"
+    const multipleGatewayIds = body.multiple_payment_gateway_ids ? String(body.multiple_payment_gateway_ids) : ""; // e.g. "1|2|3"
+
+    // Order basics
+    const orderId = `TTD-${Date.now()}`;
+    const amountStr = amount.toFixed(2); // e.g. "1000.00"
 
     // "orderId|amount" -> RSA PKCS#1 v1.5 -> base64
-    const paymentB64 = rsaEncryptBase64(`${uniqueOrderId}|${amountStr}`);
+    const paymentB64 = rsaEncryptBase64(`${orderId}|${amountStr}`);
 
-    // Optional: compute signature with SANDBOX_SECRET_KEY if the spec requires
-    // const signature = crypto.createHmac("sha256", SANDBOX_SECRET_KEY).update(...).digest("hex");
+    // Custom metadata (returned back to you)
+    const customB64 = b64(`${itemName}|${orderId}|${currency}|1`);
 
-    const customRaw = `${meta.item ?? "Regular Tuk Rental"}|${uniqueOrderId}|${currency}|1`;
-    const customB64 = b64(customRaw);
-
-    // Build strict Record<string,string>, then add optionals safely
+    // Build strict payload
     const fields: Record<string, string> = {
+      // Required trio
       payment: paymentB64,
       custom_fields: customB64,
       enc_method: ENC_METHOD,
+
+      // Helpful extras (some merchant templates expect these)
+      item_name: itemName,
+      order_id: orderId,
+
+      // Currency MUST match encrypted amount’s currency
       process_currency: currency,
+
+      // Optional merchant/site context
       cms: "Next.js",
       city: "Colombo",
       state: "Western",
       postal_code: "10300",
       country: "Sri Lanka",
+
+      // Merchant + redirects
+      merchant_id: MERCHANT_ID,
+      return_url: RETURN_URL,
+      cancel_url: CANCEL_URL,
     };
 
-    if (MERCHANT_ID) fields.merchant_id = MERCHANT_ID;
-    if (RETURN_URL) fields.return_url = RETURN_URL;
-    if (CANCEL_URL) fields.cancel_url = CANCEL_URL;
+    // Only include if provided/required by your sandbox
     if (NOTIFY_URL) fields.notify_url = NOTIFY_URL;
-
-    // If a REST call with API creds is needed, do it here server-side using fetch()
-    // with SANDBOX_API_USERNAME / SANDBOX_API_PASSWORD / SANDBOX_SECRET_KEY.
+    if (gatewayId) fields.payment_gateway_id = gatewayId;
+    if (multipleGatewayIds) fields.multiple_payment_gateway_ids = multipleGatewayIds;
 
     return NextResponse.json({
       success: true,
       redirectUrl: WEBXPAY_ACTION,
       fields,
-      debug: { orderId: uniqueOrderId, amount: amountStr },
+      debug: { orderId, amount: amountStr, currency, gatewayId, multipleGatewayIds },
     });
-  } catch (e: any) {
-    return new NextResponse(e?.message || "Server error", { status: 500 });
+  } catch (e: unknown) {
+    return new NextResponse(errMsg(e), { status: 500 });
   }
 }

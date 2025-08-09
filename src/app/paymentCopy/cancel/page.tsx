@@ -1,13 +1,10 @@
-import Link from "next/link";
-
-export default function Cancel() {
+export default function Cancelled() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold">Payment Canceled</h1>
-        <p>Something went wrong. Please try again or contact us at info@tuktukdrive.com.</p>
-        <Link href="/pricing" className="text-blue-600">Try Again</Link>
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="rounded-lg border p-8 text-center">
+        <h1 className="text-2xl font-semibold">❌ Payment Cancelled</h1>
+        <p className="mt-2 text-gray-600">No worries. You can try again anytime.</p>
       </div>
-    </div>
+    </main>
   );
 }

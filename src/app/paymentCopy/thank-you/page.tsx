@@ -1,13 +1,10 @@
-import Link from "next/link";
-
 export default function ThankYou() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold">Thank You for Your Booking!</h1>
-        <p>Your TukTuk rental is confirmed. Check your email at test@tuktukdrive.com for details.</p>
-        <Link href="/" className="text-blue-600">Return to Home</Link>
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="rounded-lg border p-8 text-center">
+        <h1 className="text-2xl font-semibold">✅ Payment Successful</h1>
+        <p className="mt-2 text-gray-600">Thanks! We’ve received your payment.</p>
       </div>
-    </div>
+    </main>
   );
 }
