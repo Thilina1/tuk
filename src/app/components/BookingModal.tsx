@@ -129,7 +129,6 @@ const BookingModal = ({
         RentalPrice: Number(totalRental.toFixed(2)),
         isBooked: true,
         status: "PENDING_PAYMENT",
-        // include couponCode ONLY if we actually have one
         ...(appliedCoupon && couponCode.trim() ? { couponCode: couponCode.trim() } : {}),
         billBreakdown: {
           perDayCharge,
@@ -141,10 +140,9 @@ const BookingModal = ({
           deposit,
         },
       };
-
+  
       const pruneUndefined = <T extends object>(obj: T): T =>
         Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as T;
-      
   
       await updateDoc(docRef, pruneUndefined(baseUpdates));
   
@@ -153,16 +151,49 @@ const BookingModal = ({
         await updateDoc(couponRef, { currentUsers: increment(1) });
       }
   
+      // ✅ Build ONE correct payload for the email
+      const emailPayload = {
+        // booking basics
+        name: formValues.name,
+        email: formValues.email,
+        whatsapp: formValues.whatsapp,
+        pickup: formValues.pickup,
+        pickupDate: formValues.pickupDate,
+        pickupTime: formValues.pickupTime,
+        returnLoc: formValues.returnLoc,
+        returnDate: formValues.returnDate,
+        returnTime: formValues.returnTime,
+        tukCount: formValues.tukCount,
+        licenseCount: formValues.licenseCount,
+  
+        // pricing (precomputed here — no server math)
+        orderId,
+        totalRental: Number(totalRental.toFixed(2)),
+        couponCode: appliedCoupon ? couponCode.trim() : undefined,
+        billBreakdown: {
+          perDayCharge,
+          rentalDays,
+          licenseChargePer: licenseCharge,
+          extrasTotal,
+          pickupPrice: formValues.pickupPrice || 0,
+          returnPrice: formValues.returnPrice || 0,
+          deposit,
+        },
+  
+        // optional: for listing extras
+        extrasCounts: formValues.extras,
+  
+        mode: "PENDING_PAYMENT",
+        messageType: "GUEST_CONFIRMATION",
+      };
+  
+      // (temporary) sanity log — remove after you confirm
+      console.log("bookingEmail payload", emailPayload);
+  
       await fetch("/api/send-email/bookingEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formValues,
-          totalRental,
-          orderId,
-          mode: "PENDING_PAYMENT",
-          messageType: "GUEST_CONFIRMATION",
-        }),
+        body: JSON.stringify(emailPayload),
       });
   
       await fetch("/api/send-email/opsNotify", {
@@ -186,7 +217,6 @@ const BookingModal = ({
       setLoading(false);
     }
   };
-  
   
 
 
@@ -406,35 +436,51 @@ const perDayCharge = getPerDayCharge(rentalDays);
     
       // Call your backend to send the email
       try {
-        const response = await fetch('/api/send-email/bookingEmail', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: formValues.name,
-            email: formValues.email,
-            whatsapp: formValues.whatsapp,
-            pickupDate: formValues.pickupDate,
-            pickupTime: formValues.pickupTime,
-            returnDate: formValues.returnDate,
-            returnTime: formValues.returnTime,
-            tukCount: formValues.tukCount,
-            licenseCount: formValues.licenseCount,
-            extras: formValues.extras,
-            licenseName: formValues.licenseName,
-            licenseAddress: formValues.licenseAddress,
-            licenseCountry: formValues.licenseCountry,
-            postalCode: formValues.postalCode,
-            licenseNumber: formValues.licenseNumber,
-            passportNumber: formValues.passportNumber,
-          }),
-        });
     
-        if (!response.ok) {
-          throw new Error(`Email send failed: ${response.statusText}`);
-        }
-        console.log('✅ Email sent successfully');
+        // inside step === 3 just before/where you call bookingEmail
+// inside handleConfirmBooking, right before setShowThankYou(true)
+await fetch("/api/send-email/bookingEmail", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    // booking basics
+    name: formValues.name,
+    email: formValues.email,
+    whatsapp: formValues.whatsapp,
+    pickup: formValues.pickup,
+    pickupDate: formValues.pickupDate,
+    pickupTime: formValues.pickupTime,
+    returnLoc: formValues.returnLoc,
+    returnDate: formValues.returnDate,
+    returnTime: formValues.returnTime,
+    tukCount: formValues.tukCount,
+    licenseCount: formValues.licenseCount,
+
+    // pricing (precomputed in modal)
+    orderId,
+    totalRental: Number(totalRental.toFixed(2)),
+    couponCode: appliedCoupon ? couponCode.trim() : undefined,
+    billBreakdown: {
+      perDayCharge,
+      rentalDays,
+      licenseChargePer: licenseCharge,
+      extrasTotal,
+      pickupPrice: formValues.pickupPrice || 0,
+      returnPrice: formValues.returnPrice || 0,
+      deposit,
+    },
+
+    // optional: to list extras chosen
+    extrasCounts: formValues.extras,
+
+    mode: "PENDING_PAYMENT",
+    messageType: "GUEST_CONFIRMATION",
+  }),
+});
+
+
+    
+       
       } catch (error) {
         console.error('❌ Error sending email:', error);
       }
