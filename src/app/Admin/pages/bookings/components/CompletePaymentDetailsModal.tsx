@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { BookingData } from "../BookingsPage";
-import Select, { StylesConfig, ActionMeta, SingleValue } from "react-select";
+import Select, {  SingleValue } from "react-select";
 
 // Types you already use
 interface TrainTransfer {
@@ -29,17 +29,8 @@ interface LocationOption {
 
 
 
-interface PersonOption {
-  label: string;
-  value: string;
-}
 
-interface TrainTransferOption {
-  label: string;
-  value: TrainTransfer;
-  price: number;
-  status?: string;
-}
+
 
 const extrasList = [
   { name: "Baby Seat", price: 2 },
