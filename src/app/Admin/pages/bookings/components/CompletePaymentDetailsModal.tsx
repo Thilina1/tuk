@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { BookingData } from "../BookingsPage";
-import Select from "react-select";
+import Select, { StylesConfig, ActionMeta, SingleValue } from "react-select";
 
 // Types you already use
 interface TrainTransfer {
@@ -18,6 +18,30 @@ interface TrainTransfer {
 interface Props {
   booking: BookingData;
   onClose: () => void;
+}
+
+interface LocationOption {
+  label: string;
+  value: string;
+  price: number;
+  status?: string;
+}
+
+interface TukTukOption {
+  label: string;
+  value: string;
+}
+
+interface PersonOption {
+  label: string;
+  value: string;
+}
+
+interface TrainTransferOption {
+  label: string;
+  value: TrainTransfer;
+  price: number;
+  status?: string;
 }
 
 const extrasList = [
@@ -37,13 +61,33 @@ interface TukTukDoc {
   active: boolean;
 }
 
+interface LocationDoc {
+  name: string;
+  price: number;
+  status: string;
+}
+
+interface PersonDoc {
+  name: string;
+  district: string;
+}
+
+interface TrainTransferDoc {
+  from: string;
+  to: string;
+  pickupTime: string;
+  downTime: string;
+  price: number;
+  status: string;
+}
+
 // WhatsApp helper (Click-to-Chat)
 const buildWhatsAppLink = (phoneE164: string, text: string) =>
   `https://wa.me/${phoneE164.replace(/[^\d]/g, "")}?text=${encodeURIComponent(text)}`;
 
-// react-select styles
-const selectStyles = {
-  control: (base: any, state: any) => ({
+// react-select styles with proper types
+const selectStyles: StylesConfig<LocationOption | PersonOption | TrainTransferOption, false> = {
+  control: (base, state) => ({
     ...base,
     borderRadius: 10,
     borderColor: state.isFocused ? "#fb923c" : "var(--tw-color-border)",
@@ -51,13 +95,13 @@ const selectStyles = {
     backgroundColor: "var(--tw-color-card)",
     minHeight: 44,
   }),
-  menu: (base: any) => ({
+  menu: (base) => ({
     ...base,
     borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "var(--tw-color-card)",
   }),
-  option: (base: any, state: any) => ({
+  option: (base, state) => ({
     ...base,
     backgroundColor: state.isFocused ? "rgba(251,146,60,.12)" : "transparent",
     color: "inherit",
@@ -93,9 +137,13 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   const [formValues, setFormValues] = useState<BookingData>({ ...booking });
   const [enableRecalculation, setEnableRecalculation] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // NEW: store payment link locally (and optionally persist)
-  const [paymentLink, setPaymentLink] = useState<string>((booking as any).paymentLink || "");
+  const [paymentLink, setPaymentLink] = useState<string>(booking.paymentLink || "");
+  const [activeLocations, setActiveLocations] = useState<LocationOption[]>([]);
+  // Comment out unused activeTuks to suppress no-unused-vars
+  // const [activeTuks, setActiveTuks] = useState<TukTukOption[]>([]);
+  const [activePersons, setActivePersons] = useState<PersonOption[]>([]);
+  const [trainTransfers, setTrainTransfers] = useState<TrainTransferOption[]>([]);
+  const [enableTrainTransfer, setEnableTrainTransfer] = useState(!!formValues.trainTransfer);
 
   const handleChange = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
@@ -108,21 +156,12 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     }));
   };
 
-  interface LocationOption {
-    label: string;
-    value: string;
-    price: number;
-    status?: string;
-  }
-
-  const [activeLocations, setActiveLocations] = useState<LocationOption[]>([]);
-
   useEffect(() => {
     const fetchLocations = async () => {
       const snapshot = await getDocs(collection(db, "locations"));
       const filtered = snapshot.docs
         .map((doc) => {
-          const data = doc.data() as any;
+          const data = doc.data() as LocationDoc;
           return {
             label: `${data.name} ($${data.price})`,
             value: data.name,
@@ -182,7 +221,8 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     );
   };
 
-  const [activeTuks, setActiveTuks] = useState<{ label: string; value: string }[]>([]);
+  // Comment out unused activeTuks fetch to suppress no-unused-vars
+  /*
   useEffect(() => {
     const fetchActiveTuks = async () => {
       const snapshot = await getDocs(collection(db, "tuktuks"));
@@ -197,13 +237,13 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     };
     fetchActiveTuks();
   }, []);
+  */
 
-  const [activePersons, setActivePersons] = useState<{ label: string; value: string }[]>([]);
   useEffect(() => {
     const fetchPersons = async () => {
       const snapshot = await getDocs(collection(db, "persons"));
       const personsList = snapshot.docs.map((doc) => {
-        const data = doc.data() as any;
+        const data = doc.data() as PersonDoc;
         return {
           value: data.name,
           label: `${data.name} (${data.district})`,
@@ -215,17 +255,12 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     fetchPersons();
   }, []);
 
-  const [trainTransfers, setTrainTransfers] = useState<
-    { label: string; value: TrainTransfer; price: number; status?: any }[]
-  >([]);
-  const [enableTrainTransfer, setEnableTrainTransfer] = useState(!!formValues.trainTransfer);
-
   useEffect(() => {
     const fetchTrainTransfers = async () => {
       const snapshot = await getDocs(collection(db, "trainTransfers"));
       const activeTransfers = snapshot.docs
         .map((doc) => {
-          const data = doc.data() as any;
+          const data = doc.data() as TrainTransferDoc;
           return {
             label: `${data.from} → ${data.to} (${data.pickupTime}) - $${data.price}`,
             value: {
@@ -245,27 +280,25 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     fetchTrainTransfers();
   }, []);
 
-  // Assign handler (unchanged logic; adds optional paymentLink persist)
   const handleAssign = async () => {
     try {
       setLoading(true);
       const docRef = doc(db, "bookings", booking.id);
 
-      const updatedData: Partial<BookingData> = {
+      const updatedData: Partial<BookingData> & { paymentLink?: string } = {
         ...formValues,
-        status: "PAID", // your existing behavior
+        status: "PAID",
       };
 
       if (enableRecalculation) {
-        (updatedData as any).RentalPrice = calculateTotal().toString();
+        updatedData.RentalPrice = calculateTotal().toString();
       }
       if (paymentLink) {
-        (updatedData as any).paymentLink = paymentLink; // persist link
+        updatedData.paymentLink = paymentLink;
       }
 
       await updateDoc(docRef, updatedData);
 
-      // send your email as before
       await fetch("/api/send-email/assignEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -302,7 +335,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     }
   };
 
-  // UI helpers
   const labelCls = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
   const inputCls =
     "border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] text-[var(--tw-color-text)] placeholder-[var(--tw-color-muted)] p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition text-sm";
@@ -328,7 +360,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        to: formValues.whatsapp.replace(/[^\d]/g, ""), // E.164 digits
+        to: formValues.whatsapp.replace(/[^\d]/g, ""),
         text: paymentMessage,
       }),
     });
@@ -342,14 +374,9 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50">
       <DarkVars />
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-
-      {/* Modal */}
       <div className="edit-booking-modal absolute inset-0 flex items-center justify-center p-4">
-        {/* Card as flex column so header/body/footer stack; body scrolls */}
         <div className="w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] overflow-hidden flex flex-col">
-          {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-[var(--tw-color-border)] bg-[var(--tw-color-card)]">
             <h2 className="text-lg md:text-xl font-semibold text-[var(--tw-color-text)]">
               Confirm Booking
@@ -362,10 +389,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
               ✕
             </button>
           </div>
-
-          {/* Body (scrollable) */}
           <div className="overflow-y-auto px-6 py-5 space-y-6 flex-1 min-h-0">
-            {/* Customer & Contact */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">
                 Customer & Contact
@@ -380,7 +404,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className={inputCls}
                   />
                 </div>
-
                 <div>
                   <label className={labelCls}>Email</label>
                   <input
@@ -390,7 +413,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className={inputCls}
                   />
                 </div>
-
                 <div>
                   <label className={labelCls}>WhatsApp</label>
                   <input
@@ -402,15 +424,11 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </div>
               </div>
             </div>
-
-            {/* Trip Details */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">
                 Trip Details
               </h3>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Pickup */}
                 <div className="space-y-2">
                   <label className={labelCls}>Pickup</label>
                   <Select
@@ -421,7 +439,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                         ? activeLocations.find((loc) => loc.value === formValues.pickup) || null
                         : null
                     }
-                    onChange={(selected: any) => {
+                    onChange={(selected: SingleValue<LocationOption>, _action: ActionMeta<LocationOption>) => {
                       handleChange("pickup", selected?.value || "");
                       handleChange("pickupPrice", selected?.price || 0);
                     }}
@@ -430,8 +448,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className="text-[var(--tw-color-text)]"
                   />
                 </div>
-
-                {/* Return */}
                 <div className="space-y-2">
                   <label className={labelCls}>Return</label>
                   <Select
@@ -442,7 +458,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                         ? activeLocations.find((loc) => loc.value === formValues.returnLoc) || null
                         : null
                     }
-                    onChange={(selected: any) => {
+                    onChange={(selected: SingleValue<LocationOption>, _action: ActionMeta<LocationOption>) => {
                       handleChange("returnLoc", selected?.value || "");
                       handleChange("returnPrice", selected?.price || 0);
                     }}
@@ -451,8 +467,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className="text-[var(--tw-color-text)]"
                   />
                 </div>
-
-                {/* Dates & Times */}
                 <div>
                   <label className={labelCls}>Pickup Date</label>
                   <input
@@ -471,7 +485,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className={inputCls}
                   />
                 </div>
-
                 <div>
                   <label className={labelCls}>Return Date</label>
                   <input
@@ -490,38 +503,32 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className={inputCls}
                   />
                 </div>
-
-                {/* Counts */}
                 <div>
                   <label className={labelCls}>Tuk Count</label>
                   <input
                     type="number"
                     min={1}
                     value={formValues.tukCount}
-                    onChange={(e) => handleChange("tukCount", parseInt(e.target.value))}
+                    onChange={(e) => handleChange("tukCount", parseInt(e.target.value) || 1)}
                     className={inputCls}
                   />
                 </div>
-
                 <div>
                   <label className={labelCls}>License Count</label>
                   <input
                     type="number"
                     min={1}
                     value={formValues.licenseCount}
-                    onChange={(e) => handleChange("licenseCount", parseInt(e.target.value))}
+                    onChange={(e) => handleChange("licenseCount", parseInt(e.target.value) || 1)}
                     className={inputCls}
                   />
                 </div>
               </div>
             </div>
-
-            {/* Train Transfer */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">
                 Train Transfer
               </h3>
-
               <div className="flex items-center gap-3 mb-4 hidden">
                 <input
                   id="trainTransferCheckbox"
@@ -543,7 +550,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                   Enable Train Transfer
                 </label>
               </div>
-
               <div className={`${enableTrainTransfer ? "block" : "hidden"} space-y-4`}>
                 <div>
                   <label className={labelCls}>Select Train Transfer</label>
@@ -558,7 +564,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                           }
                         : null
                     }
-                    onChange={(selected: any) =>
+                    onChange={(selected: SingleValue<TrainTransferOption>, _action: ActionMeta<TrainTransferOption>) =>
                       handleChange("trainTransfer", selected?.value ?? undefined)
                     }
                     isClearable
@@ -566,7 +572,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                     className="text-[var(--tw-color-text)]"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm text-red-600 font-medium">
                     Handover Agent (Train Transfer) *
@@ -581,8 +586,8 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                           ) || null
                         : null
                     }
-                    onChange={(selectedOption: any) => {
-                      handleChange("trainTransferAssignedPerson", selectedOption?.value || "");
+                    onChange={(selected: SingleValue<PersonOption>, _action: ActionMeta<PersonOption>) => {
+                      handleChange("trainTransferAssignedPerson", selected?.value || "");
                     }}
                     isClearable
                     placeholder="Search or select a person"
@@ -591,8 +596,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </div>
               </div>
             </div>
-
-            {/* Extras */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">Extras</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -620,14 +623,12 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 ))}
               </div>
             </div>
-
-            {/* Coupon (read-only if present) */}
             {formValues.couponCode && (
               <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
                 <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-3">Coupon</h3>
                 <label className={labelCls}>Coupon Code</label>
                 <input
-                  type="email"
+                  type="text"
                   value={formValues.couponCode}
                   onChange={(e) => handleChange("couponCode", e.target.value)}
                   className={`${inputCls} cursor-not-allowed opacity-80`}
@@ -635,8 +636,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 />
               </div>
             )}
-
-            {/* Price Summary */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5 flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <input
@@ -654,7 +653,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                   Recalculate Total Cost
                 </label>
               </div>
-
               <div className="flex items-center justify-between rounded-xl border border-[var(--tw-color-border)] bg-[var(--tw-color-bg)] px-4 py-3">
                 <span className="text-sm font-medium text-[var(--tw-color-muted)]">
                   {enableRecalculation ? "Updated Price" : "Original Price"}
@@ -668,8 +666,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </span>
               </div>
             </div>
-
-            {/* Payment Link + Send Payment */}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5 flex flex-col gap-3">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Payment Link (WebXPay / PayHere / etc.)
@@ -681,9 +677,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 placeholder="https://..."
                 className={inputCls}
               />
-
               <div className="flex flex-wrap gap-3">
-                {/* Click-to-Chat (client-side) */}
                 <a
                   href={buildWhatsAppLink(formValues.whatsapp, paymentMessage)}
                   target="_blank"
@@ -705,15 +699,13 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 >
                   Send Payment (WhatsApp)
                 </a>
-
-                {/* Cloud API (server-side) */}
                 <button
                   type="button"
                   className="px-4 py-2 rounded-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700"
                   onClick={async () => {
                     try {
                       if (!paymentLink) return alert("Add a valid payment link first.");
-                      new URL(paymentLink); // validate
+                      new URL(paymentLink);
                       await handleSendWhatsAppAPI();
                     } catch {
                       alert("Payment link is not a valid URL.");
@@ -725,8 +717,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
               </div>
             </div>
           </div>
-
-          {/* Footer / Actions */}
           <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 px-6 py-4 border-t border-[var(--tw-color-border)] bg-[var(--tw-color-card)]">
             <button
               onClick={onClose}
@@ -734,7 +724,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
             >
               Cancel
             </button>
-
             <button
               onClick={handleAssign}
               disabled={loading}
