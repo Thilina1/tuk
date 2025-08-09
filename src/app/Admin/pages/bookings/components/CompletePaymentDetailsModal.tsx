@@ -7,13 +7,7 @@ import { BookingData } from "../BookingsPage";
 import Select, {  SingleValue } from "react-select";
 
 // Types you already use
-interface TrainTransfer {
-  from: string;
-  to: string;
-  pickupTime: string;
-  downTime: string;
-  price: number;
-}
+
 
 interface Props {
   booking: BookingData;
