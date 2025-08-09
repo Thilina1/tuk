@@ -5,7 +5,6 @@ import { collection, doc, getDocs, updateDoc, increment  } from "firebase/firest
 import { db } from "../../config/firebase";
 import Image from "next/image";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-import Script from "next/script";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa"; // top of your file
 
 

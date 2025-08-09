@@ -3,10 +3,20 @@
 
 export const runtime = "nodejs";
 
+// Define a type for WhatsApp template components
+type Component = {
+  type: "header" | "body" | "button"; // Common component types
+  parameters?: Array<{
+    type: "text" | "image" | "video" | "document" | "currency" | "date_time";
+    [key: string]: any; // Allow specific parameter fields (e.g., text, image.url)
+  }>;
+  // Add more specific fields as needed based on your templates
+};
+
 type TemplatePayload = {
   name: string;            // e.g. "hello_world" or your template name
   language: string;        // e.g. "en_US" or "en"
-  components?: any[];      // optional vars
+  components?: Component[]; // Use specific Component type
 };
 
 export async function POST(req: Request) {
@@ -79,7 +89,8 @@ export async function POST(req: Request) {
     }
 
     return new Response(JSON.stringify(data), { status: 200 });
-  } catch (e: any) {
-    return new Response(JSON.stringify({ error: e?.message || "Unknown error" }), { status: 500 });
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : "Unknown error";
+    return new Response(JSON.stringify({ error: errorMessage }), { status: 500 });
   }
 }
