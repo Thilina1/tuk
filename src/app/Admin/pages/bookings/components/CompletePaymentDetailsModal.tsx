@@ -137,12 +137,12 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   const [formValues, setFormValues] = useState<BookingData>({ ...booking });
   const [enableRecalculation, setEnableRecalculation] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [paymentLink, setPaymentLink] = useState<string>(booking.paymentLink || "");
+  const [paymentLink, setPaymentLink] = useState<string>("");
   const [activeLocations, setActiveLocations] = useState<LocationOption[]>([]);
   // Comment out unused activeTuks to suppress no-unused-vars
   // const [activeTuks, setActiveTuks] = useState<TukTukOption[]>([]);
-  const [activePersons, setActivePersons] = useState<PersonOption[]>([]);
-  const [trainTransfers, setTrainTransfers] = useState<TrainTransferOption[]>([]);
+  //const [activePersons, setActivePersons] = useState<PersonOption[]>([]);
+  //const [trainTransfers, setTrainTransfers] = useState<TrainTransferOption[]>([]);
   const [enableTrainTransfer, setEnableTrainTransfer] = useState(!!formValues.trainTransfer);
 
   const handleChange = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
@@ -239,46 +239,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   }, []);
   */
 
-  useEffect(() => {
-    const fetchPersons = async () => {
-      const snapshot = await getDocs(collection(db, "persons"));
-      const personsList = snapshot.docs.map((doc) => {
-        const data = doc.data() as PersonDoc;
-        return {
-          value: data.name,
-          label: `${data.name} (${data.district})`,
-        };
-      });
-      setActivePersons(personsList);
-    };
 
-    fetchPersons();
-  }, []);
-
-  useEffect(() => {
-    const fetchTrainTransfers = async () => {
-      const snapshot = await getDocs(collection(db, "trainTransfers"));
-      const activeTransfers = snapshot.docs
-        .map((doc) => {
-          const data = doc.data() as TrainTransferDoc;
-          return {
-            label: `${data.from} → ${data.to} (${data.pickupTime}) - $${data.price}`,
-            value: {
-              from: data.from,
-              to: data.to,
-              pickupTime: data.pickupTime,
-              downTime: data.downTime,
-              price: data.price,
-            },
-            price: data.price,
-            status: data.status,
-          };
-        })
-        .filter((transfer) => transfer.status);
-      setTrainTransfers(activeTransfers);
-    };
-    fetchTrainTransfers();
-  }, []);
 
   const handleAssign = async () => {
     try {
@@ -432,7 +393,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 <div className="space-y-2">
                   <label className={labelCls}>Pickup</label>
                   <Select
-                    styles={selectStyles}
+                    
                     options={activeLocations}
                     value={
                       formValues.pickup
@@ -451,7 +412,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 <div className="space-y-2">
                   <label className={labelCls}>Return</label>
                   <Select
-                    styles={selectStyles}
                     options={activeLocations}
                     value={
                       formValues.returnLoc
@@ -550,51 +510,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                   Enable Train Transfer
                 </label>
               </div>
-              <div className={`${enableTrainTransfer ? "block" : "hidden"} space-y-4`}>
-                <div>
-                  <label className={labelCls}>Select Train Transfer</label>
-                  <Select
-                    styles={selectStyles}
-                    options={trainTransfers}
-                    value={
-                      formValues.trainTransfer
-                        ? {
-                            label: `${formValues.trainTransfer.from} → ${formValues.trainTransfer.to} (${formValues.trainTransfer.pickupTime}) - $${formValues.trainTransfer.price}`,
-                            value: formValues.trainTransfer,
-                          }
-                        : null
-                    }
-                    onChange={(selected: SingleValue<TrainTransferOption>, _action: ActionMeta<TrainTransferOption>) =>
-                      handleChange("trainTransfer", selected?.value ?? undefined)
-                    }
-                    isClearable
-                    placeholder="Search or select train transfer"
-                    className="text-[var(--tw-color-text)]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-red-600 font-medium">
-                    Handover Agent (Train Transfer) *
-                  </label>
-                  <Select
-                    styles={selectStyles}
-                    options={activePersons}
-                    value={
-                      formValues.trainTransferAssignedPerson
-                        ? activePersons.find(
-                            (person) => person.value === formValues.trainTransferAssignedPerson
-                          ) || null
-                        : null
-                    }
-                    onChange={(selected: SingleValue<PersonOption>, _action: ActionMeta<PersonOption>) => {
-                      handleChange("trainTransferAssignedPerson", selected?.value || "");
-                    }}
-                    isClearable
-                    placeholder="Search or select a person"
-                    className="text-[var(--tw-color-text)]"
-                  />
-                </div>
-              </div>
+           
             </div>
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">Extras</h3>
