@@ -1,20 +1,19 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-/** Pretty currency formatter */
+/** ───────── Helpers ───────── **/
 const money = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
     .format(Number(n || 0));
 
-/** Build the HTML email once */
 function buildHtml({
-  name, orderId, mode,
+  name, email, orderId, mode,
   pickup, pickupDate, pickupTime,
   returnLoc, returnDate, returnTime,
   tukCount, licenseCount,
   billBreakdown = {},
   couponCode,
-  extrasCounts
+  extrasCounts,
 }) {
   const perDay      = Number(billBreakdown.perDayCharge || 0);
   const days        = Number(billBreakdown.rentalDays || 0);
@@ -24,9 +23,9 @@ function buildHtml({
   const returnPrice = Number(billBreakdown.returnPrice || 0);
   const deposit     = Number(billBreakdown.deposit || 0);
 
-  const rentalSubtotal        = perDay * days * Number(tukCount || 1);
-  const licenseSubtotal       = licensePer * Number(licenseCount || 0);
-  const pickupReturnSubtotal  = pickupPrice + returnPrice;
+  const rentalSubtotal       = perDay * days * Number(tukCount || 1);
+  const licenseSubtotal      = licensePer * Number(licenseCount || 0);
+  const pickupReturnSubtotal = pickupPrice + returnPrice;
 
   const extrasRows = extrasCounts
     ? Object.entries(extrasCounts)
@@ -85,51 +84,33 @@ function buildHtml({
 `;
 }
 
-/** Create a transporter with given options, verify, and return it */
-async function makeTransporter(opts) {
-  const transporter = nodemailer.createTransport(opts);
-  await transporter.verify(); // throws if connection/auth fails
-  return transporter;
-}
-
-/** Try 465 (implicit TLS) then fall back to 587 (STARTTLS) */
-async function getWorkingTransporter() {
-  const masked = (s) => s ? `${s.slice(0, 2)}***` : '';
+/** non-SSL transporter: try 587 (secure:false) → fallback 25 (secure:false) */
+async function getTransporterNoSSL() {
   const base = {
     host: 'mail.tuktukdrive.com',
-    auth: {
-      user: 'test@tuktukdrive.com',
-      pass: 'F6{X_jks2D[#',
-    },
+    auth: { user: 'test@tuktukdrive.com', pass: 'F6{X_jks2D[#' },
   };
 
-  // 1) Try 465 first
+  // 587 first (STARTTLS optional if server offers; otherwise plaintext)
   try {
-    const t = await makeTransporter({
-      ...base,
-      port: 465,
-      secure: true, // implicit TLS
-    });
-    console.log('[mail] connected via 465 (implicit TLS) as', base.auth.user, '(pass:', masked(base.auth.pass), ')');
-    return t;
+    const t587 = nodemailer.createTransport({ ...base, port: 587, secure: false });
+    await t587.verify();
+    console.log('[smtp] connected on 587 (secure:false)');
+    return { t: t587, via: '587 (secure:false)' };
   } catch (e) {
-    console.warn('[mail] 465 failed, falling back to 587 STARTTLS. Reason:', e?.message || e);
+    console.warn('[smtp] 587 failed:', e?.code, e?.message);
   }
 
-  // 2) Fallback to 587 STARTTLS
-  const t587 = await makeTransporter({
-    ...base,
-    port: 587,
-    secure: false,     // STARTTLS
-    requireTLS: true,
-  });
-  console.log('[mail] connected via 587 (STARTTLS) as', base.auth.user);
-  return t587;
+  // fallback: 25 plaintext
+  const t25 = nodemailer.createTransport({ ...base, port: 25, secure: false });
+  await t25.verify();
+  console.log('[smtp] connected on 25 (secure:false)');
+  return { t: t25, via: '25 (secure:false)' };
 }
 
+/** ───────── API Route ───────── **/
 export async function POST(request) {
   try {
-    // --- parse & validate payload safely ---
     const data = await request.json().catch(() => ({}));
 
     const {
@@ -152,24 +133,21 @@ export async function POST(request) {
     } = data || {};
 
     if (!email) {
-      console.error('[bookingEmail] missing "email" in payload');
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    // Normalize billBreakdown
     const billBreakdown = {
-      perDayCharge:  Number(bbRaw?.perDayCharge ?? 0),
-      rentalDays:    Number(bbRaw?.rentalDays ?? 0),
-      licenseChargePer: Number(bbRaw?.licenseChargePer ?? 0),
-      extrasTotal:   Number(bbRaw?.extrasTotal ?? 0),
-      pickupPrice:   Number(bbRaw?.pickupPrice ?? 0),
-      returnPrice:   Number(bbRaw?.returnPrice ?? 0),
-      deposit:       Number(bbRaw?.deposit ?? 0),
-      total:         Number(totalRental ?? bbRaw?.total ?? 0),
-      totalRental:   Number(totalRental ?? bbRaw?.totalRental ?? 0),
+      perDayCharge:      Number(bbRaw?.perDayCharge ?? 0),
+      rentalDays:        Number(bbRaw?.rentalDays ?? 0),
+      licenseChargePer:  Number(bbRaw?.licenseChargePer ?? 0),
+      extrasTotal:       Number(bbRaw?.extrasTotal ?? 0),
+      pickupPrice:       Number(bbRaw?.pickupPrice ?? 0),
+      returnPrice:       Number(bbRaw?.returnPrice ?? 0),
+      deposit:           Number(bbRaw?.deposit ?? 0),
+      total:             Number(totalRental ?? bbRaw?.total ?? 0),
+      totalRental:       Number(totalRental ?? bbRaw?.totalRental ?? 0),
     };
 
-    // Build email
     const html = buildHtml({
       name, email, orderId, mode,
       pickup, pickupDate, pickupTime,
@@ -178,35 +156,51 @@ export async function POST(request) {
       billBreakdown, couponCode, extrasCounts,
     });
 
-    // Transporter (465 → 587 fallback)
-    let transporter;
+    // connect (no-SSL chain)
+    let transport, via;
     try {
-      transporter = await getWorkingTransporter();
+      const r = await getTransporterNoSSL();
+      transport = r.t;
+      via = r.via;
     } catch (connErr) {
-      console.error('[bookingEmail] SMTP connection failed after both attempts:', connErr?.message || connErr);
-      return NextResponse.json({ error: 'SMTP connection failed' }, { status: 502 });
+      return NextResponse.json({
+        error: 'SMTP connection failed',
+        details: { code: connErr?.code, message: connErr?.message }
+      }, { status: 502 });
     }
 
-    // Send mail with extra logging
-    const mailOptions = {
-      from: '"TukTuk Booking" <test@tuktukdrive.com>',
-      to: [email],
-      bcc: 'test@tuktukdrive.com',
-      subject: '🎉 Booking Confirmed + Pricing – TukTukDrive',
-      html,
-    };
-
+    // send
     try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log('[bookingEmail] sent:', { messageId: info?.messageId, accepted: info?.accepted, rejected: info?.rejected });
+      const info = await transport.sendMail({
+        from: '"TukTuk Booking" <test@tuktukdrive.com>',
+        to: [email],
+        bcc: 'test@tuktukdrive.com',
+        subject: '🎉 Booking Confirmed + Pricing – TukTukDrive',
+        html,
+      });
+      return NextResponse.json({
+        ok: true,
+        via,
+        messageId: info?.messageId,
+        accepted: info?.accepted,
+        rejected: info?.rejected,
+      });
     } catch (sendErr) {
-      console.error('[bookingEmail] sendMail error:', sendErr?.response || sendErr?.message || sendErr);
-      return NextResponse.json({ error: 'Failed to send email (SMTP send error)' }, { status: 500 });
+      return NextResponse.json({
+        error: 'SMTP send failed',
+        details: {
+          code: sendErr?.code,
+          command: sendErr?.command,
+          responseCode: sendErr?.responseCode,
+          message: sendErr?.message,
+          response: sendErr?.response,
+        }
+      }, { status: 500 });
     }
-
-    return NextResponse.json({ ok: true, message: 'Email sent successfully!' });
-  } catch (error) {
-    console.error('[bookingEmail] fatal error:', error?.message || error);
-    return NextResponse.json({ error: 'Failed to send email (server error)' }, { status: 500 });
+  } catch (fatal) {
+    return NextResponse.json({
+      error: 'Server error',
+      details: fatal?.message || String(fatal),
+    }, { status: 500 });
   }
 }
