@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 export default function WhatsAppButton() {
   const buttonRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 10, y: 650 });
+  const [position, setPosition] = useState({ x: 325, y: 650 });
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hasMoved, setHasMoved] = useState(false);
@@ -110,7 +110,7 @@ export default function WhatsAppButton() {
       }}
     >
       <a
-        href="https://wa.me/94771234567"
+        href="https://wa.me/94770063780"
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
