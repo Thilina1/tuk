@@ -7,7 +7,7 @@ const money = (n) =>
     .format(Number(n || 0));
 
 function buildHtml({
-  name, email, orderId, mode,
+  name, orderId, mode,
   pickup, pickupDate, pickupTime,
   returnLoc, returnDate, returnTime,
   tukCount, licenseCount,
