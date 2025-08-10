@@ -8,7 +8,7 @@ const money = (n) =>
 
 /** Build the HTML email once */
 function buildHtml({
-  name, email, orderId, mode,
+  name, orderId, mode,
   pickup, pickupDate, pickupTime,
   returnLoc, returnDate, returnTime,
   tukCount, licenseCount,
