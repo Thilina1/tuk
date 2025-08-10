@@ -59,11 +59,7 @@ export async function POST(request) {
       },
     });
 
-    const extrasHTML =
-      Object.entries(extras || {})
-        .filter(([, qty]) => Number(qty) > 0)
-        .map(([key, qty]) => `<li>${key}: ${qty}</li>`)
-        .join("") || "<li>No extras selected</li>";
+
 
     const tukList =
       Array.isArray(assignedTuks) && assignedTuks.length

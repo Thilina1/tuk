@@ -1,4 +1,4 @@
-// app/api/whatsapp/send/route.ts or route.js
+// app/api/whatsapp/send/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/config/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -8,6 +8,19 @@ type Payload = {
   template: string;
   langCode?: string;
   components?: unknown[];
+};
+
+type AdminConfig = {
+  whatsappToken?: string;
+  whatsappPhoneId?: string;
+  whatsappGraphVersion?: string;
+  whatsappNumber?: string; // optional default notify recipient
+};
+
+type WhatsAppSendResult = {
+  to: string;
+  ok: boolean;
+  data: unknown;
 };
 
 function normalize(msisdn: string) {
@@ -24,12 +37,8 @@ export async function POST(req: Request) {
     if (!snap.exists()) {
       return NextResponse.json({ error: "Admin settings not found" }, { status: 404 });
     }
-    const cfg = snap.data() as {
-      whatsappToken?: string;
-      whatsappPhoneId?: string;
-      whatsappGraphVersion?: string;
-      whatsappNumber?: string; // optional default notify
-    };
+
+    const cfg = snap.data() as AdminConfig;
 
     const TOKEN = cfg.whatsappToken;
     const PHONE_ID = cfg.whatsappPhoneId;
@@ -46,7 +55,7 @@ export async function POST(req: Request) {
     const lang = body.langCode || "en_US";
 
     // default notify recipient (optional)
-    const targets = cfg.whatsappNumber ? [cfg.whatsappNumber] : [];
+    const targets: string[] = cfg.whatsappNumber ? [cfg.whatsappNumber] : [];
 
     if (body.to) {
       const arr = Array.isArray(body.to) ? body.to : [body.to];
@@ -58,7 +67,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No recipients provided" }, { status: 400 });
     }
 
-    const results: any[] = [];
+    const results: WhatsAppSendResult[] = [];
+
     for (const to of uniqueTargets) {
       const payload = {
         messaging_product: "whatsapp",
@@ -69,7 +79,7 @@ export async function POST(req: Request) {
           language: { code: lang },
           ...(body.components ? { components: body.components } : {}),
         },
-      };
+      } as const;
 
       const res = await fetch(url, {
         method: "POST",
@@ -80,13 +90,18 @@ export async function POST(req: Request) {
         body: JSON.stringify(payload),
       });
 
-      const json = await res.json();
+      const json: unknown = await res.json();
       results.push({ to, ok: res.ok, data: json });
     }
 
     const anyFailed = results.some((r) => !r.ok);
     return NextResponse.json({ results }, { status: anyFailed ? 207 : 200 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "error" }, { status: 500 });
+  } catch (e: unknown) {
+    // Optional: surface to logs for debugging
+    // console.error(e);
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "Unknown error" }, { status: 500 });
   }
 }

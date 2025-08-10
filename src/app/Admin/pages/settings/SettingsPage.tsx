@@ -2,29 +2,40 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { db } from "@/config/firebase";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 
-type Settings = {
+type SettingsFirestore = {
+  email?: string;
+  mobile?: string;
+  whatsappToken?: string;
+  whatsappPhoneId?: string;
+  whatsappGraphVersion?: string;
+  whatsappNumber?: string; // E.164 without +
+  updatedAt?: Timestamp;    // Firestore Timestamp when read
+};
+
+type SettingsForm = {
   email: string;
   mobile: string;
   whatsappToken: string;
   whatsappPhoneId: string;
   whatsappGraphVersion: string;
-  whatsappNumber: string; // default notify recipient (E.164, no +)
-  updatedAt?: any; // Firestore timestamp
+  whatsappNumber: string;    // E.164 without +
+  updatedAt?: Timestamp | null;
 };
 
 const COLLECTION = "settings";
 const DOC_ID = "contact";
 
 export default function SettingsPage() {
-  const [form, setForm] = useState<Settings>({
+  const [form, setForm] = useState<SettingsForm>({
     email: "",
     mobile: "",
     whatsappToken: "",
     whatsappPhoneId: "",
     whatsappGraphVersion: "v22.0",
     whatsappNumber: "",
+    updatedAt: null,
   });
 
   const [loading, setLoading] = useState(true);
@@ -48,7 +59,7 @@ export default function SettingsPage() {
     return `${head}${"*".repeat(t.length - 8)}${tail}`;
   };
 
-  const onChange = <K extends keyof Settings>(key: K, val: Settings[K]) => {
+  const onChange = <K extends keyof SettingsForm>(key: K, val: SettingsForm[K]) => {
     setForm((p) => ({ ...p, [key]: val }));
     setDirty(true);
     setSaveMsg(null);
@@ -70,7 +81,10 @@ export default function SettingsPage() {
     return /^\d{6,20}$/.test(form.whatsappPhoneId.trim());
   }, [form.whatsappPhoneId]);
 
-  const graphOk = useMemo(() => /^v\d+\.\d+$/.test(form.whatsappGraphVersion.trim()), [form.whatsappGraphVersion]);
+  const graphOk = useMemo(
+    () => /^v\d+\.\d+$/.test(form.whatsappGraphVersion.trim()),
+    [form.whatsappGraphVersion]
+  );
 
   const waNumberOk = useMemo(() => {
     if (!form.whatsappNumber) return true; // optional
@@ -95,7 +109,7 @@ export default function SettingsPage() {
         setLoading(true);
         const snap = await getDoc(docRef);
         if (snap.exists()) {
-          const d = snap.data() as Partial<Settings & { updatedAt?: any }>;
+          const d = snap.data() as SettingsFirestore;
           setForm({
             email: d.email ?? "",
             mobile: d.mobile ?? "",
@@ -103,15 +117,16 @@ export default function SettingsPage() {
             whatsappPhoneId: d.whatsappPhoneId ?? "",
             whatsappGraphVersion: d.whatsappGraphVersion ?? "v22.0",
             whatsappNumber: d.whatsappNumber ?? "",
-            updatedAt: d.updatedAt,
+            updatedAt: d.updatedAt ?? null,
           });
           setDirty(false);
         } else {
-          // First time — keep defaults, user will Save to create doc
+          // First time — keep defaults
           setDirty(false);
         }
-      } catch (e: any) {
-        setLoadError(e?.message || "Failed to load settings.");
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Failed to load settings.";
+        setLoadError(message);
       } finally {
         setLoading(false);
       }
@@ -133,14 +148,15 @@ export default function SettingsPage() {
           whatsappPhoneId: form.whatsappPhoneId.trim(),
           whatsappGraphVersion: form.whatsappGraphVersion.trim(),
           whatsappNumber: form.whatsappNumber.trim(),
-          updatedAt: serverTimestamp(),
+          updatedAt: serverTimestamp(), // FieldValue on write, ok for Firestore
         },
         { merge: true }
       );
       setDirty(false);
       setSaveMsg("Saved ✅");
-    } catch (e: any) {
-      setSaveMsg(e?.message || "Failed to save.");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Failed to save.";
+      setSaveMsg(message);
     } finally {
       setSaving(false);
     }
@@ -220,7 +236,6 @@ export default function SettingsPage() {
                   {showToken ? "Hide" : "Show"}
                 </button>
               </div>
-              {/* Masked preview when hidden */}
               {!showToken && form.whatsappToken && (
                 <p className="text-xs text-gray-500 mt-1">Saved: {maskToken(form.whatsappToken)}</p>
               )}
@@ -277,7 +292,7 @@ export default function SettingsPage() {
           {/* Meta */}
           {form.updatedAt && (
             <p className="text-xs text-gray-500">
-              Last updated: {form.updatedAt?.toDate?.().toLocaleString?.() ?? "—"}
+              Last updated: {form.updatedAt.toDate().toLocaleString()}
             </p>
           )}
 
