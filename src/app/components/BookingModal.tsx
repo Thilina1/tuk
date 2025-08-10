@@ -215,6 +215,50 @@ const BookingModal = ({
     } finally {
       setLoading(false);
     }
+
+
+    await fetch("/api/send-email/bookingAdminMail", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        name: formValues.name,
+        email: formValues.email,
+        whatsapp: formValues.whatsapp,
+        pickup: formValues.pickup,
+        pickupDate: formValues.pickupDate,
+        pickupTime: formValues.pickupTime,
+        returnLoc: formValues.returnLoc,
+        returnDate: formValues.returnDate,
+        returnTime: formValues.returnTime,
+        tukCount: formValues.tukCount,
+        licenseCount: formValues.licenseCount,
+        totalRental: Number(totalRental.toFixed(2)),
+        couponCode: appliedCoupon ? couponCode.trim() : undefined,
+        extrasCounts: formValues.extras,
+        status: "PENDING_PAYMENT",
+      }),
+    });
+    
+
+
+    await fetch("/api/whatsapp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        template: "hello_world",
+        langCode: "en_US",
+        // optional: to also send to the customer's number
+        to: formValues.whatsapp,
+      }),
+    });
+    
+    
+
+
+
+
+
   };
   
 
@@ -962,7 +1006,7 @@ await fetch("/api/send-email/bookingEmail", {
   </div>
 </div>
   {/* IDP Upload */}
-  <div>
+  <div  className="hidden">
     <label className="flex items-center text-sm font-semibold mb-2">
       <FaIdCard className="text-orange-500 mr-2" />
       Upload International Driving Permit (PDF or up to 3 Images)
@@ -986,7 +1030,7 @@ await fetch("/api/send-email/bookingEmail", {
   </div>
 
   {/* Passport Upload */}
-  <div>
+  <div  className="hidden">
     <label className="flex items-center text-sm font-semibold mb-2">
       <FaPassport className="text-blue-500 mr-2" />
       Upload Passport (PDF or Image)
@@ -1009,7 +1053,7 @@ await fetch("/api/send-email/bookingEmail", {
   </div>
 
   {/* Selfie with License Upload */}
-  <div>
+  <div  className="hidden">
     <label className="flex items-center text-sm font-semibold mb-2">
       <FaUser className="text-green-600 mr-2" />
       Upload a Photo of Yourself (Image only)

@@ -5,13 +5,7 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: 'thilinaweeras@gmail.com',
-    //     pass: 'aklxqxdmgjwxrplz', // App Password only
-    //   },
-    // });
+
     const transporter = nodemailer.createTransport({
       host: 'mail.tuktukdrive.com',
       port: 465,

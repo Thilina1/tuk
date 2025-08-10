@@ -13,6 +13,8 @@ const NAV_ITEMS = [
  // { label: "Train Transfer", icon: "🚂", href: "/Admin/pages/TrainTransfer" },
   { label: "Trainers", icon: "👤", href: "/Admin/pages/persons" },
   { label: "Discounts", icon: "💲", href: "/Admin/pages/discount" },
+  { label: "Settings", icon: "⚙️", href: "/Admin/pages/settings" },
+
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
