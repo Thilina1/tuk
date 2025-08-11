@@ -52,8 +52,8 @@ export async function POST(request) {
       port: 465,
       secure: true,
       auth: {
-        user: "test@tuktukdrive.com",
-        pass: "F6{X_jks2D[#",
+        user: "info@tuktukdrive.com",
+        pass: "DC5OJ7wUuOdo",
       },
     });
 
@@ -98,7 +98,7 @@ export async function POST(request) {
     `;
 
     const mailOptions = {
-      from: '"TukTuk Booking" <test@tuktukdrive.com>',
+      from: '"TukTuk Booking" <info@tuktukdrive.com>',
       to: adminEmail, // ✅ fetched from Firestore
       subject: `✅ New Booking Received – Please Complete (Order ${orderId})`,
       html,

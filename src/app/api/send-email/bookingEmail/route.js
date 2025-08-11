@@ -47,8 +47,8 @@ export async function POST(request) {
       port: 465,
       secure: true,
       auth: {
-        user: 'test@tuktukdrive.com',       // move to env in prod
-        pass: 'F6{X_jks2D[#',               // move to env in prod
+        user: 'info@tuktukdrive.com',       // move to env in prod
+        pass: 'DC5OJ7wUuOdo',               // move to env in prod
       },
     });
 
@@ -102,7 +102,7 @@ export async function POST(request) {
   </div>
 
   <div style="padding:16px; background:#f9fafb; text-align:center; font-size:12px; color:#6b7280;">
-    <p style="margin:0 0 6px;">Need help? <a href="mailto:support@tuktukdrive.com" style="color:#0ea5e9; text-decoration:none;">support@tuktukdrive.com</a></p>
+    <p style="margin:0 0 6px;">Need help? <a href="mailto:info@tuktukdrive.com" style="color:#0ea5e9; text-decoration:none;">info@tuktukdrive.com</a></p>
     <p style="margin:0 0 6px;">No: 233, Tuk Tuk Drive, Kandy Road, Kandy, Sri Lanka</p>
     <p style="margin:0;">&copy; ${new Date().getFullYear()} TukTukDrive. All rights reserved.</p>
   </div>
@@ -110,9 +110,9 @@ export async function POST(request) {
     `;
 
     const mailOptions = {
-      from: '"TukTuk Booking" <test@tuktukdrive.com>',
+      from: '"TukTuk Booking" <info@tuktukdrive.com>',
       to: [email],
-      bcc: 'test@tuktukdrive.com',
+      bcc: 'info@tuktukdrive.com',
       subject: '🎉 Booking Confirmed + Pricing – TukTukDrive',
       html,
     };

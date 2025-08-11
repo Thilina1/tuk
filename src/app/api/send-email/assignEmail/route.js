@@ -11,7 +11,7 @@ export async function POST(request) {
       //   port: 465,
       //   secure: true, // SSL/TLS
       //   auth: {
-      //     user: 'test@tuktukdrive.com',
+      //     user: 'info@tuktukdrive.com',
       //     pass: 'F6{X_jks2D[#',
       //   },
       // });
@@ -21,8 +21,8 @@ export async function POST(request) {
         port: 465,
         secure: true, // SSL/TLS
         auth: {
-        user: 'test@tuktukdrive.com',
-        pass: 'F6{X_jks2D[#',
+        user: 'info@tuktukdrive.com',
+        pass: 'DC5OJ7wUuOdo',
        
         // user: 'info@tuktukdrive.com',
         // pass: 'Rd#RhOyBa^jy',
@@ -37,7 +37,7 @@ export async function POST(request) {
     const tukList = (data.assignedTuks || []).join(', ') || 'Not Assigned';
 
     const mailOptions = {
-      from: '"TukTuk Booking" <test@tuktukdrive.com>',
+      from: '"TukTuk Booking" <info@tuktukdrive.com>',
       to: [data.email],
       subject: '✅ TukTuk Assignment Confirmation – TukTukDrive',
       html: `
@@ -68,7 +68,7 @@ export async function POST(request) {
 
           <footer style="font-size: 13px; color: #555; text-align: center;">
             <p>Need assistance? Email us at 
-              <a href="mailto:support@tuktukdrive.com" style="color: #0077b6;">support@tuktukdrive.com</a>
+              <a href="mailto:info@tuktukdrive.com" style="color: #0077b6;">info@tuktukdrive.com</a>
             </p>
 
             <p style="margin-top: 8px;"><strong>Reference Address:</strong> No. 06, Ambasewanagama, Kengalla. (Kandy), Sri Lanka</p>
