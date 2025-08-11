@@ -29,7 +29,6 @@ export async function POST(request) {
       licenseCount,
       totalRental,
       couponCode,
-      assignedTuks,
       status = "PENDING_PAYMENT",
     } = data;
 
