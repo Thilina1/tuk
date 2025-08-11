@@ -85,13 +85,20 @@ export async function POST(request) {
               <tr><td>Return Date & Time</td><td>${returnDate || "-"} ${returnTime || "-"}</td></tr>
               <tr><td>Tuk Tuks</td><td>${tukCount ?? "-"}</td></tr>
               <tr><td>Licenses</td><td>${licenseCount ?? "-"}</td></tr>
-              <tr><td>Assigned Tuks</td><td>${tukList}</td></tr>
             </tbody>
           </table>
           <h3>Total</h3>
           <p><strong>${money(totalRental)}</strong> ${couponCode ? `(coupon: ${couponCode})` : ""}</p>
           <p><strong>Action:</strong> Please complete this booking.</p>
         </div>
+          <p style="margin:16px 0 0;">
+    <a href="https://www.tuktukdrive.com/Admin"
+       target="_blank"
+       style="display:inline-block;padding:12px 18px;background:#2563eb;color:#ffffff;
+              text-decoration:none;border-radius:8px;font-weight:600;line-height:1;">
+      Open Admin
+    </a>
+  </p>
       </div>
     `;
 
