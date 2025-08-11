@@ -60,10 +60,6 @@ export async function POST(request) {
 
 
 
-    const tukList =
-      Array.isArray(assignedTuks) && assignedTuks.length
-        ? assignedTuks.join(", ")
-        : "Not Assigned";
 
     const html = `
       <div style="font-family:Arial,sans-serif;max-width:660px;margin:auto;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
