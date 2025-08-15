@@ -335,12 +335,12 @@ export default function IncompleteBookings({
   );
 }
 
-function Detail({ label, value }: { label: string; value?: any }) {
+function Detail({ label, value }: { label: string; value?: string }) {
   if (value === undefined || value === null || value === '') return null;
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
       <div className="text-[11px] uppercase tracking-wide text-gray-500">{label}</div>
-      <div className="text-sm text-gray-900 break-words">{String(value)}</div>
+      <div className="text-sm text-gray-900 break-words">{value}</div>
     </div>
   );
 }
