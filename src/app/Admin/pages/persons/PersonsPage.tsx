@@ -1,15 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { db } from '@/config/firebase';
-import {
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 interface Person {
   id?: string;
@@ -23,6 +16,7 @@ interface Person {
   district: string;
   province: string;
   isActive?: boolean;
+  number?: number;
 }
 
 const provinceDistricts: Record<string, string[]> = {
@@ -42,7 +36,7 @@ export default function PersonsPage() {
     name: '',
     idNumber: '',
     licenseNumber: '',
-    dateOfBirth:'',
+    dateOfBirth: '',
     mobile: '',
     email: '',
     location: '',
@@ -56,44 +50,53 @@ export default function PersonsPage() {
     district: '',
     province: '',
   });
-  
 
   const [persons, setPersons] = useState<Person[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-
+  const sortAndNumber = (rows: Person[]) =>
+    rows
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+      .map((p, i) => ({ ...p, number: i + 1 }));
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // start loading
+      setLoading(true);
       const snapshot = await getDocs(collection(db, 'persons'));
-      const data = snapshot.docs.map((doc, index) => ({
-        id: doc.id,
-        ...doc.data(),
-        number: index + 1,
-      })) as unknown as Person[] & { number: number }[];
-      setPersons(data);
-      setLoading(false); // stop loading
+      const data = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as Omit<Person, 'id'>),
+      })) as Person[];
+      setPersons(sortAndNumber(data));
+      setLoading(false);
     };
-  
     fetchData();
   }, []);
-  
 
-  const handleChange = <K extends keyof Person>(key: K, value: Person[K]) => {
+  const handleChange = <K extends keyof Person>(key: K, value: Person[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
-  };
-  
 
-  const handleSubmit = async () => {
-    try {
-      const newPerson = { ...form, isActive: true };
-      const docRef = await addDoc(collection(db, 'persons'), newPerson);
-      setPersons((prev) => [
-        ...prev,
-        { ...newPerson, id: docRef.id, number: prev.length + 1 },
-      ]);
+  const openModal = (person?: Person) => {
+    if (person) {
+      setEditingId(person.id || null);
+      setForm({
+        id: person.id,
+        name: person.name || '',
+        idNumber: person.idNumber || '',
+        licenseNumber: person.licenseNumber || '',
+        dateOfBirth: person.dateOfBirth || '',
+        mobile: person.mobile || '',
+        email: person.email || '',
+        location: person.location || '',
+        district: person.district || '',
+        province: person.province || '',
+        isActive: person.isActive ?? true,
+      });
+    } else {
+      setEditingId(null);
       setForm({
         name: '',
         idNumber: '',
@@ -106,260 +109,361 @@ export default function PersonsPage() {
         province: '',
         isActive: true,
       });
+    }
+    setShowModal(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      if (!form.name.trim()) return alert('Name is required.');
+      if (!form.province) return alert('Province is required.');
+      if (!form.district) return alert('District is required.');
+
+      if (editingId) {
+        const ref = doc(db, 'persons', editingId);
+        const payload: Omit<Person, 'id' | 'number'> = {
+          name: form.name,
+          idNumber: form.idNumber,
+          licenseNumber: form.licenseNumber,
+          dateOfBirth: form.dateOfBirth,
+          mobile: form.mobile,
+          email: form.email,
+          location: form.location,
+          district: form.district,
+          province: form.province,
+          isActive: form.isActive,
+        };
+        await updateDoc(ref, payload as any);
+        setPersons((prev) => sortAndNumber(prev.map((p) => (p.id === editingId ? { ...p, ...payload } : p))));
+      } else {
+        const payload: Omit<Person, 'id' | 'number'> = {
+          name: form.name,
+          idNumber: form.idNumber,
+          licenseNumber: form.licenseNumber,
+          dateOfBirth: form.dateOfBirth,
+          mobile: form.mobile,
+          email: form.email,
+          location: form.location,
+          district: form.district,
+          province: form.province,
+          isActive: true,
+        };
+        const ref = await addDoc(collection(db, 'persons'), payload as any);
+        setPersons((prev) => sortAndNumber([...prev, { ...payload, id: ref.id }]));
+      }
+
       setShowModal(false);
-    } catch (error) {
-      console.error('Error adding person:', error);
+      setEditingId(null);
+      setForm({
+        name: '',
+        idNumber: '',
+        licenseNumber: '',
+        dateOfBirth: '',
+        mobile: '',
+        email: '',
+        location: '',
+        district: '',
+        province: '',
+        isActive: true,
+      });
+    } catch (e) {
+      console.error(e);
+      alert('Failed to save person.');
     }
   };
 
   const toggleActiveStatus = async (person: Person) => {
     if (!person.id) return;
-
-    const newStatus = !person.isActive;
-    const ref = doc(db, 'persons', person.id);
-    await updateDoc(ref, { isActive: newStatus });
-
-    setPersons((prev) =>
-      prev.map((p) => (p.id === person.id ? { ...p, isActive: newStatus } : p))
-    );
+    try {
+      const ref = doc(db, 'persons', person.id);
+      const next = !person.isActive;
+      await updateDoc(ref, { isActive: next });
+      setPersons((prev) => prev.map((p) => (p.id === person.id ? { ...p, isActive: next } : p)));
+    } catch (e) {
+      console.error(e);
+      alert('Failed to update status.');
+    }
   };
 
   const handleDelete = async (id?: string) => {
     if (!id) return;
     try {
       await deleteDoc(doc(db, 'persons', id));
-      setPersons((prev) => prev.filter((p) => p.id !== id));
-    } catch (error) {
-      console.error('Failed to delete person:', error);
+      setPersons((prev) => sortAndNumber(prev.filter((p) => p.id !== id)));
+    } catch (e) {
+      console.error(e);
+      alert('Failed to delete person.');
     }
   };
 
+  const filtered = useMemo(
+    () =>
+      persons
+        .filter((p) => p.name.toLowerCase().includes(searchFilters.name.toLowerCase()))
+        .filter((p) => (searchFilters.province ? p.province === searchFilters.province : true))
+        .filter((p) => (searchFilters.district ? p.district === searchFilters.district : true)),
+    [persons, searchFilters]
+  );
+
+  // Columns: ['#','Name','ID','License','DOB','Mobile','Location','District','Status','Actions'] (10 columns total)
+  // widths sum to 100%
+  const colWidths = ['4%', '16%', '12%', '12%', '9%', '10%', '13%', '11%', '6%', '7%'];
+
   return (
+    <div className="max-w-7xl mx-auto p-6">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-semibold text-gray-900"></h2>
+        <button
+          onClick={() => openModal()}
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          type="button"
+        >
+          + Add Person
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-3">
+        <input
+          value={searchFilters.name}
+          onChange={(e) => setSearchFilters((s) => ({ ...s, name: e.target.value }))}
+          placeholder="Search by name"
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+        />
+        <select
+          value={searchFilters.province}
+          onChange={(e) => setSearchFilters((s) => ({ ...s, province: e.target.value, district: '' }))}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+        >
+          <option value="">All Provinces</option>
+          {Object.keys(provinceDistricts).map((prov) => (
+            <option key={prov} value={prov}>
+              {prov}
+            </option>
+          ))}
+        </select>
+        <select
+          value={searchFilters.district}
+          onChange={(e) => setSearchFilters((s) => ({ ...s, district: e.target.value }))}
+          disabled={!searchFilters.province}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100"
+        >
+          <option value="">All Districts</option>
+          {provinceDistricts[searchFilters.province]?.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table */}
+      {loading ? (
+                <div className="flex justify-center items-center h-40">
+                <svg
+                  className="animate-spin h-8 w-8 text-blue-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                <span className="ml-3 text-gray-600">Loading trainers...</span>
+              </div>
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <table className="w-full table-fixed text-sm">
+            <colgroup>
+              {colWidths.map((w, i) => (
+                <col key={i} style={{ width: w }} />
+              ))}
+            </colgroup>
+
+            <thead className="bg-gray-50">
+              <tr className="text-left">
+                {['#', 'Name',  'License No', 'Date of Birth', 'Mobile', 'Location',"district", 'Status', 'Actions'].map(
+                  (h) => (
+                    <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {h}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-100">
+              {filtered.map((p, i) => (
+                <tr key={p.id} className="align-top hover:bg-blue-50/20">
+                  <td className="px-3 py-3 text-xs text-gray-700">{p.number ?? i + 1}</td>
+                  <td className="px-3 py-3 text-xs text-gray-900 break-words">{p.name}</td>
+                  <td className="px-3 py-3 text-xs text-gray-700 break-words">{p.licenseNumber}</td>
+                  <td className="px-3 py-3 text-xs text-gray-700">{p.dateOfBirth}</td>
+                  <td className="px-3 py-3 text-xs text-gray-700">{p.mobile}</td>
+                  <td className="px-3 py-3 text-xs text-gray-700 break-words">{p.location}</td>
+                  <td className="px-3 py-3 text-xs text-gray-700 break-words">{p.district}</td>
 
 
-    
-<div className="p-6">
-  {/* 🔷 Header */}
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-    <h2 className="text-2xl font-semibold text-gray-800">Trainers</h2>
-    <button
-      onClick={() => setShowModal(true)}
-      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded shadow"
-    >
-      ➕ Add Person
-    </button>
-  </div>
+                  {/* Status: small pill, click to toggle */}
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    <button
+                      onClick={() => toggleActiveStatus(p)}
+                      type="button"
+                      title="Click to toggle status"
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs shadow-sm
+                                  ${p.isActive ? "bg-green-100 text-green-800"
+                                               : 'bg-red-100 text-red-800 '}`}
+                    >
+                      {p.isActive ? 'Active' : 'Inactive'}
+                    </button>
+                  </td>
 
-  {/* 🔷 Search Section */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-    {/* Search by Name */}
-    <div className="flex flex-col">
-      <label className="text-xs text-gray-600 mb-1">Search by Name</label>
-      <input
-        type="text"
-        placeholder="Name"
-        value={searchFilters.name}
-        onChange={(e) =>
-          setSearchFilters((prev) => ({ ...prev, name: e.target.value }))
-        }
-        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100"
-      />
-    </div>
+                  {/* Actions: small pills */}
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => openModal(p)}
+                        title="Edit"
+                        type="button"
+                        className="inline-flex items-center rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold
+                                   text-white shadow-sm hover:bg-blue-700"
+                      >
+                        Edit
+                      </button>
 
-    {/* Province */}
-    <div className="flex flex-col">
-      <label className="text-xs text-gray-600 mb-1">Province</label>
-      <select
-        value={searchFilters.province}
-        onChange={(e) =>
-          setSearchFilters((prev) => ({
-            ...prev,
-            province: e.target.value,
-            district: '', // reset district if province changes
-          }))
-        }
-        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100"
-      >
-        <option value="">All Provinces</option>
-        {Object.keys(provinceDistricts).map((prov) => (
-          <option key={prov} value={prov}>
-            {prov}
-          </option>
-        ))}
-      </select>
-    </div>
+                      <button
+                        onClick={() => handleDelete(p.id)}
+                        title="Delete"
+                        type="button"
+                        className="inline-flex items-center rounded-full bg-red-600 px-3 py-1 text-xs font-semibold
+                                   text-white shadow-sm hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-    {/* District */}
-    <div className="flex flex-col">
-      <label className="text-xs text-gray-600 mb-1">District</label>
-      <select
-        value={searchFilters.district}
-        onChange={(e) =>
-          setSearchFilters((prev) => ({ ...prev, district: e.target.value }))
-        }
-        className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100"
-        disabled={!searchFilters.province}
-      >
-        <option value="">All Districts</option>
-        {provinceDistricts[searchFilters.province]?.map((dist) => (
-          <option key={dist} value={dist}>
-            {dist}
-          </option>
-        ))}
-      </select>
-    </div>
-  </div>
-
-
-
-
+      {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white p-6 rounded shadow-lg w-full max-w-2xl relative">
-            <h3 className="text-xl font-bold mb-4">Add Person</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Name" value={form.name} onChange={(e) => handleChange('name', e.target.value)} className="border p-2" />
-              <input type="text" placeholder="ID Number" value={form.idNumber} onChange={(e) => handleChange('idNumber', e.target.value)} className="border p-2" />
-              <input type="text" placeholder="License Number" value={form.licenseNumber} onChange={(e) => handleChange('licenseNumber', e.target.value)} className="border p-2" />
-              <input
-                  type="date"
-                  placeholder="Date of Birth"
-                  value={form.dateOfBirth || ''}
-                  onChange={(e) => handleChange('dateOfBirth', e.target.value)}
-                  className="border p-2"
-            />
-              <input type="text" placeholder="Mobile Number" value={form.mobile} onChange={(e) => handleChange('mobile', e.target.value)} className="border p-2" />
-              <input type="email" placeholder="Email" value={form.email} onChange={(e) => handleChange('email', e.target.value)} className="border p-2" />
-              <input type="text" placeholder="Location" value={form.location} onChange={(e) => handleChange('location', e.target.value)} className="border p-2" />
-
-              {/* Province Dropdown */}
-              <select value={form.province} onChange={(e) => {
-                handleChange('province', e.target.value);
-                handleChange('district', ''); // reset district
-              }} className="border p-2">
-                <option value="">Select Province</option>
-                {Object.keys(provinceDistricts).map((prov) => (
-                  <option key={prov} value={prov}>{prov}</option>
-                ))}
-              </select>
-
-              {/* District Dropdown */}
-              <select value={form.district} onChange={(e) => handleChange('district', e.target.value)} className="border p-2" disabled={!form.province}>
-                <option value="">Select District</option>
-                {provinceDistricts[form.province]?.map((dist) => (
-                  <option key={dist} value={dist}>{dist}</option>
-                ))}
-              </select>
+        <div className="fixed inset-0 z-50 grid place-items-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowModal(false)} />
+          <div className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-2xl font-semibold text-gray-900">{editingId ? 'Edit Person' : 'Add Person'}</h3>
+              <button
+                onClick={() => setShowModal(false)}
+                className="rounded-full p-2 hover:bg-gray-100"
+                aria-label="Close"
+                type="button"
+              >
+                <svg className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none">
+                  <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
             </div>
 
-            <div className="flex justify-end gap-4 mt-6">
-              <button onClick={() => setShowModal(false)} className="bg-gray-300 text-black px-4 py-2 rounded">Cancel</button>
-              <button onClick={handleSubmit} className="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field label="Name" value={form.name} onChange={(v) => handleChange('name', v)} />
+              <Field label="ID Number" value={form.idNumber} onChange={(v) => handleChange('idNumber', v)} />
+              <Field label="License Number" value={form.licenseNumber} onChange={(v) => handleChange('licenseNumber', v)} />
+              <Field label="Date of Birth" type="date" value={form.dateOfBirth} onChange={(v) => handleChange('dateOfBirth', v)} />
+              <Field label="Mobile" value={form.mobile} onChange={(v) => handleChange('mobile', v)} />
+              <Field label="Email" type="email" value={form.email} onChange={(v) => handleChange('email', v)} />
+              <Field label="Location" value={form.location} onChange={(v) => handleChange('location', v)} />
+
+              <div>
+                <Label>Province</Label>
+                <select
+                  value={form.province}
+                  onChange={(e) => {
+                    handleChange('province', e.target.value);
+                    handleChange('district', '');
+                  }}
+                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+                >
+                  <option value="">Select Province</option>
+                  {Object.keys(provinceDistricts).map((prov) => (
+                    <option key={prov} value={prov}>
+                      {prov}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <Label>District</Label>
+                <select
+                  value={form.district}
+                  disabled={!form.province}
+                  onChange={(e) => handleChange('district', e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100"
+                >
+                  <option value="">Select District</option>
+                  {provinceDistricts[form.province]?.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                type="button"
+                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                type="button"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                {editingId ? 'Update' : 'Save'}
+              </button>
             </div>
           </div>
         </div>
       )}
+    </div>
+  );
+}
 
-      <h3 className="text-xl font-semibold mt-8 mb-4">Person List</h3>
+/* helpers */
+function Label({ children }: { children: React.ReactNode }) {
+  return <label className="block text-xs font-medium text-gray-600">{children}</label>;
+}
 
-
-      {loading ? (
-  <div className="flex justify-center items-center h-40">
-    <svg
-      className="animate-spin h-8 w-8 text-blue-600"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v8H4z"
-      ></path>
-    </svg>
-    <span className="ml-2 text-gray-600">Loading persons...</span>
-  </div>
-) : (
-
-
-      
-<table className="min-w-full bg-white shadow rounded-lg overflow-hidden text-sm">
-  <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
-    <tr>
-      <th className="px-3 py-2 text-left">#</th>
-      <th className="px-3 py-2 text-left">Name</th>
-      <th className="px-3 py-2 text-left">ID Number</th>
-      <th className="px-3 py-2 text-left">License No</th>
-      <th className="px-3 py-2 text-left">Date Of Birth</th>
-      <th className="px-3 py-2 text-left">Mobile</th>
-      <th className="px-3 py-2 text-left">Email</th>
-      <th className="px-3 py-2 text-left">Location</th>
-      <th className="px-3 py-2 text-left">Province</th>
-      <th className="px-3 py-2 text-left">District</th>
-      <th className="px-3 py-2 text-left">Status</th>
-      <th className="px-3 py-2 text-left">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {persons
-      .filter((person) =>
-        person.name.toLowerCase().includes(searchFilters.name.toLowerCase())
-      )
-      .filter((person) =>
-        searchFilters.province ? person.province === searchFilters.province : true
-      )
-      .filter((person) =>
-        searchFilters.district ? person.district === searchFilters.district : true
-      )
-      .map((person, index) => (
-        <tr
-          key={person.id}
-          className="hover:bg-gray-50 even:bg-gray-50 text-gray-800"
-        >
-          <td className="px-3 py-2">{index + 1}</td>
-          <td className="px-3 py-2">{person.name}</td>
-          <td className="px-3 py-2">{person.idNumber}</td>
-          <td className="px-3 py-2">{person.licenseNumber}</td>
-          <td className="px-3 py-2">{person.dateOfBirth}</td>
-          <td className="px-3 py-2">{person.mobile}</td>
-          <td className="px-3 py-2">{person.email}</td>
-          <td className="px-3 py-2">{person.location}</td>
-          <td className="px-3 py-2">{person.province}</td>
-          <td className="px-3 py-2">{person.district}</td>
-          <td className="px-3 py-2">
-            <button
-              onClick={() => toggleActiveStatus(person)}
-              className={`text-xs px-3 py-1 rounded-full shadow ${
-                person.isActive
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
-            >
-              {person.isActive ? 'Active' : 'Inactive'}
-            </button>
-          </td>
-          <td className="px-3 py-2 space-x-1">
-            <button
-              onClick={() => handleDelete(person.id)}
-              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs shadow"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      ))}
-  </tbody>
-</table>
-
-)}
+function Field({
+  label,
+  value,
+  onChange,
+  type = 'text',
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <div>
+      <Label>{label}</Label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={label}
+        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+      />
     </div>
   );
 }

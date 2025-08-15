@@ -114,13 +114,20 @@ export default function HeroBookingSection() {
       const snapshot = await getDocs(collection(db, "locations"));
       const data: Location[] = snapshot.docs
         .map((doc) => doc.data() as Location)
-        .filter((loc) => loc.status !== "inactive");
+        .filter((loc) => loc.status !== "inactive")
+        .sort((a, b) =>
+          a.name.trim().localeCompare(b.name.trim(), undefined, {
+            sensitivity: "base",
+            numeric: true,
+          })
+        ); // ← alphabetical (case-insensitive)
   
       setLocationOptions(data);
     };
   
     fetchLocations();
   }, []);
+  
 
   const [loading, setLoading] = useState(false);
 
@@ -175,7 +182,7 @@ useEffect(() => {
 }, []);
 
 const timeOptions = Array.from({ length: 10 }, (_, i) => {
-  const hour = i + 8; // 8 to 17
+  const hour = i + 10; // 8 to 17
   const value = hour.toString().padStart(2, "0") + ":00";
   return (
     <option key={value} value={value}>
@@ -468,7 +475,4 @@ const timeOptions = Array.from({ length: 10 }, (_, i) => {
     </>
   );
 }
-// function setLoading(arg0: boolean) {
-//   throw new Error("Function not implemented.");
-// }
 

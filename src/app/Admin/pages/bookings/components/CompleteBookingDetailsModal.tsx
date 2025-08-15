@@ -287,398 +287,538 @@ useEffect(() => {
   
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div className="bg-white max-h-[90vh] w-full max-w-3xl rounded shadow flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 font-sans">
+    <div className="bg-white max-h-[90vh] w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col overflow-hidden">
       {/* Scrollable content */}
-      <div className="overflow-y-auto p-6">
-        <h2 className="text-xl font-bold mb-4">Confirm Booking</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <div className="overflow-y-auto p-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Confirm Booking</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+          {/* Name Input */}
           <div>
-            <label className="block text-xs">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
             <input
               type="text"
               value={formValues.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Enter your name"
             />
           </div>
 
+          {/* Email Input */}
           <div>
-            <label className="block text-xs">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
               value={formValues.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Enter your email"
             />
           </div>
 
+          {/* WhatsApp Input */}
           <div>
-            <label className="block text-xs">WhatsApp</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
             <input
               type="text"
               value={formValues.whatsapp}
               onChange={(e) => handleChange("whatsapp", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Enter WhatsApp number"
             />
           </div>
 
-<div>
-  <label className="block text-xs">Pickup</label>
-  <Select
-    options={activeLocations}
-    value={
-      formValues.pickup
-        ? activeLocations.find(loc => loc.value === formValues.pickup)
-        : null
-    }
-    onChange={(selected) => {
-      handleChange("pickup", selected?.value || "");
-      handleChange("pickupPrice", selected?.price || 0);
-    }}
-    isClearable
-    placeholder="Select pickup location"
-  />
-</div>
-
-
+          {/* Pickup Location */}
           <div>
-            <label className="block text-xs">Pickup Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
+            <Select
+              options={activeLocations}
+              value={
+                formValues.pickup
+                  ? activeLocations.find(loc => loc.value === formValues.pickup)
+                  : null
+              }
+              onChange={(selected) => {
+                handleChange("pickup", selected?.value || "");
+                handleChange("pickupPrice", selected?.price || 0);
+              }}
+              isClearable
+              placeholder="Select pickup location"
+              className="text-sm"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  borderColor: '#d1d5db',
+                  padding: '0.25rem',
+                  '&:hover': { borderColor: '#f97316' },
+                  boxShadow: 'none',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem',
+                }),
+                option: (base, { isFocused, isSelected }) => ({
+                  ...base,
+                  backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                  color: isSelected ? 'white' : '#374151',
+                  padding: '0.75rem',
+                }),
+              }}
+            />
+          </div>
+
+          {/* Pickup Date */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
             <input
               type="date"
               value={formValues.pickupDate}
               onChange={(e) => handleChange("pickupDate", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
+          {/* Pickup Time */}
           <div>
-            <label className="block text-xs">Pickup Time</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
             <input
               type="time"
               value={formValues.pickupTime}
               onChange={(e) => handleChange("pickupTime", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
-
-
+          {/* Return Location */}
           <div>
-  <label className="block text-xs">Return</label>
-  <Select
-    options={activeLocations}
-    value={
-      formValues.returnLoc
-        ? activeLocations.find(loc => loc.value === formValues.returnLoc)
-        : null
-    }
-    onChange={(selected) => {
-      handleChange("returnLoc", selected?.value || "");
-      handleChange("returnPrice", selected?.price || 0);
-    }}
-    isClearable
-    placeholder="Select return location"
-  />
-</div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Return Location</label>
+            <Select
+              options={activeLocations}
+              value={
+                formValues.returnLoc
+                  ? activeLocations.find(loc => loc.value === formValues.returnLoc)
+                  : null
+              }
+              onChange={(selected) => {
+                handleChange("returnLoc", selected?.value || "");
+                handleChange("returnPrice", selected?.price || 0);
+              }}
+              isClearable
+              placeholder="Select return location"
+              className="text-sm"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  borderColor: '#d1d5db',
+                  padding: '0.25rem',
+                  '&:hover': { borderColor: '#f97316' },
+                  boxShadow: 'none',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem',
+                }),
+                option: (base, { isFocused, isSelected }) => ({
+                  ...base,
+                  backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                  color: isSelected ? 'white' : '#374151',
+                  padding: '0.75rem',
+                }),
+              }}
+            />
+          </div>
 
+          {/* Return Date */}
           <div>
-            <label className="block text-xs">Return Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
             <input
               type="date"
               value={formValues.returnDate}
               onChange={(e) => handleChange("returnDate", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
+          {/* Return Time */}
           <div>
-            <label className="block text-xs">Return Time</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Return Time</label>
             <input
               type="time"
               value={formValues.returnTime}
               onChange={(e) => handleChange("returnTime", e.target.value)}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
+          {/* Tuk Count */}
           <div>
-            <label className="block text-xs">Tuk Count</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tuk Count</label>
             <input
               type="number"
               min={1}
               value={formValues.tukCount}
               onChange={(e) => handleChange("tukCount", parseInt(e.target.value))}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Enter number of tuks"
             />
           </div>
 
+          {/* License Count */}
           <div>
-            <label className="block text-xs">License Count</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">License Count</label>
             <input
               type="number"
               min={1}
               value={formValues.licenseCount}
               onChange={(e) => handleChange("licenseCount", parseInt(e.target.value))}
-              className="border p-1 w-full"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Enter number of licenses"
             />
           </div>
 
-
-
-
-
-
+          {/* Train Transfer */}
           <div className="md:col-span-2">
-  {/* Always show the checkbox */}
-<div className="flex items-center gap-3 mb-4 hidden">
-  <input
-    id="trainTransferCheckbox"
-    type="checkbox"
-    checked={enableTrainTransfer}
-    onChange={(e) => {
-      const checked = e.target.checked;
-      setEnableTrainTransfer(checked);
-      if (!checked) {
-        handleChange("trainTransfer", undefined);
-      }
-    }}
-    className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
-  />
-  <label
-    htmlFor="trainTransferCheckbox"
-    className="text-sm font-medium text-gray-700 select-none"
-  >
-    Enable Train Transfer
-  </label>
-</div>
+            <div className="flex items-center gap-3 mb-4">
+              <input
+                id="trainTransferCheckbox"
+                type="checkbox"
+                checked={enableTrainTransfer}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setEnableTrainTransfer(checked);
+                  if (!checked) {
+                    handleChange("trainTransfer", undefined);
+                  }
+                }}
+                className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+              />
+              <label
+                htmlFor="trainTransferCheckbox"
+                className="text-sm font-medium text-gray-700 select-none"
+              >
+                Enable Train Transfer
+              </label>
+            </div>
 
+            {enableTrainTransfer && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Select Train Transfer</label>
+                <Select
+                  options={trainTransfers}
+                  value={
+                    formValues.trainTransfer
+                      ? {
+                          label: `${formValues.trainTransfer.from} → ${formValues.trainTransfer.to} (${formValues.trainTransfer.pickupTime}) - $${formValues.trainTransfer.price}`,
+                          value: formValues.trainTransfer,
+                        }
+                      : null
+                  }
+                  onChange={(selected) =>
+                    handleChange("trainTransfer", selected?.value ?? undefined)
+                  }
+                  isClearable
+                  placeholder="Search or select train transfer"
+                  className="text-sm"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderRadius: '0.5rem',
+                      borderColor: '#d1d5db',
+                      padding: '0.25rem',
+                      '&:hover': { borderColor: '#f97316' },
+                      boxShadow: 'none',
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      borderRadius: '0.5rem',
+                      marginTop: '0.25rem',
+                    }),
+                    option: (base, { isFocused, isSelected }) => ({
+                      ...base,
+                      backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                      color: isSelected ? 'white' : '#374151',
+                      padding: '0.75rem',
+                    }),
+                  }}
+                />
 
-  {/* Conditionally show train transfer select */}
-  <div className={`${enableTrainTransfer ? 'block' : 'hidden'}`}>
-    <label className="block text-xs">Select Train Transfer</label>
-    <Select
-      options={trainTransfers}
-      value={
-        formValues.trainTransfer
-          ? {
-              label: `${formValues.trainTransfer.from} → ${formValues.trainTransfer.to} (${formValues.trainTransfer.pickupTime}) - $${formValues.trainTransfer.price}`,
-              value: formValues.trainTransfer,
-            }
-          : null
-      }
-      onChange={(selected) =>
-        handleChange("trainTransfer", selected?.value ?? undefined)
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-red-600 mb-1">
+                    Handover Agent (Train Transfer) *
+                  </label>
+                  <Select
+                    options={activePersons}
+                    value={
+                      formValues.trainTransferAssignedPerson
+                        ? activePersons.find((person) => person.value === formValues.trainTransferAssignedPerson)
+                        : null
+                    }
+                    onChange={(selectedOption) => {
+                      handleChange("trainTransferAssignedPerson", selectedOption?.value || "");
+                    }}
+                    isClearable
+                    placeholder="Search or select a person"
+                    className="text-sm"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderRadius: '0.5rem',
+                        borderColor: '#d1d5db',
+                        padding: '0.25rem',
+                        '&:hover': { borderColor: '#f97316' },
+                        boxShadow: 'none',
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        borderRadius: '0.5rem',
+                        marginTop: '0.25rem',
+                      }),
+                      option: (base, { isFocused, isSelected }) => ({
+                        ...base,
+                        backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                        color: isSelected ? 'white' : '#374151',
+                        padding: '0.75rem',
+                      }),
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
 
-      }
-      isClearable
-      placeholder="Search or select train transfer"
-    />
+          {/* Extras */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Extras</label>
+            <div className="grid grid-cols-2 gap-4">
+              {extrasList.map((extra) => (
+                <div key={extra.name} className="flex justify-between items-center text-sm">
+                  <span className="text-gray-700">
+                    {extra.name} <span className="text-gray-500">(${extra.price} each)</span>
+                  </span>
+                  <select
+                    value={formValues.extras?.[extra.name] || 0}
+                    onChange={(e) => handleExtrasChange(extra.name, parseInt(e.target.value))}
+                    className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                  >
+                    {Array.from({ length: 11 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
 
-
-<div>
-  <label className="block text-xs text-red-600 font-medium">
-  Handover Agent (Train Transfer) *
-  </label>
-
-  <Select
-    options={activePersons}
-    value={
-      formValues.trainTransferAssignedPerson
-        ? activePersons.find((person) => person.value === (formValues).trainTransferAssignedPerson)
-        : null
-    }
-    onChange={(selectedOption) => {
-      handleChange("trainTransferAssignedPerson", selectedOption?.value || "");
-    }}
-    isClearable
-    placeholder="Search or select a person"
-  />
-</div>
-</div>
-</div>
-
-
-
-
-
-<div className="md:col-span-2">
-  <label className="block text-xs">Extras</label>
-  <div className="grid grid-cols-2 gap-2">
-    {extrasList.map((extra) => (
-      <div key={extra.name} className="flex justify-between items-center text-sm">
-        <span>
-          {extra.name} <span className="text-gray-500">(${extra.price} each)</span>
-        </span>
-        <select
-          value={formValues.extras?.[extra.name] || 0}
-          onChange={(e) => handleExtrasChange(extra.name, parseInt(e.target.value))}
-          className="border px-2 rounded"
-        >
-          {Array.from({ length: 11 }, (_, i) => (
-            <option key={i} value={i}>
-              {i}
-            </option>
-          ))}
-        </select>
-      </div>
-    ))}
-  </div>
-</div>
-
-
-
+          {/* Assigned Tuk Tuks */}
           <div className="md:col-span-2 pt-6">
-  <label className="block text-xs">Assigned Tuk Tuks *</label>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-  
+            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Tuk Tuks *</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array.from({ length: formValues.tukCount || 1 }, (_, index) => (
+                <div key={index}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tuk Tuk {index + 1}</label>
+                  <Select
+                    options={activeTuks}
+                    value={
+                      formValues.assignedTuks?.[index]
+                        ? { value: formValues.assignedTuks[index], label: formValues.assignedTuks[index] }
+                        : null
+                    }
+                    onChange={(selectedOption) => {
+                      const updated = [...(formValues.assignedTuks || [])];
+                      updated[index] = selectedOption?.value || "";
+                      handleChange("assignedTuks", updated);
+                    }}
+                    isClearable
+                    placeholder="Search or select tuk tuk"
+                    className="text-sm"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderRadius: '0.5rem',
+                        borderColor: '#d1d5db',
+                        padding: '0.25rem',
+                        '&:hover': { borderColor: '#f97316' },
+                        boxShadow: 'none',
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        borderRadius: '0.5rem',
+                        marginTop: '0.25rem',
+                      }),
+                      option: (base, { isFocused, isSelected }) => ({
+                        ...base,
+                        backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                        color: isSelected ? 'white' : '#374151',
+                        padding: '0.75rem',
+                      }),
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
+          {/* Handover Agent (Start) */}
+          <div>
+            <label className="block text-sm font-medium text-red-600 mb-1">
+              Handover Agent (Start) *
+            </label>
+            <Select
+              options={activePersons}
+              value={
+                formValues.assignedPerson
+                  ? activePersons.find((person) => person.value === formValues.assignedPerson)
+                  : null
+              }
+              onChange={(selectedOption) => {
+                handleChange("assignedPerson", selectedOption?.value || "");
+              }}
+              isClearable
+              placeholder="Search or select a person"
+              className="text-sm"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  borderColor: '#d1d5db',
+                  padding: '0.25rem',
+                  '&:hover': { borderColor: '#f97316' },
+                  boxShadow: 'none',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem',
+                }),
+                option: (base, { isFocused, isSelected }) => ({
+                  ...base,
+                  backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                  color: isSelected ? 'white' : '#374151',
+                  padding: '0.75rem',
+                }),
+              }}
+            />
+          </div>
 
-{Array.from({ length: formValues.tukCount || 1 }, (_, index) => (
-  <div key={index}>
-    <label className="block text-xs">Tuk Tuk {index + 1}</label>
-    <Select
-      options={activeTuks}
-      value={
-        formValues.assignedTuks?.[index]
-          ? { value: formValues.assignedTuks[index], label: formValues.assignedTuks[index] }
-          : null
-      }
-      onChange={(selectedOption) => {
-        const updated = [...(formValues.assignedTuks || [])];
-        updated[index] = selectedOption?.value || "";
-        handleChange("assignedTuks", updated);
-      }}
-      isClearable
-      placeholder="Search or select tuk tuk"
-    />
-  </div>
-))}
+          {/* Return Agent */}
+          <div>
+            <label className="block text-sm font-medium text-red-600 mb-1">
+              Return Agent *
+            </label>
+            <Select
+              options={activePersons}
+              value={
+                formValues.holdBackAssignedPerson
+                  ? activePersons.find((person) => person.value === formValues.holdBackAssignedPerson)
+                  : null
+              }
+              onChange={(selectedOption) => {
+                handleChange("holdBackAssignedPerson", selectedOption?.value || "");
+              }}
+              isClearable
+              placeholder="Search or select a person"
+              className="text-sm"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  borderColor: '#d1d5db',
+                  padding: '0.25rem',
+                  '&:hover': { borderColor: '#f97316' },
+                  boxShadow: 'none',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  borderRadius: '0.5rem',
+                  marginTop: '0.25rem',
+                }),
+                option: (base, { isFocused, isSelected }) => ({
+                  ...base,
+                  backgroundColor: isSelected ? '#f97316' : isFocused ? '#fed7aa' : 'white',
+                  color: isSelected ? 'white' : '#374151',
+                  padding: '0.75rem',
+                }),
+              }}
+            />
+          </div>
 
+          {/* Coupon Code */}
+          {formValues.couponCode && (
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coupon Code</label>
+              <input
+                type="text"
+                value={formValues.couponCode}
+                onChange={(e) => handleChange("couponCode", e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                placeholder="Coupon code"
+                readOnly
+              />
+            </div>
+          )}
 
+          {/* Price and Recalculation */}
+          <div className="md:col-span-2 flex items-center gap-4 mt-6">
+            <div className="flex items-center gap-2">
+              <input
+                id="recalcCheckbox"
+                type="checkbox"
+                checked={enableRecalculation}
+                disabled={!!formValues.couponCode}
+                onChange={() => setEnableRecalculation((prev) => !prev)}
+                className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+              />
+              <label
+                htmlFor="recalcCheckbox"
+                className="text-sm font-medium text-gray-700 select-none"
+              >
+                Recalculate Total Cost
+              </label>
+            </div>
+            <div className="text-sm font-semibold text-gray-900">
+              {enableRecalculation ? (
+                <>Updated Price: <span className="text-green-600">${calculateTotal().toFixed(2)}</span></>
+              ) : (
+                <>Original Price: <span className="text-blue-600">${booking.RentalPrice || "N/A"}</span></>
+              )}
+            </div>
+          </div>
 
-  </div>
-</div>
-
-
-<div>
-  <label className="block text-xs text-red-600 font-medium">
-  Handover Agent (Start) *
-  </label>
-
-  <Select
-    options={activePersons}
-    value={
-      formValues.assignedPerson
-        ? activePersons.find((person) => person.value === (formValues).assignedPerson)
-        : null
-    }
-    onChange={(selectedOption) => {
-      handleChange("assignedPerson", selectedOption?.value || "");
-    }}
-    isClearable
-    placeholder="Search or select a person"
-  />
-</div>
-
-
-
-<div>
-  <label className="block text-xs text-red-600 font-medium">
-  Return Agent *
-  </label>
-
-  <Select
-    options={activePersons}
-    value={
-      formValues.holdBackAssignedPerson
-        ? activePersons.find((person) => person.value === (formValues).holdBackAssignedPerson)
-        : null
-    }
-    onChange={(selectedOption) => {
-      handleChange("holdBackAssignedPerson", selectedOption?.value || "");
-    }}
-    isClearable
-    placeholder="Search or select a person"
-  />
-</div>
-
-
-
-        </div>
-
-{formValues.couponCode && (
-<div>
-  <label className="block text-xs">Coupon Code</label>
-    <input
-      type="email"
-      value={formValues.couponCode}
-      onChange={(e) => handleChange("couponCode", e.target.value)}
-      className="border p-1 w-full"
-      readOnly   // 👈 this makes it non-editable
-    />
-</div>
-)}
-
-
-
-
-
-        <div className="flex items-center gap-4 mt-6">
-        <input
-  id="recalcCheckbox"
-  type="checkbox"
-  checked={enableRecalculation}
-  disabled={!!formValues.couponCode}   // 👈 disable if coupon code present
-  onChange={() => setEnableRecalculation((prev) => !prev)}
-  className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
-/>
-<label
-  htmlFor="recalcCheckbox"
-  className="text-sm font-medium text-gray-700 select-none"
->
-  Recalculate Total Cost
-</label>
-
-
-  <div className="text-sm font-semibold text-gray-900">
-    {enableRecalculation ? (
-      <>Updated Price: <span className="text-green-600">${calculateTotal().toFixed(2)}</span></>
-    ) : (
-      <>Original Price: <span className="text-blue-600">${booking.RentalPrice || "N/A"}</span></>
-    )}
-  </div>
-</div>
-
-
-
-
-
-        <div className="flex justify-end gap-4 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded text-sm"
-          >
-            Cancel
-          </button>
-          <button
-  onClick={handleAssign}
-  disabled={loading}
-  className={`px-4 py-2 rounded text-sm text-white ${loading ? 'bg-orange-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600'}`}
->
-  {loading ? (
-    <div className="flex items-center gap-2">
-      <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-      Assigning...
-    </div>
-  ) : (
-    "Assign"
-  )}
-</button>
-
+          {/* Action Buttons */}
+          <div className="md:col-span-2 flex justify-end gap-4 mt-8">
+            <button
+              onClick={onClose}
+              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAssign}
+              disabled={loading}
+              className={`px-6 py-2 rounded-lg text-sm font-medium text-white flex items-center gap-2 ${
+                loading ? 'bg-orange-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600 transition'
+              }`}
+            >
+              {loading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Assigning...
+                </>
+              ) : (
+                "Assign"
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    </div>
+  </div>
   );
 }

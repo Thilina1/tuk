@@ -122,27 +122,37 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="p-6 space-y-8 min-h-screen bg-gradient-to-br from-[#fdfbfb] to-[#ebedee]">
-      <h1 className="text-3xl font-bold text-gray-800">📊 Dashboard Overview</h1>
+    <div className="p-6 space-y-8 min-h-screen bg-gray-100">
+      <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <span className="material-symbols-outlined">dashboard</span> Dashboard Overview
+      </h1>
 
       {loading ? (
-        <p>Loading...</p>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="backdrop-blur bg-white/70 p-5 rounded-2xl shadow-md border border-white">
-              <h2 className="text-sm text-gray-600">💵 Total Rental Revenue (All)</h2>
-              <p className="text-2xl text-emerald-600 font-bold">${totalRentalAll}</p>
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-sm text-gray-600 flex items-center gap-2">
+                <span className="material-symbols-outlined"></span> Total Rental Revenue
+              </h2>
+              <p className="text-2xl text-emerald-600 font-bold">${totalRentalAll.toLocaleString()}</p>
             </div>
-            <div className="backdrop-blur bg-white/70 p-5 rounded-2xl shadow-md border border-white">
-              <h2 className="text-sm text-gray-600">📅 Last 30 Days Revenue</h2>
-              <p className="text-2xl text-blue-600 font-bold">${totalRental30}</p>
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-sm text-gray-600 flex items-center gap-2">
+                <span className="material-symbols-outlined"></span> Last 30 Days Revenue
+              </h2>
+              <p className="text-2xl text-blue-600 font-bold">${totalRental30.toLocaleString()}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            <div className="backdrop-blur bg-white/70 p-5 rounded-2xl shadow-md border border-white">
-              <h2 className="text-sm text-gray-600 mb-2">🎯 Booking Status Overview</h2>
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined"></span> Booking Status
+              </h2>
               <div className="w-full h-64">
                 <Pie
                   data={{
@@ -151,17 +161,29 @@ export default function DashboardPage() {
                       {
                         data: [isBookedStats.booked, isBookedStats.notBooked],
                         backgroundColor: ["#10B981", "#F59E0B"],
-                        hoverOffset: 8,
+                        hoverOffset: 12,
+                        borderColor: "#ffffff",
+                        borderWidth: 2,
                       },
                     ],
                   }}
-                  options={{ maintainAspectRatio: false }}
+                  options={{
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: "bottom",
+                        labels: { color: "#374151", usePointStyle: true },
+                      },
+                    },
+                  }}
                 />
               </div>
             </div>
 
-            <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">📈 Revenue Trend (Last 7 Days)</h2>
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined"></span> Revenue Trend (Last 7 Days)
+              </h2>
               <Line
                 data={{
                   labels: revenueChartData.labels,
@@ -172,13 +194,27 @@ export default function DashboardPage() {
                       borderColor: "#10B981",
                       backgroundColor: "#10B98133",
                       tension: 0.4,
+                      pointRadius: 4,
+                      pointHoverRadius: 6,
                     },
                   ],
                 }}
+                options={{
+                  plugins: {
+                    legend: { labels: { color: "#374151" } },
+                    tooltip: { backgroundColor: "#1F2937", titleColor: "#ffffff", bodyColor: "#ffffff" },
+                  },
+                  scales: {
+                    x: { ticks: { color: "#374151" } },
+                    y: { ticks: { color: "#374151" } },
+                  },
+                }}
               />
             </div>
-            <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">📊 Booking Count (Last 7 Days)</h2>
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined"></span> Booking Count (Last 7 Days)
+              </h2>
               <Line
                 data={{
                   labels: countChartData.labels,
@@ -189,32 +225,60 @@ export default function DashboardPage() {
                       borderColor: "#3B82F6",
                       backgroundColor: "#3B82F633",
                       tension: 0.4,
+                      pointRadius: 4,
+                      pointHoverRadius: 6,
                     },
                   ],
+                }}
+                options={{
+                  plugins: {
+                    legend: { labels: { color: "#374151" } },
+                    tooltip: { backgroundColor: "#1F2937", titleColor: "#ffffff", bodyColor: "#ffffff" },
+                  },
+                  scales: {
+                    x: { ticks: { color: "#374151" } },
+                    y: { ticks: { color: "#374151" } },
+                  },
                 }}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">Upcoming Pickups</h2>
-              <ul className="text-sm text-gray-800 space-y-2">
-                {upcomingPickups.map((b, i) => (
-                  <li key={i} className="border-b pb-2">
-                    <span className="font-medium">{b.pickup}</span> — {new Date(b.pickupDate!.toDate()).toLocaleDateString()} — <span className="text-emerald-600 font-semibold">${b.RentalPrice}</span>
-                  </li>
-                ))}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              </h2>
+              <ul className="text-sm text-gray-800 space-y-3">
+                {upcomingPickups.length ? (
+                  upcomingPickups.map((b, i) => (
+                    <li key={i} className="border-b border-gray-200 pb-2 flex justify-between items-center">
+                      <div>
+                        <span className="font-medium">{b.pickup || "N/A"}</span> — {new Date(b.pickupDate!.toDate()).toLocaleDateString()}
+                      </div>
+                      <span className="text-emerald-600 font-semibold">${b.RentalPrice.toLocaleString()}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500"></li>
+                )}
               </ul>
             </div>
-            <div className="backdrop-blur bg-white/70 p-6 rounded-2xl shadow-md border border-white">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">Upcoming Returns</h2>
-              <ul className="text-sm text-gray-800 space-y-2">
-                {upcomingReturns.map((b, i) => (
-                  <li key={i} className="border-b pb-2">
-                    <span className="font-medium">{b.returnLoc}</span> — {new Date(b.returnDate!.toDate()).toLocaleDateString()} — <span className="text-blue-600 font-semibold">${b.RentalPrice}</span>
-                  </li>
-                ))}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              </h2>
+              <ul className="text-sm text-gray-800 space-y-3">
+                {upcomingReturns.length ? (
+                  upcomingReturns.map((b, i) => (
+                    <li key={i} className="border-b border-gray-200 pb-2 flex justify-between items-center">
+                      <div>
+                        <span className="font-medium">{b.returnLoc || "N/A"}</span> — {new Date(b.returnDate!.toDate()).toLocaleDateString()}
+                      </div>
+                      <span className="text-blue-600 font-semibold">${b.RentalPrice.toLocaleString()}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500"></li>
+                )}
               </ul>
             </div>
           </div>

@@ -19,12 +19,12 @@ export default function PricingDetails() {
   const extras = [
     { name: "Train Transfer", price: 30, type: "per unit" },
     { name: "Full-Time Driver", price: 25, type: "per day" },
-    { name: "Surf-Board Rack", price: 1, type: "per unit" },
-    { name: "Bluetooth Speakers", price: 1, type: "per unit" },
-    { name: "Cooler Box", price: 1, type: "per unit" },
-    { name: "Dash Cam", price: 1, type: "per unit" },
-    { name: "Baby Seat", price: 2, type: "per unit" },
-    { name: "Hood Rack", price: 3, type: "per unit" },
+    { name: "Surf-Board Rack", price: 1, type: "per day" },
+    { name: "Bluetooth Speakers", price: 1, type: "per day" },
+    { name: "Cooler Box", price: 1, type: "per day" },
+    { name: "Dash Cam", price: 1, type: "per day" },
+    { name: "Baby Seat", price: 2, type: "per day" },
+    { name: "Hood Rack", price: 3, type: "per day" },
   ];
 
   return (

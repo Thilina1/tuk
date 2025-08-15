@@ -122,7 +122,7 @@ export default function TuktukPage() {
     <div>
 {/* 🔷 Header */}
 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-  <h2 className="text-2xl font-semibold text-gray-800">Tuk Tuk Management</h2>
+  <h2 className="text-2xl font-semibold text-gray-800"></h2>
   <button
     onClick={() => setShowModal(true)}
     className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded shadow"
@@ -160,6 +160,8 @@ export default function TuktukPage() {
       fill="none"
       viewBox="0 0 24 24"
     >
+                      <span className="ml-3 text-gray-600">Loading tuk tuks...</span>
+
       <circle
         className="opacity-25"
         cx="12"
@@ -180,18 +182,18 @@ export default function TuktukPage() {
 <table className="min-w-full bg-white shadow rounded-lg overflow-hidden text-sm">
   <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
     <tr>
-      <th className="px-3 py-2 text-left">#</th>
-      <th className="px-3 py-2 text-left">Owner</th>
-      <th className="px-3 py-2 text-left">Vehicle No</th>
-      <th className="px-3 py-2 text-left">Users</th>
-      <th className="px-3 py-2 text-left">District</th>
-      <th className="px-3 py-2 text-left">Province</th>
-      <th className="px-3 py-2 text-left">Mobile</th>
-      <th className="px-3 py-2 text-left">Year</th>
-      <th className="px-3 py-2 text-left">Warranty Exp</th>
-      <th className="px-3 py-2 text-left">License Exp</th>
-      <th className="px-3 py-2 text-left">Status</th>
-      <th className="px-3 py-2 text-left">Action</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle No</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Province</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mobile</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Warranty Exp</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">License Exp</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
     </tr>
   </thead>
   <tbody>

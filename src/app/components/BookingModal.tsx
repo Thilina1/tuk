@@ -320,12 +320,12 @@ const BookingModal = ({
   const extrasList = [
     { name: "Train Transfer", icon: "/icons/train.png", price: 30, type:" per unit" },
     { name: "Full-Time Driver", icon: "/icons/Driver.png", price: 25, type:" per day" },
-    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 1, type:" per unit" },
-    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 1, type:" per unit" },
-    { name: "Cooler Box", icon: "/icons/cooler.png", price: 1, type:" per unit" },
-    { name: "Dash Cam", icon: "/icons/cam.png", price: 1, type:" per unit" },
-    { name: "Baby Seat", icon: "/icons/babyseat.png", price: 2, type:" per unit" },
-    { name: "Hood Rack", icon: "/icons/Hood Rack.png", price: 3, type:" per unit" },
+    { name: "Surf-Board Rack", icon: "/icons/surfboard.png", price: 1, type:" per day" },
+    { name: "Bluetooth Speakers", icon: "/icons/speaker.png", price: 1, type:" per day" },
+    { name: "Cooler Box", icon: "/icons/cooler.png", price: 1, type:" per day" },
+    { name: "Dash Cam", icon: "/icons/cam.png", price: 1, type:" per day" },
+    { name: "Baby Seat", icon: "/icons/babyseat.png", price: 2, type:" per day" },
+    { name: "Hood Rack", icon: "/icons/Hood Rack.png", price: 3, type:" per day" },
 
   ];
   
@@ -549,89 +549,67 @@ await fetch("/api/send-email/bookingEmail", {
 </button>
 
 
-<div className="relative w-full ">
+<div className="relative w-full">
+  <div className="px-4 mb-4">
+    {/* Progress Bar */}
+    <div className="flex flex-row space-x-1">
+      {[
+        { number: 1, title: "Rental Details", subtitle: "Request Details" },
+        { number: 2, title: "Extras", subtitle: "Extras Selection" },
+        { number: 3, title: "License Details", subtitle: "Documents" },
+        { number: 4, title: "Payment", subtitle: "Confirm & Pay" },
+      ].map((stepItem, index) => {
+        const isActiveOrCompleted = index <= step;
 
-<div className="flex justify-between items-start px-4 mb-4">
-  {/* Progress Bar */}
-  <div className="flex flex-1 space-x-1">
-    {[
-      { number: 1, title: "Rental Details", subtitle: "Request Details" },
-      { number: 2, title: "Extras", subtitle: "Extras Selection" },
-      { number: 3, title: "License Details", subtitle: "Documents" },
-      { number: 4, title: "Payment", subtitle: "Confirm & Pay" },
-    ].map((stepItem, index) => {
-      const isActiveOrCompleted = index <= step;
-
-      return (
-        
-<div
-  key={index}
-  style={{
-    flex: 1,
-    textAlign: 'center',
-    padding: '0.5rem 0.5rem',
-    borderRadius: '0.5rem',
-    transition: 'all 0.3s ease',
-    backgroundColor: isActiveOrCompleted
-      ? '#22C55E' // orange-500
-      : isActiveOrCompleted
-      ? '#22C55E' // green-500
-      : 'var(--bg-color)',
-    color: isActiveOrCompleted || isActiveOrCompleted
-      ? '#FFFFFF'
-      : 'var(--text-color)',
-  }}
->
-  <style jsx>{`
-    div {
-      --bg-color: #E5E7EB;
-      --text-color: #1F2937;
-    }
-    @media (prefers-color-scheme: dark) {
-      div {
-        --bg-color: #374151; /* gray-700 */
-        --text-color: #E5E7EB; /* gray-200 */
-      }
-    }
-  `}</style>
-
-  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
-    {stepItem.number}. {stepItem.title}
+        return (
+          <div
+            key={index}
+            className="flex-1 text-center p-2 rounded-lg transition-all duration-300 sm:flex sm:flex-col sm:items-center"
+            style={{
+              backgroundColor: isActiveOrCompleted ? '#22C55E' : 'var(--bg-color)',
+              color: isActiveOrCompleted ? '#FFFFFF' : 'var(--text-color)',
+            }}
+          >
+            <style jsx>{`
+              div {
+                --bg-color: #E5E7EB;
+                --text-color: #1F2937;
+              }
+              @media (prefers-color-scheme: dark) {
+                div {
+                  --bg-color: #374151; /* gray-700 */
+                  --text-color: #E5E7EB; /* gray-200 */
+                }
+              }
+            `}</style>
+            <div className="text-sm font-semibold sm:flex sm:items-center">
+              {stepItem.number}
+              <span className="hidden sm:inline sm:ml-1">. {stepItem.title}</span>
+            </div>
+            <div className="text-xs font-medium sm:text-sm">
+              <span className="sm:hidden">{stepItem.title}</span>
+              <span className="hidden sm:block">{stepItem.subtitle}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   </div>
-  <div style={{ fontSize: '0.75rem', fontWeight: 500 }}>
-    {stepItem.subtitle}
-  </div>
-</div>
-
-
-      );
-    })}
-  </div>
-
-  {/* Close Button */}
-  {/* <button
-    onClick={closeModal}
-    className="ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-500 text-gray-600 hover:text-white shadow transition"
-    aria-label="Close"
-  >
-    &times;
-  </button> */}
-</div>
-
 </div>
 
 {showThankYou ? (
   <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg p-6 shadow-md text-gray-800">
     <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">
-      🛺🎉 Woohoo! Your Tuk-Tuk Awaits!
+    ✅🎉 Booking Confirmed! Booking Confirmed!
     </h2>
 
     <p className="text-gray-700 mb-6 text-center max-w-xl">
-      Thanks for booking with us — your tuk-tuk ride is officially confirmed!
+    Your tuk-tuk adventure is ready to roll 🚐💨
+      <br/>
+    Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
       <br />
-      We’ve sent all the details to your email, and our representative will be in touch with you via WhatsApp shortly.
+      We’ll be in touch soon with all the details.
       <br />
-      Adventure, smiles, and three wheels of fun are coming your way! 🛺💨
     </p>
 
     <button
@@ -828,103 +806,152 @@ await fetch("/api/send-email/bookingEmail", {
                 </div>
               </div>
 
-<div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
-  <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
-  <p><strong>Number of days:</strong> {rentalDays}</p>
-  <strong>Rental for the number of days:</strong> ${perDayCharge} × {rentalDays} = ${perDayCharge * rentalDays}
-  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
-  <p>
-  <strong>Pickup & Return Price:</strong>{" "}
-     ${formValues.pickupPrice || 0} + ${formValues.returnPrice || 0} = $
-     {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
-  </p>  
-  <p><strong>Extras Total:</strong> ${extrasTotal}</p>
-  <p><strong>Deposite Price(Refundable):</strong> ${deposit}</p>
-  <p className="text-lg font-bold mt-2 text-emerald-600">
-    Total Rentals: ${totalRental}
-  </p>
-</div>
 
-            </div>
-          </div>
-        )}
 
-        {step === 1 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Select Your Extras</h3>
-    
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {extrasList.map((extra) => (
-    <div
-      key={extra.name}
-      className="flex items-center justify-between bg-white border rounded-lg shadow-sm p-3 hover:shadow-md transition"
-    >
-      <div className="flex items-center gap-3">
-        <Image
-          src={extra.icon}
-          alt={extra.name}
-          width={32}
-          height={32}
-          className="w-8 h-8 object-contain"
-        />
-        <div>
-          <div className="font-medium text-sm text-gray-800">{extra.name}</div>
-          <div className="text-xs text-gray-500">${extra.price} {extra.type} </div>
+              <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm shadow-sm">
+      <h3 className="text-base font-semibold text-gray-800 mb-2">Total Rentals Detail</h3>
+      <dl className="space-y-1">
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Pickup - {formValues.pickup}</dt>
+          <dd className="text-gray-800 font-semibold">${formValues.pickupPrice || 0}</dd>
         </div>
-      </div>
-
-      <select
-        value={formValues.extras[extra.name] || 0}
-        onChange={(e) =>
-          setFormValues({
-            ...formValues,
-            extras: {
-              ...formValues.extras,
-              [extra.name]: parseInt(e.target.value),
-            },
-          })
-        }
-        className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-orange-400"
-      >
-        {Array.from({ length: 11 }, (_, i) => (
-          <option key={i} value={i}>
-            {i}
-          </option>
-        ))}
-      </select>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Return - {formValues.returnLoc}</dt>
+          <dd className="text-gray-800 font-semibold">${formValues.returnPrice || 0}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Rental for {rentalDays} days (${perDayCharge})</dt>
+          <dd className="text-gray-800 font-semibold">${perDayCharge * rentalDays}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Local License ($35 × {formValues.licenseCount})</dt>
+          <dd className="text-gray-800 font-semibold">${35 * formValues.licenseCount}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Extras Total</dt>
+          <dd className="text-gray-800 font-semibold">${extrasTotal}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Deposit (Refundable)</dt>
+          <dd className="text-gray-800 font-semibold">${deposit}</dd>
+        </div>
+        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+          <dt className="text-base font-bold text-gray-800">Grand Total</dt>
+          <dd className="text-base font-bold text-emerald-600">${totalRental}</dd>
+        </div>
+      </dl>
     </div>
-  ))}
-</div>
 
 
 
-
-
-
-
-
-<div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm">
-  <h3 className="text-base font-semibold mb-2">Total Rentals Detail</h3>
-  <strong>Rental for the number of days:</strong> ${perDayCharge} × {rentalDays} = ${perDayCharge * rentalDays}
-  <p><strong>License Charge:</strong> $35 × {formValues.licenseCount} = ${35 * formValues.licenseCount}</p>
-  <p>
-  <strong>Pickup & Return Price:</strong>{" "}
-     ${formValues.pickupPrice || 0} + ${formValues.returnPrice || 0} = $
-     {(formValues.pickupPrice || 0) + (formValues.returnPrice || 0)}
-  </p>  
-  <p><strong>Extras Total:</strong> ${extrasTotal}</p>
-  <p><strong>Deposite Price(Refundable):</strong> ${deposit}</p>
-  <p className="text-lg font-bold mt-2 text-emerald-600">
-    Total Rentals: ${totalRental}
-  </p>
             </div>
           </div>
         )}
+
+{step === 1 && (
+  <div className="space-y-4">
+    <h3 className="text-lg font-semibold">Select Your Extras</h3>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {extrasList.map((extra) => (
+        <div
+          key={extra.name}
+          className="flex items-center justify-between bg-white border rounded-lg shadow-sm p-3 hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <Image
+              src={extra.icon}
+              alt={extra.name}
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain"
+            />
+            <div>
+              <div className="font-medium text-sm text-gray-800">{extra.name}</div>
+              <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
+            </div>
+          </div>
+
+          <select
+            value={formValues.extras[extra.name] || 0}
+            onChange={(e) =>
+              setFormValues({
+                ...formValues,
+                extras: {
+                  ...formValues.extras,
+                  [extra.name]: parseInt(e.target.value),
+                },
+              })
+            }
+            className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-orange-400"
+          >
+            {Array.from({ length: 11 }, (_, i) => (
+              <option key={i} value={i}>
+                {i}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))}
+    </div>
+
+    <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm shadow-sm">
+      <h3 className="text-base font-semibold text-gray-800 mb-2">Total Rentals Detail</h3>
+      <dl className="space-y-1">
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Pickup - {formValues.pickup}</dt>
+          <dd className="text-gray-800 font-semibold">${formValues.pickupPrice || 0}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Return - {formValues.returnLoc}</dt>
+          <dd className="text-gray-800 font-semibold">${formValues.returnPrice || 0}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Rental for {rentalDays} days (${perDayCharge})</dt>
+          <dd className="text-gray-800 font-semibold">${perDayCharge * rentalDays}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Local License ($35 × {formValues.licenseCount})</dt>
+          <dd className="text-gray-800 font-semibold">${35 * formValues.licenseCount}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Extras Total</dt>
+          <dd className="text-gray-800 font-semibold">${extrasTotal}</dd>
+        </div>
+        <div className="flex justify-between">
+          <dt className="text-gray-700">Deposit (Refundable)</dt>
+          <dd className="text-gray-800 font-semibold">${deposit}</dd>
+        </div>
+        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+          <dt className="text-base font-bold text-gray-800">Grand Total</dt>
+          <dd className="text-base font-bold text-emerald-600">${totalRental}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+)}
 
 {step === 2 && (
   <div className="space-y-6">
   <h3 className="text-lg font-semibold">License & Identity Details</h3>
-
+{/* Important Notice */}
+<div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg text-sm text-gray-800">
+      <p className="font-semibold">📢 Important Notice</p>
+      <p>
+        As per the Sri Lankan government regulation effective March 30th, 2025, all foreign visitors must have a valid International Driving Permit (IDP) to obtain a local driving license.
+      </p>
+      <p className="mt-2">
+        Don’t have an IDP? No problem! 😊 We can create that for you.{' '}
+        <a
+          href="https://wa.me/your-whatsapp-number"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline font-semibold"
+        >
+          📱 Contact us on WhatsApp
+        </a>
+      </p>
+    </div>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <div>
     <label className="text-sm font-semibold">International Driving Permit (IDP)</label>
@@ -1005,6 +1032,44 @@ await fetch("/api/send-email/bookingEmail", {
     />
   </div>
 </div>
+
+
+
+ {/* Document Submission Notice */}
+ <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg text-sm text-gray-800">
+      <p className="font-semibold">📋 Document Submission Instructions</p>
+      <p>
+        After filling out your license details, please send the following required documents via{' '}
+        <a
+          href="mailto:info@tuktukdrive.com"
+          className="text-blue-600 hover:underline font-semibold"
+          aria-label="Email to TukTukDrive for document submission"
+        >
+          Email (info@tuktukdrive.com)
+        </a>{' '}
+        or{' '}
+        <a
+          href="https://wa.me/+94770063780"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline font-semibold"
+          aria-label="WhatsApp for document submission"
+        >
+          WhatsApp (+94770063780)
+        </a>{' '}
+        to prepare your local driving license:
+      </p>
+      <ul className="mt-2 list-disc pl-6">
+        <li>Clear photo of your passport details.</li>
+        <li>Clear photos or a PDF of your International Driving Permit (IDP).</li>
+        <li>
+          Your photo for the new local license (similar to a passport photo, with a white or light background).
+        </li>
+      </ul>
+    </div>
+
+
+
   {/* IDP Upload */}
   <div  className="hidden">
     <label className="flex items-center text-sm font-semibold mb-2">
@@ -1075,9 +1140,9 @@ await fetch("/api/send-email/bookingEmail", {
     )}
   </div>
 </div>
+
+
 )}
-
-
 
 
 {step === 3 && (
