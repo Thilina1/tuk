@@ -118,40 +118,31 @@ export default function PersonsPage() {
       if (!form.name.trim()) return alert('Name is required.');
       if (!form.province) return alert('Province is required.');
       if (!form.district) return alert('District is required.');
-
+  
+      const payload: Omit<Person, 'id' | 'number'> = {
+        name: form.name,
+        idNumber: form.idNumber,
+        licenseNumber: form.licenseNumber,
+        dateOfBirth: form.dateOfBirth,
+        mobile: form.mobile,
+        email: form.email,
+        location: form.location,
+        district: form.district,
+        province: form.province,
+        isActive: form.isActive,
+      };
+  
       if (editingId) {
         const ref = doc(db, 'persons', editingId);
-        const payload: Omit<Person, 'id' | 'number'> = {
-          name: form.name,
-          idNumber: form.idNumber,
-          licenseNumber: form.licenseNumber,
-          dateOfBirth: form.dateOfBirth,
-          mobile: form.mobile,
-          email: form.email,
-          location: form.location,
-          district: form.district,
-          province: form.province,
-          isActive: form.isActive,
-        };
-        await updateDoc(ref, payload as any);
-        setPersons((prev) => sortAndNumber(prev.map((p) => (p.id === editingId ? { ...p, ...payload } : p))));
+        await updateDoc(ref, payload);
+        setPersons((prev) =>
+          sortAndNumber(prev.map((p) => (p.id === editingId ? { ...p, ...payload } : p)))
+        );
       } else {
-        const payload: Omit<Person, 'id' | 'number'> = {
-          name: form.name,
-          idNumber: form.idNumber,
-          licenseNumber: form.licenseNumber,
-          dateOfBirth: form.dateOfBirth,
-          mobile: form.mobile,
-          email: form.email,
-          location: form.location,
-          district: form.district,
-          province: form.province,
-          isActive: true,
-        };
-        const ref = await addDoc(collection(db, 'persons'), payload as any);
+        const ref = await addDoc(collection(db, 'persons'), payload);
         setPersons((prev) => sortAndNumber([...prev, { ...payload, id: ref.id }]));
       }
-
+  
       setShowModal(false);
       setEditingId(null);
       setForm({
