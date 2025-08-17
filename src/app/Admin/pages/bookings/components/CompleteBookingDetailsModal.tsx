@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { BookingData } from "../BookingsPage";
 import Select from "react-select";
@@ -14,18 +14,43 @@ interface TrainTransfer {
   price: number;
 }
 
+// add with your other interfaces
+interface TrainTransferDoc {
+  from: string;
+  to: string;
+  pickupTime: string;
+  downTime: string;
+  price: number;
+  status?: boolean | "active" | "inactive" | string;
+}
+
+
+interface PersonDoc {
+  name: string;
+  district?: string;
+  status?: "active" | "inactive" | string;
+}
+
 interface Props {
   booking: BookingData;
   onClose: () => void;
 }
 
+// add near your other interfaces
+interface LocationDoc {
+  name: string;
+  price: number;
+  status?: "active" | "inactive" | string;
+}
+
 /** Firestore masterPrices shape */
+// ✅ replace
 type MasterPrices = {
   dailyRates: { duration: string; pricePerDay: number }[];
   licenseFee: { amount: number; description?: string };
   optionalExtras: { name: string; price: number; type: string }[];
   refundableDeposit: { amount: number; description?: string };
-  updatedAt?: any;
+  updatedAt?: Timestamp;
 };
 
 interface TukTukDoc {
@@ -50,21 +75,19 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   useEffect(() => {
     const fetchLocations = async () => {
       const snapshot = await getDocs(collection(db, "locations"));
-      const filtered = snapshot.docs
-        .map((doc) => {
-          const data = doc.data() as any;
-          return {
-            label: `${data.name} ($${data.price})`,
-            value: data.name,
-            price: data.price,
-            status: data.status,
-          };
-        })
-        .filter((loc) => loc.status === "active");
-      setActiveLocations(filtered);
+      const options: LocationOption[] = snapshot.docs
+        .map((d) => d.data() as LocationDoc)
+        .filter((data) => data.status === "active")
+        .map((data) => ({
+          label: `${data.name} ($${data.price})`,
+          value: data.name,
+          price: data.price,
+        }));
+      setActiveLocations(options);
     };
     fetchLocations();
   }, []);
+  
 
   /** 🔹 Load active tuks */
   const [activeTuks, setActiveTuks] = useState<{ label: string; value: string }[]>([]);
@@ -88,11 +111,11 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   useEffect(() => {
     const fetchPersons = async () => {
       const snapshot = await getDocs(collection(db, "persons"));
-      const personsList = snapshot.docs.map((doc) => {
-        const data = doc.data() as any;
+      const personsList: { label: string; value: string }[] = snapshot.docs.map((d) => {
+        const data = d.data() as PersonDoc;
         return {
           value: data.name,
-          label: `${data.name} (${data.district})`,
+          label: `${data.name} (${data.district ?? "Unknown"})`,
         };
       });
       setActivePersons(personsList);
@@ -106,27 +129,29 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   useEffect(() => {
     const fetchTrainTransfers = async () => {
       const snapshot = await getDocs(collection(db, "trainTransfers"));
-      const activeTransfers = snapshot.docs
-        .map((doc) => {
-          const data = doc.data() as any;
-          return {
-            label: `${data.from} → ${data.to} (${data.pickupTime}) - $${data.price}`,
-            value: {
-              from: data.from,
-              to: data.to,
-              pickupTime: data.pickupTime,
-              downTime: data.downTime,
-              price: data.price,
-            },
+      const transfers = snapshot.docs
+        .map((d) => d.data() as TrainTransferDoc)
+        .filter((data) =>
+          typeof data.status === "boolean"
+            ? data.status
+            : data.status === "active" || data.status === undefined
+        )
+        .map((data) => ({
+          label: `${data.from} → ${data.to} (${data.pickupTime}) - $${data.price}`,
+          value: {
+            from: data.from,
+            to: data.to,
+            pickupTime: data.pickupTime,
+            downTime: data.downTime,
             price: data.price,
-            status: data.status,
-          };
-        })
-        .filter((t) => t.status);
-      setTrainTransfers(activeTransfers);
+          },
+          price: data.price,
+        }));
+      setTrainTransfers(transfers);
     };
     fetchTrainTransfers();
   }, []);
+  
 
   /** 🆕 Load masterPrices (daily slabs, license fee, deposit, extras) */
   const [prices, setPrices] = useState<MasterPrices | null>(null);
@@ -273,12 +298,12 @@ export default function EditBookingModal({ booking, onClose }: Props) {
 
   /** Assign handler (unchanged flow) */
   const handleAssign = async () => {
-    const missingTuks =
-      !formValues.assignedTuks ||
-      formValues.assignedTuks.length !== formValues.tukCount ||
-      formValues.assignedTuks.some((tuk) => tuk.trim() === "");
-    const missingPerson =
-      !formValues.assignedPerson || (formValues as any).assignedPerson.trim() === "";
+const missingTuks =
+  !formValues.assignedTuks ||
+  formValues.assignedTuks.length !== formValues.tukCount ||
+  formValues.assignedTuks.some((tuk) => !tuk?.trim());
+
+const missingPerson = !formValues.assignedPerson?.trim();
 
     if (missingTuks || missingPerson) {
       alert("Please fill all required fields: Assigned Tuk Tuks and Assigned Person.");
