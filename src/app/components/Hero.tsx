@@ -181,7 +181,7 @@ useEffect(() => {
   setIsMounted(true);
 }, []);
 
-const timeOptions = Array.from({ length: 10 }, (_, i) => {
+const timeOptions = Array.from({ length: 8 }, (_, i) => {
   const hour = i + 10; // 8 to 17
   const value = hour.toString().padStart(2, "0") + ":00";
   return (

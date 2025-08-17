@@ -283,7 +283,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
         <div className="w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] overflow-hidden flex flex-col">
           <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-[var(--tw-color-border)] bg-[var(--tw-color-card)]">
             <h2 className="text-lg md:text-xl font-semibold text-[var(--tw-color-text)]">
-              Confirm Booking
+              Confirm Booking Payment
             </h2>
             <button
               onClick={onClose}

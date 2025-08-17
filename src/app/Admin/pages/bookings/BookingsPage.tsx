@@ -60,6 +60,17 @@ export interface BookingData {
     downTime: string;
     price: number;
   };
+  licenseName?: string;
+
+
+  hasIDP?: boolean;
+  licenseAddress?: string;
+  licenseCountry?: string;
+  postalCode?: string;
+  licenseNumber?: string;
+  passportNumber?: string;
+
+
 }
 
 type TabType = "complete" | "pending" | "incomplete" | "assigned" | "finished" | "OnBoard" | "OnBoarded" | "ReadyFinish";
