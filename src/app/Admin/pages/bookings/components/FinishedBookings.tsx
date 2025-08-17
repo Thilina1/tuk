@@ -10,17 +10,20 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
   if (finished.length === 0)
     return <p className="text-gray-600">No finished bookings.</p>;
 
-  const money = (n: any) => {
-    const num = typeof n === "number" ? n : parseFloat(n ?? "0");
-    if (Number.isNaN(num)) return n ?? "—";
+  type Numericish = number | string | null | undefined;
+
+  const money = (n: Numericish): string => {
+    const num =
+      typeof n === "number"
+        ? n
+        : n != null
+        ? Number.parseFloat(String(n))
+        : Number.NaN;
+    if (!Number.isFinite(num)) return String(n ?? "—");
     return `$${num.toLocaleString()}`;
   };
+  
 
-  const buildExtrasList = (b: BookingData) =>
-    Object.entries(b.extras || {})
-      .filter(([, count]) => (count as number) > 0)
-      .map(([key, value]) => `${key} (${value})`)
-      .join(", ") || "None";
 
   const handlePrint = () => {
     if (typeof window === "undefined") return;

@@ -14,11 +14,18 @@ export default function AssignedBookings({ bookings }: { bookings: BookingData[]
   const [selectedBooking, setSelectedBooking] = useState<BookingData | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const money = (n: any) => {
-    const num = typeof n === "number" ? n : parseFloat(n ?? "0");
-    if (Number.isNaN(num)) return n ?? "—";
+  // ✅ Type-safe currency formatter: accepts number | string | null | undefined
+  const money = (n: number | string | null | undefined): string => {
+    if (n === null || n === undefined) return "—";
+    if (typeof n === "number") return `$${n.toLocaleString()}`;
+
+    const trimmed = n.trim();
+    if (trimmed === "") return "—";
+    const num = Number(trimmed);
+    if (Number.isNaN(num)) return n; // fall back to raw string if it isn't numeric
     return `$${num.toLocaleString()}`;
   };
+
 
   const handleComplete = async (booking: BookingData) => {
     try {

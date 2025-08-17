@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { collection, doc, getDocs, updateDoc, increment } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, increment, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa";
@@ -83,13 +83,13 @@ type CouponDoc = {
   maxUsers: number;
 };
 
-/** Firestore masterPrices shape */
+/** Firestore masterPrices shape (single source of truth;) */
 type MasterPrices = {
   dailyRates: { duration: string; pricePerDay: number }[];
   licenseFee: { amount: number; description?: string };
   optionalExtras: { name: string; price: number; type: string }[];
   refundableDeposit: { amount: number; description?: string };
-  updatedAt?: any;
+  updatedAt?: Timestamp | Date | string | number;
 };
 
 /** time options (unchanged UI) */

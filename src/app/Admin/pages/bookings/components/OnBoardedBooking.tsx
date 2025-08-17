@@ -12,9 +12,16 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
   const [selectedBooking, setSelectedBooking] = useState<BookingData | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const money = (n: any) => {
-    const num = typeof n === "number" ? n : parseFloat(n ?? "0");
-    if (Number.isNaN(num)) return n ?? "—";
+  type Numericish = number | string | null | undefined;
+
+  const money = (n: Numericish): string => {
+    const num =
+      typeof n === "number"
+        ? n
+        : n != null
+        ? Number.parseFloat(String(n))
+        : Number.NaN;
+    if (!Number.isFinite(num)) return String(n ?? "—");
     return `$${num.toLocaleString()}`;
   };
 
