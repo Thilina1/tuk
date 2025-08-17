@@ -162,10 +162,8 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
                 <div><strong>Handover Agent (Start):</strong> {selectedBooking.assignedPerson || "N/A"}</div>
                 <div><strong>Return Agent:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
               </div>
-            </div>
 
-
-            <div className="space-y-4 border border-gray-300 p-4 rounded-lg shadow-sm mb-4">
+              <div className="space-y-4 border border-gray-300 p-4 rounded-lg shadow-sm mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">License & Identity</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
                   <div><strong>International Driving Permit (IDP):</strong> {(selectedBooking.hasIDP)}</div>
@@ -177,6 +175,10 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
                   <div><strong>Passport Number:</strong> {(selectedBooking.passportNumber)}</div>
                 </div>
               </div>
+
+            </div>
+
+
 
             {/* Rental Price Section at the Bottom */}
             <div className="border-t border-gray-300 p-4 mt-4 text-right">

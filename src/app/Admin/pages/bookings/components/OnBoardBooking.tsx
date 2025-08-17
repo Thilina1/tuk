@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
@@ -7,6 +9,19 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
   const [onBoardBookings, setOnBoardBookings] = useState<BookingData[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<BookingData | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  type Numericish = number | string | null | undefined;
+
+  const money = (n: Numericish): string => {
+    const num =
+      typeof n === "number"
+        ? n
+        : n != null
+        ? Number.parseFloat(String(n))
+        : Number.NaN;
+    if (!Number.isFinite(num)) return String(n ?? "—");
+    return `$${num.toLocaleString()}`;
+  };
 
   useEffect(() => {
     const today = new Date();
@@ -55,6 +70,11 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
     }
   };
 
+  const handlePrint = () => {
+    if (typeof window === "undefined") return;
+    window.print();
+  };
+
   return (
     <div>
       {onBoardBookings.length === 0 ? (
@@ -63,17 +83,17 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
         <div className="overflow-x-auto shadow rounded-lg">
           <table className="min-w-full bg-white text-sm text-gray-800">
             <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
-            <tr>
-              <th className="px-3 py-2 text-left">#</th>
-              <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
-              <th className="px-3 py-2 text-left">Pickup Location</th>
-              <th className="px-3 py-2 text-left">Pickup Data</th>
-              <th className="px-3 py-2 text-left">Pick up time</th>
-              <th className="px-3 py-2 text-left">Return Data</th>
-              <th className="px-3 py-2 text-left">assigned Person</th>
-              <th className="px-3 py-2 text-left">Action</th>
-            </tr>
+              <tr>
+                <th className="px-3 py-2 text-left">#</th>
+                <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
+                <th className="px-3 py-2 text-left">Pickup Location</th>
+                <th className="px-3 py-2 text-left">Pickup Date</th>
+                <th className="px-3 py-2 text-left">Pick up time</th>
+                <th className="px-3 py-2 text-left">Return Date</th>
+                <th className="px-3 py-2 text-left">Assigned Person</th>
+                <th className="px-3 py-2 text-left">Action</th>
+              </tr>
             </thead>
             <tbody>
               {onBoardBookings.map((booking, index) => {
@@ -155,59 +175,224 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
 
       {/* Booking Detail Modal */}
       {selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-            <h2 className="text-lg font-bold mb-4">Booking Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div><strong>Name:</strong> {selectedBooking.name}</div>
-              <div><strong>Email:</strong> {selectedBooking.email}</div>
-              <div><strong>WhatsApp:</strong> +{selectedBooking.whatsapp}</div>
-              <div><strong>Total Price:</strong> ${selectedBooking.RentalPrice || "—"}</div>
-              <div><strong>Pickup:</strong> {selectedBooking.pickup}</div>
-              <div><strong>Pickup Date/Time:</strong> {selectedBooking.pickupDate} {selectedBooking.pickupTime}</div>
-              <div><strong>Return:</strong> {selectedBooking.returnLoc}</div>
-              <div><strong>Return Date/Time:</strong> {selectedBooking.returnDate} {selectedBooking.returnTime}</div>
-              <div><strong>Tuk Count:</strong> {selectedBooking.tukCount}</div>
-              <div><strong>License Count:</strong> {selectedBooking.licenseCount}</div>
-              <div className="md:col-span-2">
-                <strong>Extras:</strong>{" "}
-                {Object.entries(selectedBooking.extras || {})
-                  .filter(([, count]) => count > 0)
-                  .map(([key, value]) => `${key} (${value})`)
-                  .join(", ") || "None"}
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Booking details"
+          onKeyDown={(e) => e.key === "Escape" && setSelectedBooking(null)}
+          tabIndex={-1}
+        >
+          {/* PRINT AREA WRAPPER */}
+          <div
+            id="onboard-print-area"
+            className="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+              <div className="flex items-center gap-3 no-print">
+                <button
+                  onClick={handlePrint}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md transition"
+                >
+                  Print
+                </button>
+                <button
+                  onClick={() => setSelectedBooking(null)}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold shadow-md transition"
+                >
+                  Close
+                </button>
               </div>
-              <div className="md:col-span-2">
-                <strong>Train Transfer:</strong>{" "}
+            </div>
+
+            <div className="space-y-6">
+              {/* General Booking Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div>
+                  <strong className="font-semibold text-gray-900">Name:</strong>{" "}
+                  {selectedBooking.name || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Email:</strong>{" "}
+                  {selectedBooking.email || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">WhatsApp:</strong>{" "}
+                  {selectedBooking.whatsapp ? `+${selectedBooking.whatsapp}` : "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Total Price:</strong>{" "}
+                  {money(selectedBooking.RentalPrice) || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Pickup:</strong>{" "}
+                  {selectedBooking.pickup || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Pickup Date/Time:</strong>{" "}
+                  {selectedBooking.pickupDate && selectedBooking.pickupTime
+                    ? `${selectedBooking.pickupDate} ${selectedBooking.pickupTime}`
+                    : "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Return:</strong>{" "}
+                  {selectedBooking.returnLoc || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Return Date/Time:</strong>{" "}
+                  {selectedBooking.returnDate && selectedBooking.returnTime
+                    ? `${selectedBooking.returnDate} ${selectedBooking.returnTime}`
+                    : "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Tuk Count:</strong>{" "}
+                  {selectedBooking.tukCount || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">License Count:</strong>{" "}
+                  {selectedBooking.licenseCount || "—"}
+                </div>
+              </div>
+
+              {/* Extras */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Extras</h3>
+                <p className="text-sm text-gray-700">
+                  {Object.entries(selectedBooking.extras || {})
+                    .filter(([, count]) => (count as number) > 0)
+                    .map(([key, value]) => `${key} (${value})`)
+                    .join(", ") || "None"}
+                </p>
+              </div>
+
+              {/* License & Identity */}
+              <div className="border border-gray-200 p-4 rounded-lg shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">License & Identity</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                  <div>
+                    <strong className="font-semibold text-gray-900">International Driving Permit (IDP):</strong>{" "}
+                    {selectedBooking.hasIDP || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">Full Name:</strong>{" "}
+                    {selectedBooking.licenseName || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">Address:</strong>{" "}
+                    {selectedBooking.licenseAddress || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">Country:</strong>{" "}
+                    {selectedBooking.licenseCountry || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">Postal Code:</strong>{" "}
+                    {selectedBooking.postalCode || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">License Number:</strong>{" "}
+                    {selectedBooking.licenseNumber || "—"}
+                  </div>
+                  <div>
+                    <strong className="font-semibold text-gray-900">Passport Number:</strong>{" "}
+                    {selectedBooking.passportNumber || "—"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Train Transfer */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Train Transfer</h3>
                 {selectedBooking.trainTransfer ? (
-                  <div className="mt-1 space-y-1 text-sm text-gray-700">
-                    <p><strong>From:</strong> {selectedBooking.trainTransfer.from}</p>
-                    <p><strong>To:</strong> {selectedBooking.trainTransfer.to}</p>
-                    <p><strong>Pickup Time:</strong> {selectedBooking.trainTransfer.pickupTime}</p>
-                    <p><strong>Price:</strong> ${selectedBooking.trainTransfer.price}</p>
-                    <p><strong>Train Assign Person:</strong> {selectedBooking.trainTransferAssignedPerson || "N/A"}</p>
+                  <div className="space-y-1 text-sm text-gray-700">
+                    <p>
+                      <strong className="font-semibold text-gray-900">From:</strong>{" "}
+                      {selectedBooking.trainTransfer.from || "—"}
+                    </p>
+                    <p>
+                      <strong className="font-semibold text-gray-900">To:</strong>{" "}
+                      {selectedBooking.trainTransfer.to || "—"}
+                    </p>
+                    <p>
+                      <strong className="font-semibold text-gray-900">Pickup Time:</strong>{" "}
+                      {selectedBooking.trainTransfer.pickupTime || "—"}
+                    </p>
+                    <p>
+                      <strong className="font-semibold text-gray-900">Price:</strong>{" "}
+                      {money(selectedBooking.trainTransfer.price) || "—"}
+                    </p>
+                    <p>
+                      <strong className="font-semibold text-gray-900">Train Assign Person:</strong>{" "}
+                      {selectedBooking.trainTransferAssignedPerson || "N/A"}
+                    </p>
                   </div>
                 ) : (
-                  "None"
+                  <p className="text-sm text-gray-700">None</p>
                 )}
               </div>
 
-              <div><strong>Assigned Tuks:</strong> {selectedBooking.assignedTuks?.join(", ")}</div>
-              <div><strong>Handover Agent (Start):</strong> {selectedBooking.assignedPerson || "N/A"}</div>
-              <div><strong>Return Agent:</strong> {selectedBooking.holdBackAssignedPerson || "N/A"}</div>
-            </div>
-            <div className="flex justify-end mt-6">
-              <button
-                onClick={() => setSelectedBooking(null)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded shadow"
-              >
-                Close
-              </button>
+              {/* Additional Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div>
+                  <strong className="font-semibold text-gray-900">Assigned Tuks:</strong>{" "}
+                  {selectedBooking.assignedTuks?.join(", ") || "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Handover Agent (Start):</strong>{" "}
+                  {selectedBooking.assignedPerson || "N/A"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Return Agent:</strong>{" "}
+                  {selectedBooking.holdBackAssignedPerson || "N/A"}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        </div>
       )}
+
+      {/* Print-only CSS */}
+      <style jsx global>{`
+        @media print {
+          body * {
+            visibility: hidden !important;
+          }
+          #onboard-print-area,
+          #onboard-print-area * {
+            visibility: visible !important;
+          }
+          #onboard-print-area {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            margin: 0 !important;
+            padding: 16px !important;
+            box-shadow: none !important;
+            max-height: none !important;
+            height: auto !important;
+            width: 100% !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+          /* Ensure text and borders are black for print */
+          #onboard-print-area h2,
+          #onboard-print-area h3,
+          #onboard-print-area strong {
+            color: #000000 !important;
+          }
+          #onboard-print-area .border,
+          #onboard-print-area .border-t {
+            border-color: #000000 !important;
+          }
+          #onboard-print-area .shadow-sm {
+            box-shadow: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
