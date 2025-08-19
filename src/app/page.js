@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Testimonials from "./components/Testimonials";
@@ -11,24 +13,26 @@ import Hero from "./components/Hero";
 import WhoWeAre from "./components/WhoAreWe";
 import FAQ from "./components/FAQ";
 import Whatsapp from "./components/whatsapp";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
   return (
     <main>
       <Navbar />
-      <Hero />
+      <Hero onModalChange={setIsBookingOpen} />
       <Reviews />
-      <WhoWeAre/>
-      <BookingProcess/>
+      <WhoWeAre />
+      <BookingProcess />
       <Vehicles />
-      <Specialities/>
-      <Testimonials/>
-      <BlogSection/>
-      <Locations/>
-      <FAQ/>
+      <Specialities />
+      <Testimonials />
+      <BlogSection />
+      <Locations />
+      <FAQ />
       <Footer />
-      <Whatsapp/>
-
+      {!isBookingOpen && <Whatsapp />}
     </main>
   );
 }

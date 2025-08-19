@@ -12,7 +12,10 @@ import dynamic from 'next/dynamic';
 const PhoneInput = dynamic(() => import('react-phone-input-2'), { ssr: false });
 import { FaWhatsapp } from "react-icons/fa";
 
-
+type HeroProps = {
+  onModalChange?: (open: boolean) => void;
+};
+ 
 // Define a proper type for Location
 type Location = {
   name: string;
@@ -52,7 +55,7 @@ type BookingFormValues = {
   hasIDP: string;
 };
 
-export default function HeroBookingSection() {
+export default function HeroBookingSection({ onModalChange }: HeroProps) {
   const sectionRef = useRef(null);
   const [submitted, setSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -128,6 +131,12 @@ export default function HeroBookingSection() {
     fetchLocations();
   }, []);
   const [loading, setLoading] = useState(false);
+
+
+    // whenever either overlay is shown/hidden, notify parent
+    useEffect(() => {
+      onModalChange?.(showModal || showUnavailablePopup);
+    }, [showModal, showUnavailablePopup, onModalChange]);
 
 
   useEffect(() => {
