@@ -845,7 +845,7 @@ const BookingModal = ({
               className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="0">No</option>
-              <option value={rentalDays}>{rentalDays}</option>
+              <option value={rentalDays}>{rentalDays} days</option>
             </select>
           )}
         </div>
