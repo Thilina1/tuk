@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { label: "Trainers", icon: "👤", href: "/Admin/pages/persons" },
   { label: "Discounts", icon: "💲", href: "/Admin/pages/discount" },
   { label: "Master Prices", icon: "💵", href: "/Admin/pages/masterPrices" },
+  { label: "Activation Manager", icon: "✅", href: "/Admin/pages/ActiveDeactive" },
   { label: "Settings", icon: "⚙️", href: "/Admin/pages/settings" },
 ];
 

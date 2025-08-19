@@ -794,110 +794,127 @@ const BookingModal = ({
               </div>
             )}
 
-            {step === 1 && (
-              <div className="space-y-5">
-                <h3 className="text-lg font-semibold">Select Your Extras</h3>
+{step === 1 && (
+  <div className="space-y-5">
+    <h3 className="text-lg font-semibold">Select Your Extras</h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {extrasList.map((extra) => (
-                    <div
-                      key={extra.name}
-                      className="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Image src={extra.icon} alt={extra.name} width={32} height={32} className="w-8 h-8 object-contain" />
-                        <div>
-                          <div className="font-medium text-sm text-gray-900">{extra.name}</div>
-                          <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
-                        </div>
-                      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {extrasList.map((extra) => (
+        <div
+          key={extra.name}
+          className="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <Image src={extra.icon} alt={extra.name} width={32} height={32} className="w-8 h-8 object-contain" />
+            <div>
+              <div className="font-medium text-sm text-gray-900">{extra.name}</div>
+              <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
+            </div>
+          </div>
 
-                      <select
-                        value={formValues.extras[extra.name] || 0}
-                        onChange={(e) =>
-                          setFormValues({
-                            ...formValues,
-                            extras: {
-                              ...formValues.extras,
-                              [extra.name]: parseInt(e.target.value),
-                            },
-                          })
-                        }
-                        className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                      >
-                        {Array.from({ length: 11 }, (_, i) => (
-                          <option key={i} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ))}
-                </div>
+          {/* Conditional rendering for Full-Time Driver and Train Transfer */}
+          {["Full-Time Driver", "Train Transfer"].includes(extra.name) ? (
+            <input
+              type="number"
+              min="0"
+              value={formValues.extras[extra.name] || 0}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  extras: {
+                    ...formValues.extras,
+                    [extra.name]: parseInt(e.target.value) || 0,
+                  },
+                })
+              }
+              className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              placeholder="0"
+            />
+          ) : (
+            <select
+              value={formValues.extras[extra.name] || 0}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  extras: {
+                    ...formValues.extras,
+                    [extra.name]: parseInt(e.target.value),
+                  },
+                })
+              }
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="0">No</option>
+              <option value={rentalDays}>{rentalDays}</option>
+            </select>
+          )}
+        </div>
+      ))}
+    </div>
 
-                {/* Summary Card */}
-                <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
-                  <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
+    {/* Summary Card (unchanged) */}
+    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
+      <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
 
-                  {(() => {
-                    const money = (n: number = 0) => `$${Number(n).toLocaleString()}`;
+      {(() => {
+        const money = (n: number = 0) => `$${Number(n).toLocaleString()}`;
 
-                    const pickupPrice = Number(formValues.pickupPrice || 0);
-                    const returnPrice = Number(formValues.returnPrice || 0);
-                    const days = Number(rentalDays || 0);
-                    const dayRate = Number(perDayCharge || 0);
-                    const licenseCount = Number(formValues.licenseCount || 0);
-                    const licenseTotal = licenseCharge * licenseCount;
-                    const extras = Number(extrasTotal || 0);
-                    const depositAmt = Number(deposit || 0);
+        const pickupPrice = Number(formValues.pickupPrice || 0);
+        const returnPrice = Number(formValues.returnPrice || 0);
+        const days = Number(rentalDays || 0);
+        const dayRate = Number(perDayCharge || 0);
+        const licenseCount = Number(formValues.licenseCount || 0);
+        const licenseTotal = licenseCharge * licenseCount;
+        const extras = Number(extrasTotal || 0);
+        const depositAmt = Number(deposit || 0);
 
-                    const rental = dayRate * days;
-                    const totalActual = pickupPrice + returnPrice + rental + licenseTotal + extras;
-                    const grandTotal = totalActual + depositAmt;
+        const rental = dayRate * days;
+        const totalActual = pickupPrice + returnPrice + rental + licenseTotal + extras;
+        const grandTotal = totalActual + depositAmt;
 
-                    return (
-                      <dl className="mt-3 space-y-1">
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Pickup - {formValues.pickup || "-"}</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(pickupPrice)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Return - {formValues.returnLoc || "-"}</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(returnPrice)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Rental for {days} days ({money(dayRate)})</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(rental)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Local License (${licenseCharge} × {licenseCount})</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(licenseTotal)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Extras Total</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(extras)}</dd>
-                        </div>
+        return (
+          <dl className="mt-3 space-y-1">
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Pickup - {formValues.pickup || "-"}</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(pickupPrice)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Return - {formValues.returnLoc || "-"}</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(returnPrice)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Rental for {days} days ({money(dayRate)})</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(rental)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Local License (${licenseCharge} × {licenseCount})</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(licenseTotal)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Extras Total</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(extras)}</dd>
+            </div>
 
-                        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
-                          <dt className="text-base font-semibold text-gray-800">Total Actual</dt>
-                          <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(totalActual)}</dd>
-                        </div>
+            <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+              <dt className="text-base font-semibold text-gray-800">Total Actual</dt>
+              <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(totalActual)}</dd>
+            </div>
 
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Deposit (Refundable)</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(depositAmt)}</dd>
-                        </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Deposit (Refundable)</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(depositAmt)}</dd>
+            </div>
 
-                        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
-                          <dt className="text-base font-semibold text-gray-800">Grand Total</dt>
-                          <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(grandTotal)}</dd>
-                        </div>
-                      </dl>
-                    );
-                  })()}
-                </div>
-              </div>
-            )}
+            <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+              <dt className="text-base font-semibold text-gray-800">Grand Total</dt>
+              <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(grandTotal)}</dd>
+            </div>
+          </dl>
+        );
+      })()}
+    </div>
+  </div>
+)}
 
             {step === 2 && (
               <div className="space-y-6">

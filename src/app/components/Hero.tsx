@@ -61,7 +61,7 @@ export default function HeroBookingSection() {
   const [dateError, setDateError] = useState("");
   const [locationOptions, setLocationOptions] = useState<{ name: string; price: number }[]>([]);
 
-
+  const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
 
   const extrasList = [
     "Train Transfer",
@@ -127,9 +127,24 @@ export default function HeroBookingSection() {
   
     fetchLocations();
   }, []);
-  
-
   const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+    const fetchDeactivateDate = async () => {
+      const snapshot = await getDocs(collection(db, "vehicleStatus"));
+      const regularTukTukDoc = snapshot.docs.find(doc => doc.id === "regularTukTuk");
+      if (regularTukTukDoc) {
+        const data = regularTukTukDoc.data();
+        const deactivateUntil = data.deactivateUntil.toDate(); // Convert Firestore Timestamp to JS Date
+        setUnavailableDate(deactivateUntil);
+      }
+    };
+  
+    fetchDeactivateDate();
+  }, []);
+  
+  const [unavailableDate, setUnavailableDate] = useState<Date | null>(null);
 
 
   const handleSubmit = useCallback(
@@ -143,27 +158,39 @@ export default function HeroBookingSection() {
         setDateError("Return date & time must be after pickup date & time.");
         return;
       }
+      let isDateValid = true;
+      if (unavailableDate && pickupDateTime < unavailableDate) {
+        setShowUnavailablePopup(true);
+        isDateValid = false;
+      }
       setDateError("");
       setLoading(true); // START loading
   
       try {
-        const docRef = await addDoc(collection(db, "bookings"), {
+        // Ensure all form values, including file arrays, are saved
+        const bookingData = {
           ...formValues,
+          idpFiles: formValues.idpFiles.map(file => file.name), // Save file names instead of File objects
+          passportFiles: formValues.passportFiles.map(file => file.name),
+          selfieWithLicense: formValues.selfieWithLicense.map(file => file.name),
           createdAt: new Date(),
-        });
+        };
+  
+        const docRef = await addDoc(collection(db, "bookings"), bookingData);
   
         setDocId(docRef.id);
-        setShowModal(true);
-        setStep(0);
+        if (isDateValid) {
+          setShowModal(true);
+          setStep(0);
+        }
         setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 4000);
       } catch (err) {
         console.error("Error saving booking:", err);
       } finally {
         setLoading(false); // STOP loading
       }
     },
-    [formValues]
+    [formValues, unavailableDate]
   );
   
 
@@ -471,6 +498,42 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
           locationOptions={locationOptions}
         />
       )}
+
+{showUnavailablePopup && (
+  <div className="fixed inset-0 bg-gray-800/80 z-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full mx-4">
+    <h2 className="text-xl font-bold text-black mb-4">
+  Vehicles Currently Unavailable 🚗❌
+</h2>
+
+      <p className="mb-4  text-black">
+        Oops! 😞 Vehicles are not available for booking until <strong>August 21, 2025</strong>. Your booking request has been saved 🎉, and we’ll notify you when availability changes 📅.
+      </p>
+      <p className="mb-4  text-black">
+        Need help? Contact us for manual checks or assistance! 🤝
+      </p>
+      <a
+        href="https://wa.me/94770063780"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full py-3 px-4 mb-4 rounded-lg flex items-center justify-center gap-2 font-semibold"
+style={{ background: "linear-gradient(to right, #42c90c, #225c0b)" }}
+      >
+        <FaWhatsapp className="mr-2" /> Chat on WhatsApp (+94 77 006 3780) 💬
+      </a>
+      <button
+className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold"
+style={{ background: "linear-gradient(to right, #fbbf24, #f97316)" }}
+
+onClick={() => setShowUnavailablePopup(false)}
+>
+  Close 🙅‍♂️
+</button>
+
+    </div>
+  </div>
+)}
+
     </section>
     </>
   );
