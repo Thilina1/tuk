@@ -1,31 +1,77 @@
 "use client";
 
-import React from "react";
-import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
+import { doc, onSnapshot, Timestamp } from "firebase/firestore";
+import { db } from "@/config/firebase";
 
+// ---- Types ----
+type DailyRate = { duration: string; pricePerDay: number };
+type Extra = { name: string; price: number; type: string };
+type PricingDoc = {
+  dailyRates?: DailyRate[];
+  licenseFee?: { amount: number; description?: string };
+  optionalExtras?: Extra[];
+  refundableDeposit?: { amount: number; description?: string };
+  updatedAt?: Timestamp;
+};
+
+// ---- Utils ----
+const money = (n?: number) =>
+  typeof n === "number" ? `$${n}` : "-";
+
+// ---- Component ----
 export default function PricingDetails() {
-  const perDayCharges = [
-    { range: "1–4 days", price: 23 },
-    { range: "5–8 days", price: 16 },
-    { range: "9–15 days", price: 15 },
-    { range: "16–19 days", price: 13 },
-    { range: "20–35 days", price: 12 },
-    { range: "36–90 days", price: 11 },
-    { range: "91–120 days", price: 10 },
-    { range: "121+ days", price: 8 },
-  ];
+  const [data, setData] = useState<PricingDoc | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const extras = [
-    { name: "Train Transfer", price: 30, type: "per unit" },
-    { name: "Full-Time Driver", price: 25, type: "per day" },
-    { name: "Surf-Board Rack", price: 1, type: "per day" },
-    { name: "Bluetooth Speakers", price: 1, type: "per day" },
-    { name: "Cooler Box", price: 1, type: "per day" },
-    { name: "Dash Cam", price: 1, type: "per day" },
-    { name: "Baby Seat", price: 2, type: "per day" },
-    { name: "Hood Rack", price: 3, type: "per day" },
-  ];
+  // Live Firestore subscription to masterPrices/pricing
+  useEffect(() => {
+    const ref = doc(db, "masterPrices", "pricing");
+    const unsub = onSnapshot(
+      ref,
+      (snap) => {
+        setData((snap.data() as PricingDoc) ?? null);
+        setLoading(false);
+      },
+      (err) => {
+        setError(err.message);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <p className="text-gray-500">Loading pricing…</p>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <p className="text-red-600">Couldn’t load pricing. {error ?? ""}</p>
+      </div>
+    );
+  }
+
+  // ✅ Filter out bad/placeholder rows coming from Firestore
+  const dailyRates =
+    (data.dailyRates ?? []).filter(
+      (r) => r?.duration?.trim() && Number(r?.pricePerDay) > 0
+    );
+
+  const optionalExtras =
+    (data.optionalExtras ?? []).filter(
+      (e) => e?.name?.trim() && Number(e?.price) > 0
+    );
+
+  const { licenseFee, refundableDeposit } = data;
 
   return (
     <div
@@ -43,6 +89,7 @@ export default function PricingDetails() {
           <h3 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
             <FaMoneyBillWave /> Daily Rental Rates
           </h3>
+
           <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden bg-white">
             <thead className="bg-[#FFEDD5] text-gray-700">
               <tr>
@@ -51,12 +98,19 @@ export default function PricingDetails() {
               </tr>
             </thead>
             <tbody>
-              {perDayCharges.map((item, idx) => (
-                <tr key={idx} className="hover:bg-orange-50 transition">
-                  <td className="px-4 py-2 border-b">{item.range}</td>
-                  <td className="px-4 py-2 border-b font-medium">${item.price}</td>
+              {dailyRates.map((r, i) => (
+                <tr key={`${r.duration}-${i}`} className="hover:bg-orange-50 transition">
+                  <td className="px-4 py-2 border-b">{r.duration}</td>
+                  <td className="px-4 py-2 border-b font-medium">{money(r.pricePerDay)}</td>
                 </tr>
               ))}
+              {dailyRates.length === 0 && (
+                <tr>
+                  <td className="px-4 py-3 text-gray-500" colSpan={2}>
+                    No rates available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>
@@ -64,13 +118,12 @@ export default function PricingDetails() {
         {/* License Fee */}
         <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
           <h3 className="text-2xl font-bold text-emerald-600 mb-4">🪪 License Fee</h3>
-          <p className="text-sm leading-relaxed">
-            Every driver must hold a valid license. If you are a foreign visitor, we strongly recommend carrying an International Driving Permit (IDP).
-          </p>
           <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
-            <li><strong>$35 per license</strong> is charged to process and validate each license.</li>
-            <li>This fee covers digital verification, support, and insurance eligibility.</li>
-            <li>All drivers must be 18 years or older and comply with Sri Lankan road regulations.</li>
+            <li>
+              <strong>{money(licenseFee?.amount)} per license</strong>.
+            </li>
+            {licenseFee?.description && <li>{licenseFee.description}</li>}
+            <li>IDP recommended for foreign visitors; all drivers must be 18+.</li>
           </ul>
         </section>
 
@@ -79,6 +132,7 @@ export default function PricingDetails() {
           <h3 className="text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
             <FaTags /> Optional Extras
           </h3>
+
           <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden bg-white">
             <thead className="bg-[#FEF3C7] text-gray-700">
               <tr>
@@ -88,13 +142,20 @@ export default function PricingDetails() {
               </tr>
             </thead>
             <tbody>
-              {extras.map((extra, idx) => (
-                <tr key={idx} className="hover:bg-yellow-50 transition">
-                  <td className="px-4 py-2 border-b">{extra.name}</td>
-                  <td className="px-4 py-2 border-b">${extra.price}</td>
-                  <td className="px-4 py-2 border-b">{extra.type}</td>
+              {optionalExtras.map((e, i) => (
+                <tr key={`${e.name}-${i}`} className="hover:bg-yellow-50 transition">
+                  <td className="px-4 py-2 border-b">{e.name}</td>
+                  <td className="px-4 py-2 border-b">{money(e.price)}</td>
+                  <td className="px-4 py-2 border-b">{e.type}</td>
                 </tr>
               ))}
+              {optionalExtras.length === 0 && (
+                <tr>
+                  <td className="px-4 py-3 text-gray-500" colSpan={3}>
+                    No extras available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>
@@ -103,62 +164,30 @@ export default function PricingDetails() {
         <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
           <h3 className="text-2xl font-bold text-blue-600 mb-4">💰 Refundable Deposit</h3>
           <p className="text-sm leading-relaxed">
-            A one-time <strong>$50 security deposit</strong> will be collected during your booking. This is fully refundable and ensures vehicle protection.
+            A one-time <strong>{money(refundableDeposit?.amount ?? 50)} security deposit</strong> is collected and fully refunded after the trip (if all good).
           </p>
-          <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
-            <li>Returned within 3–5 business days after your trip ends.</li>
-            <li>No deductions if the tuk-tuk is returned undamaged and on time.</li>
-            <li>In case of minor damages or rule violations, partial deductions may apply.</li>
-          </ul>
-        </section>
-
-        {/* Coupons */}
-        <section className="rounded-xl border border-amber-300 shadow-sm p-6 bg-gradient-to-br from-[#FFFBEB] via-white to-[#FFF7ED] !bg-white">
-          <h3 className="text-2xl font-bold text-orange-600 mb-4">🏷️ Discount Coupons</h3>
-          <p className="text-sm leading-relaxed">
-            We frequently offer promo codes to help you save on your adventures! Apply your coupon during checkout and enjoy automatic savings.
-          </p>
-          <ul className="list-disc pl-6 mt-2 text-sm space-y-1">
-            <li><strong>Percentage-based:</strong> e.g., 10% off your total booking.</li>
-            <li><strong>Fixed amount:</strong> e.g., $20 off your rental.</li>
-            <li>Coupons must be valid, active, and within user limits.</li>
-            <li>Only one coupon can be used per transaction.</li>
-            <li>Watch out for seasonal deals shared on our homepage or via email.</li>
-          </ul>
+          {refundableDeposit?.description && (
+            <p className="text-sm mt-2">{refundableDeposit.description}</p>
+          )}
         </section>
 
         {/* Cost Formula */}
         <section className="rounded-xl border border-dashed border-emerald-400 p-6 bg-[#F0FFF4] text-sm">
           <h3 className="text-xl font-bold text-emerald-800 mb-2">🧮 Cost Calculation Formula</h3>
           <code className="text-gray-700 block">
-            Total = (Tuk Count × Days × Per Day Rate) + (License Count × $35) + Pickup/Return + Extras + $50 (Deposit) - Coupon Discount
+            Total = (Tuk Count × Days × Per Day Rate) + (License Count × {money(licenseFee?.amount ?? 35)}) + Pickup/Return + Extras + {money(refundableDeposit?.amount ?? 50)} (Deposit) − Coupon
           </code>
-        </section>
-
-        {/* FAQ */}
-        <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-[#F0F9FF] via-white to-[#F7FEE7] !bg-white">
-          <h3 className="text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2">
-            <FaQuestionCircle /> Frequently Asked
-          </h3>
-          <ul className="text-sm list-disc pl-6 space-y-2">
-            <li><strong>Is insurance included?</strong> – Yes, basic coverage is included.</li>
-            <li><strong>Can I rent without a license?</strong> – No, a valid license or IDP is mandatory.</li>
-            <li><strong>Are discounts stackable?</strong> – Only one coupon can be used per booking.</li>
-          </ul>
         </section>
 
         {/* CTA */}
         <div className="text-center">
-        <Link
-  href="/#book"
-  className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 !bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
-  style={{
-    backgroundImage: 'linear-gradient(to right, #fb923c, #fbbf24)', // fallback to hardcoded gradient
-  }}
->
-  🚀 Book Your TukTuk Now
-</Link>
-
+          <Link
+            href="/#book"
+            className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 !bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
+            style={{ backgroundImage: "linear-gradient(to right, #fb923c, #fbbf24)" }}
+          >
+            🚀 Book Your TukTuk Now
+          </Link>
           <p className="text-sm text-gray-500 mt-2">No upfront payment required to get started.</p>
         </div>
       </div>

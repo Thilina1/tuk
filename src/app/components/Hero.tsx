@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import BookingModal from "../components/BookingModal";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "react-phone-input-2/lib/style.css";
 
@@ -138,20 +138,57 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
       onModalChange?.(showModal || showUnavailablePopup);
     }, [showModal, showUnavailablePopup, onModalChange]);
 
+// 👇 keep your sentinel
+const SENTINEL_UNTIL = new Date("3000-01-01T00:00:00Z");
 
-  useEffect(() => {
-    const fetchDeactivateDate = async () => {
-      const snapshot = await getDocs(collection(db, "vehicleStatus"));
-      const regularTukTukDoc = snapshot.docs.find(doc => doc.id === "regularTukTuk");
-      if (regularTukTukDoc) {
-        const data = regularTukTukDoc.data();
-        const deactivateUntil = data.deactivateUntil.toDate(); // Convert Firestore Timestamp to JS Date
-        setUnavailableDate(deactivateUntil);
-      }
-    };
-  
-    fetchDeactivateDate();
-  }, []);
+const isSentinel = (d: Date | null) =>
+  !!d && d.getTime() === SENTINEL_UNTIL.getTime();
+
+const formatUntil = (d: Date | null) =>
+  d
+    ? new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(d)
+    : "";
+
+
+    useEffect(() => {
+      const fetchDeactivateDate = async () => {
+        try {
+          const ref = doc(db, "vehicleStatus", "regularTukTuk");
+          const snap = await getDoc(ref);
+    
+          if (!snap.exists()) {
+            setUnavailableDate(SENTINEL_UNTIL);
+            return;
+          }
+    
+          const data = snap.data() as { deactivateUntil?: Timestamp | null | string };
+    
+          // Firestore Timestamp → Date
+          if (data?.deactivateUntil instanceof Timestamp) {
+            setUnavailableDate(data.deactivateUntil.toDate());
+            return;
+          }
+    
+          // ISO string in DB → Date
+          if (typeof data?.deactivateUntil === "string" && data.deactivateUntil.trim()) {
+            setUnavailableDate(new Date(data.deactivateUntil));
+            return;
+          }
+    
+          // null / missing → sentinel
+          setUnavailableDate(SENTINEL_UNTIL);
+        } catch (e) {
+          console.error("Failed to fetch vehicleStatus:", e);
+          setUnavailableDate(SENTINEL_UNTIL);
+        }
+      };
+    
+      fetchDeactivateDate();
+    }, []);
   
   const [unavailableDate, setUnavailableDate] = useState<Date | null>(null);
 
@@ -511,37 +548,47 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
 {showUnavailablePopup && (
   <div className="fixed inset-0 bg-gray-800/80 z-50 flex items-center justify-center">
     <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full mx-4">
-    <h2 className="text-xl font-bold text-black mb-4">
-  Vehicles Currently Unavailable 🚗❌
-</h2>
+      <h2 className="text-xl font-bold text-black mb-4">
+        Vehicles Currently Unavailable 🚗❌
+      </h2>
 
-      <p className="mb-4  text-black">
-        Oops! 😞 Vehicles are not available for booking until <strong>August 21, 2025</strong>. Your booking request has been saved 🎉, and we’ll notify you when availability changes 📅.
+      <p className="mb-4 text-black">
+        Oops! 😞 Vehicles are not available{" "}
+        {isSentinel(unavailableDate) ? (
+          <>until <strong>further notice</strong>.</>
+        ) : (
+          <>
+            until <strong>{formatUntil(unavailableDate)}</strong>.
+          </>
+        )}{" "}
+        Your booking request has been saved 🎉, and we’ll notify you when availability changes 📅.
       </p>
-      <p className="mb-4  text-black">
+
+      <p className="mb-4 text-black">
         Need help? Contact us for manual checks or assistance! 🤝
       </p>
+
       <a
         href="https://wa.me/94770063780"
         target="_blank"
         rel="noopener noreferrer"
         className="w-full py-3 px-4 mb-4 rounded-lg flex items-center justify-center gap-2 font-semibold"
-style={{ background: "linear-gradient(to right, #42c90c, #225c0b)" }}
+        style={{ background: "linear-gradient(to right, #42c90c, #225c0b)" }}
       >
         <FaWhatsapp className="mr-2" /> Chat on WhatsApp (+94 77 006 3780) 💬
       </a>
+
       <button
-className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold"
-style={{ background: "linear-gradient(to right, #fbbf24, #f97316)" }}
-
-onClick={() => setShowUnavailablePopup(false)}
->
-  Close 🙅‍♂️
-</button>
-
+        className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-semibold"
+        style={{ background: "linear-gradient(to right, #fbbf24, #f97316)" }}
+        onClick={() => setShowUnavailablePopup(false)}
+      >
+        Close 🙅‍♂️
+      </button>
     </div>
   </div>
 )}
+
 
     </section>
     </>
