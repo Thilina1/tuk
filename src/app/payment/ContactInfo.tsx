@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaMoneyBillWave, FaTags, FaQuestionCircle } from "react-icons/fa";
+import { FaMoneyBillWave, FaTags } from "react-icons/fa";
 import { doc, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
