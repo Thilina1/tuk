@@ -929,7 +929,7 @@ const BookingModal = ({
                   <p className="mt-2">
                     Don’t have an IDP? No problem! 😊 We can create that for you{" "}
                     <a
-                      href="https://wa.me/your-whatsapp-number"
+                      href="https://wa.me/+94770063780"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline font-semibold"
