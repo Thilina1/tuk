@@ -93,8 +93,8 @@ type MasterPrices = {
 };
 
 /** time options (unchanged UI) */
-const timeOptions = Array.from({ length: 15 }, (_, i) => {
-  const hour = i + 6;
+const timeOptions = Array.from({ length: 8 }, (_, i) => {
+  const hour = i + 10;
   const value = hour.toString().padStart(2, "0") + ":00";
   return (
     <option key={value} value={value}>
