@@ -35,6 +35,7 @@ type Booking = {
   isBooked: boolean;
   pickup?: string;
   returnLoc?: string;
+  status?: string;
 };
 
 export default function DashboardPage() {
@@ -73,9 +74,13 @@ export default function DashboardPage() {
           const pickupDate = data.pickupDate?.toDate?.() ?? null;
           const returnDate = data.returnDate?.toDate?.() ?? null;
 
-          if (typeof data.RentalPrice === "number") {
+          if (
+            typeof data.RentalPrice === "number" &&
+            data.status !== "" &&
+            data.status !== "PENDING_PAYMENT"
+          ) {
             totalAll += data.RentalPrice;
-
+          
             if (createdAt && createdAt >= thirtyDaysAgo && createdAt <= endOfToday) {
               total30 += data.RentalPrice;
               const day = createdAt.toISOString().split("T")[0];
@@ -83,6 +88,7 @@ export default function DashboardPage() {
               dayCountMap[day] = (dayCountMap[day] || 0) + 1;
             }
           }
+          
 
           if (data.isBooked) bookedCount++;
           else notBookedCount++;
