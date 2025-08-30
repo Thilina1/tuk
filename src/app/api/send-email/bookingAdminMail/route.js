@@ -48,12 +48,15 @@ export async function POST(request) {
 
     // Transport
     const transporter = nodemailer.createTransport({
-      host: "mail.tuktukdrive.com",
-      port: 465,
-      secure: true,
+      host: "webhost.dynadot.com",
+      port: 587,
+      secure: false, // must be false for STARTTLS
       auth: {
         user: "info@tuktukdrive.com",
-        pass: "DC5OJ7wUuOdo",
+        pass: "73716891",
+      },
+      tls: {
+        rejectUnauthorized: false, // allow self-signed / Dynadot certs
       },
     });
 
