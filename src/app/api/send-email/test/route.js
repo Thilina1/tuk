@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const HOST = "mail.dynadot.com";
 const USER = "info@tuktukdrive.com";
 const PASS = "DC5OJ7wUuOdo"; // put your Dynadot email password in .env.local
 
