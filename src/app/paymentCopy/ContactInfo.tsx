@@ -4,20 +4,21 @@ import React, { useState } from "react";
 
 export default function PayPage() {
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState("1000"); // LKR
-  const [gatewayId, setGatewayId] = useState("1"); // try empty "" if not required
-  const [multiIds, setMultiIds] = useState(""); // e.g. "1|2|3"
+  const [sendingMail, setSendingMail] = useState(false);
+  const [amount, setAmount] = useState("1000");
+  const [gatewayId, setGatewayId] = useState("1");
+  const [multiIds, setMultiIds] = useState("");
 
   const handlePay = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch("/api/payhere/checkout/api2", {
+      const res = await fetch("/api/send-email/checkout/api2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: Number(amount),
-          currency: "LKR", // keep consistent with encrypted amount
+          currency: "LKR",
           item_name: "Regular Tuk Rental",
           payment_gateway_id: gatewayId || undefined,
           multiple_payment_gateway_ids: multiIds || undefined,
@@ -48,6 +49,42 @@ export default function PayPage() {
       alert("Payment init failed. See console for details.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      setSendingMail(true);
+      const res = await fetch("/api/send-email/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "thilinaweerasing@gmail.com", // 👈 force send to Gmail
+          subject: "TukTukDrive — SMTP Live ✅",
+          html: `
+            <h2>SMTP is working 🎉</h2>
+            <p>This is a test email from your Next.js app.</p>
+            <ul>
+              <li>Amount: <b>${amount} LKR</b></li>
+              <li>Gateway: <b>${gatewayId || "-"}</b></li>
+              <li>Multi IDs: <b>${multiIds || "-"}</b></li>
+            </ul>
+          `,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Send email failed:", data);
+        alert(`Email failed: ${data.code || ""} ${data.message || ""}`);
+        return;
+      }
+      alert(`Email sent! Message ID: ${data.id}`);
+    } catch (e) {
+      console.error(e);
+      alert("Email send failed. Check console.");
+    } finally {
+      setSendingMail(false);
     }
   };
 
@@ -94,9 +131,13 @@ export default function PayPage() {
           {loading ? "Processing…" : "💳 Pay Now"}
         </button>
 
-        <p className="text-xs text-gray-500">
-          Heads up: keep <code>LKR</code> as <code>process_currency</code> and encrypt the same currency amount.
-        </p>
+        <button
+          onClick={handleSendEmail}
+          disabled={sendingMail}
+          className="w-full px-4 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-60"
+        >
+          {sendingMail ? "Sending…" : "✉️ Send Test Email"}
+        </button>
       </div>
     </main>
   );
