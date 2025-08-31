@@ -6,6 +6,7 @@ import BookingModal from "../components/BookingModal";
 import { addDoc, collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "react-phone-input-2/lib/style.css";
+import { FaInstagram, FaFacebookF } from "react-icons/fa";
 
 
 import dynamic from 'next/dynamic';
@@ -293,46 +294,184 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       <div className="absolute inset-0 bg-black/60 z-10" />
 
       <div className="relative z-20 max-w-7xl mx-auto px-6 pt-14 md:pt-6 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between min-h-[90vh] md:min-h-[85vh]">
+
+
       <div
-  className="md:w-1/2 text-center md:text-left space-y-4"
   style={{
-    colorScheme: "light",          // Force light theme interpretation
-    color: "#ffffff",              // Main text color
+    position: "relative",
+    zIndex: 10,
+    textAlign: "center", // mobile default
+    maxWidth: "768px",
+    margin: "0 auto", // center mobile
   }}
+  className="promo-section"
 >
-  <h1 className="text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-xl" style={{ color: "#ffffff" }}>
-    Rent <span style={{ color: "#fbbf24" }}>Tuk Tuk</span> with unlimited mileage!
-  </h1>
-  <p className="text-lg font-medium" style={{ color: "#facc15" }}>
-    From just $8 per day.
-  </p>
-  <p className="text-sm sm:text-base" style={{ color: "rgba(255, 255, 255, 0.9)" }}>
-    Book instantly with peace of mind. 24/7 roadside support and easy pickup. <br />
+  {/* Heading */}
+  <h3
+    style={{
+      fontSize: "2rem",
+      fontWeight: "800",
+      lineHeight: "1.2",
+      color: "#fff",
+      marginBottom: "0.5rem",
+      textShadow: "0 2px 6px rgba(0,0,0,0.6)",
+    }}
+  >
+    <span style={{ color: "#FFD700" }}>Lowest Prices in Sri Lanka</span>{" "}
+    Guaranteed!
+  </h3>
 
+  {/* Budget line */}
+  <p
+    style={{
+      fontSize: "1.25rem",
+      fontWeight: "500",
+      color: "#FFD700",
+      margin: "0.25rem 0",
+    }}
+  >
+    💰 Rate adjustments according to your budget.
+  </p>
+
+  {/* Book Now line */}
+  <p
+    style={{
+      fontSize: "1.125rem",
+      fontWeight: "600",
+      color: "#fff",
+      marginTop: "0.5rem",
+    }}
+  >
+    📲 Book now to{" "}
+    <span style={{ fontSize: "1.5rem", fontWeight: "700", color: "#FFD700" }}>
+      grab limited-time offers!
+    </span>
+  </p>
+
+  {/* WhatsApp CTA */}
+  <a
+    href="https://wa.me/94770063780?text=Hi%20I%27m%20interested%20in%20your%20offers!"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "0.5rem",
+      marginTop: "0.75rem",
+      padding: "0.625rem 1.25rem",
+      borderRadius: "1rem",
+      backgroundColor: "#22c55e",
+      color: "#fff",
+      fontWeight: "700",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+      textDecoration: "none",
+      transition: "all 0.3s ease",
+    }}
+    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}
+    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#22c55e")}
+  >
+    <FaWhatsapp style={{ fontSize: "1.5rem" }} /> Chat on WhatsApp for
+    Personalized Quotes
+  </a>
+
+  {/* Hurry Up */}
+  <p
+    style={{
+      fontSize: "1.125rem",
+      fontWeight: "700",
+      color: "#FFD700",
+      marginTop: "1rem",
+    }}
+  >
+    ⚡ Hurry up – Demand is already high this Season!
+  </p>
+
+  {/* Social Icons */}
+  <div
+    className="social-icons"
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      gap: "1rem",
+      marginTop: "1rem",
+    }}
+  >
     <a
-  href="https://wa.me/94770063780"
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    color: "#fbbf24",
-    fontWeight: 500,
-    fontSize: "1.6rem",
-    marginTop: "10px",
-    textDecoration: "none", // optional: remove underline
-  }}
->
-  Chat with us: +94 77 006 3780
-  <FaWhatsapp color="#25D366" size={35} />
-
-</a>
-
-  </p>
+      href="https://www.instagram.com/tuktukdrive_srilanka/?hl=en"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        width: "2.75rem",
+        height: "2.75rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "50%",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        transition: "opacity 0.3s",
+        textDecoration: "none",
+      }}
+    >
+      <FaInstagram style={{ fontSize: "1.25rem", color: "#fff" }} />
+    </a>
+    <a
+      href="https://web.facebook.com/tuktukdrivesl?_rdc=1&_rdr#"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        width: "2.75rem",
+        height: "2.75rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "50%",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        transition: "opacity 0.3s",
+        textDecoration: "none",
+      }}
+    >
+      <FaFacebookF style={{ fontSize: "1.25rem", color: "#fff" }} />
+    </a>
+    <a
+      href="https://wa.me/94770063780"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        width: "2.75rem",
+        height: "2.75rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "50%",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        transition: "opacity 0.3s",
+        textDecoration: "none",
+      }}
+    >
+      <FaWhatsapp style={{ fontSize: "1.25rem", color: "#fff" }} />
+    </a>
+  </div>
 </div>
 
-        <div className="w-full md:w-[350px] bg-white/10 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
+<style>
+  {`
+    /* Desktop overrides */
+    @media (min-width: 1024px) {
+      .promo-section {
+        text-align: left !important;
+        margin-left: 2rem !important;
+        margin-right: 0 !important;
+      }
+      .social-icons {
+        justify-content: flex-start !important;
+      }
+    }
+  `}
+</style>
+
+
+
+        <div className="w-full md:w-[350px] bg-white/20 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label className="text-xs font-medium">Full Name</label>
