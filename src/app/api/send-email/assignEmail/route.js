@@ -75,8 +75,8 @@ export async function POST(request) {
 
             <div style="margin-top: 10px;">
               <a href="https://tuktukdrive.com" style="color: #0077b6; text-decoration: none;">Website</a> |
-              <a href="https://instagram.com/tuktukdrive" style="color: #0077b6; text-decoration: none;">Instagram</a> |
-              <a href="https://facebook.com/tuktukdrive" style="color: #0077b6; text-decoration: none;">Facebook</a>
+              <a href="https://www.instagram.com/tuktukdrive_srilanka/" style="color: #0077b6; text-decoration: none;">Instagram</a> |
+              <a href="https://web.facebook.com/TukTukDriveSrilanka?_rdc=1&_rdr" style="color: #0077b6; text-decoration: none;">Facebook</a>
             </div>
 
             <p style="margin-top: 10px; font-size: 12px; color: #999;">&copy; ${new Date().getFullYear()} TukTukDrive. All rights reserved.</p>

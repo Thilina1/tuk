@@ -93,7 +93,7 @@ export default function Footer() {
           <h3 className="font-semibold text-white mb-3">Follow Us</h3>
           <div className="flex gap-4 mb-4">
             <a
-              href="https://web.facebook.com/tuktukdrivesl?_rdc=1&_rdr#"
+              href="https://web.facebook.com/TukTukDriveSrilanka?_rdc=1&_rdr"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-full hover:bg-amber-400 hover:text-gray-900"
@@ -102,7 +102,7 @@ export default function Footer() {
               <Facebook className="w-5 h-5" />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/tuktukdrive_srilanka/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-full hover:bg-amber-400 hover:text-gray-900"

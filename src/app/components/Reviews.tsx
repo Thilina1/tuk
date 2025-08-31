@@ -93,10 +93,10 @@ support that make every trip unforgettable. ...
           {/* Social Icons */}
           <div className="flex justify-center md:justify-start gap-4 mt-6">
   {[ // your social links
-    { icon: FaFacebookF, href: "https://web.facebook.com/tuktukdrivesl?_rdc=1&_rdr#" },
+    { icon: FaFacebookF, href: "https://web.facebook.com/TukTukDriveSrilanka?_rdc=1&_rdr" },
     { icon: FaInstagram, href: "https://www.instagram.com/tuktukdrive_srilanka/" },
-    { icon: FaGoogle, href: "https://google.com/YourPage" },
-    { icon: FaTripadvisor, href: "https://tripadvisor.com/YourPage" },
+    { icon: FaGoogle, href: "https://share.google/77qkWxGfd1NguksXy" },
+    { icon: FaTripadvisor, href: "https://tripadvisor.com" },
   ].map((social, i) => (
     <a
       key={i}
