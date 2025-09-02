@@ -295,7 +295,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
 
       <div className="relative z-20 max-w-7xl mx-auto px-6 pt-14 md:pt-6 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between min-h-[90vh] md:min-h-[85vh]">
 
-
+ 
       <div
   style={{
     position: "relative",
