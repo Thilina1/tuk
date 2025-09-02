@@ -70,6 +70,9 @@ export default function Footer() {
             <li><Link href="/blog" className="hover:text-amber-400">Blog</Link></li>
             <li><Link href="/about" className="hover:text-amber-400">About Us</Link></li>
             <li><Link href="/contact" className="hover:text-amber-400">Contact</Link></li>
+            <li><Link href="/privacyPolicy" className="hover:text-amber-400">Privacy Policy</Link></li>
+            <li><Link href="/refundPolicy" className="hover:text-amber-400">Refund Policy</Link></li>
+            
           </ul>
         </div>
 
@@ -130,7 +133,7 @@ export default function Footer() {
 
       {/* Bottom Copyright */}
       <div className="relative z-10 border-t border-gray-700 text-center text-xs py-4 px-4" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", color: "#d1d5db" }}>
-        © {new Date().getFullYear()} Tuk Tuk Drive. All rights reserved.
+        © {new Date().getFullYear()} Tuk Tuk Drive. All rights reserved. <Link href="/termsConditions" className="hover:text-amber-400">Terms and Conditions</Link>
       </div>
     </footer>
   );

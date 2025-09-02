@@ -24,7 +24,7 @@ export default function Navbar() {
     { title: "Home", path: "/" },
     { title: "Blog", path: "/blog" },
     { title: "Pricing Summary", path: "/payment" },
-    { title: "About Us", path: "/aboutus" },
+    { title: "About", path: "/aboutus" },
     { title: "FAQ", path: "/faq" },
     { title: "Contact Us", path: "/contact" },
     //{ title: "Pay", path: "/paymentCopy" },

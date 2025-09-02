@@ -307,9 +307,9 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
   className="promo-section"
 >
   {/* Heading */}
-  <h3
+  <h2
     style={{
-      fontSize: "2rem",
+      fontSize: "2.5rem",
       fontWeight: "800",
       lineHeight: "1.2",
       color: "#fff",
@@ -319,7 +319,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
   >
     <span style={{ color: "#FFD700" }}>Lowest Prices in Sri Lanka</span>{" "}
     Guaranteed!
-  </h3>
+  </h2>
 
   {/* Budget line */}
   <p
@@ -397,7 +397,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
     }}
   >
     <a
-      href="https://www.instagram.com/tuktukdrive_srilanka/"
+      href="https://www.instagram.com/tuktukdrive_srilanka/?hl=en"
       target="_blank"
       rel="noopener noreferrer"
       style={{
@@ -415,7 +415,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       <FaInstagram style={{ fontSize: "1.25rem", color: "#fff" }} />
     </a>
     <a
-      href="https://web.facebook.com/TukTukDriveSrilanka?_rdc=1&_rdr"
+      href="https://web.facebook.com/tuktukdrivesl?_rdc=1&_rdr#"
       target="_blank"
       rel="noopener noreferrer"
       style={{

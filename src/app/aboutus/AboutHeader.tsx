@@ -19,14 +19,14 @@ export default function AboutUsHeader() {
         {/* Text Content */}
         <div className="relative z-10">
           <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-md">
-            About Us
+            About
           </h1>
           <p className="mt-2 text-sm md:text-base drop-shadow-md max-w-xl mx-auto">
             Discover Sri Lanka at your own pace with TukTuk Drive — your partner in
             adventure, freedom, and unforgettable road trips.
           </p>
           <p className="text-xs text-yellow-400 mt-2 drop-shadow-md">
-            TukTuk Drive &gt; About Us
+            TukTuk Drive &gt; About
           </p>
         </div>
       </section>
