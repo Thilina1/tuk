@@ -78,7 +78,7 @@ export default function WhoWeAre() {
       backgroundImage: "linear-gradient(to right, #fbbf24, #f97316)",
       color: "#fff",
     }}
-    onClick={() => window.location.href = "/aboutus"}
+    onClick={() => window.location.href = "/about"}
 
   >
     Learn More About Us
