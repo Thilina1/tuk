@@ -11,7 +11,7 @@ export async function POST(request) {
       secure: false, // must be false for STARTTLS
       auth: {
         user: "info@tuktukdrive.com",
-        pass: "73716891",
+        pass: "DC5OJ7wUuOdo",
       },
       tls: {
         rejectUnauthorized: false, // allow self-signed / Dynadot certs
