@@ -13,7 +13,7 @@ export async function POST() {
       tls: {
         rejectUnauthorized: false, // allow self-signed / Dynadot certs
       },
-    });
+    }); 
 
     const info = await transporter.sendMail({
       from: '"TukTukDrive" <info@tuktukdrive.com>',
