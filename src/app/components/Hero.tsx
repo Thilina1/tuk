@@ -86,9 +86,9 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
     returnLoc: "",
     returnPrice: 0,
     pickupDate: "",
-    pickupTime: "08:00",
+    pickupTime: "10:00",
     returnDate: "",
-    returnTime: "08:00",
+    returnTime: "10:00",
     tukCount: 1,
     licenseCount: 1,
     extras: extrasList.reduce((acc, key) => {
