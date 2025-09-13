@@ -1,6 +1,7 @@
 // app/layout.jsx
 import { Geist, Geist_Mono } from "next/font/google";
-import './globals.css';
+import Script from "next/script";   // <-- Add this line
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,6 @@ export default function RootLayout({ children }) {
         />
 
         {/* Google Ads (gtag.js) */}
-        {/* Google tag (gtag.js) */}
         <Script
           id="gtag-lib"
           src="https://www.googletagmanager.com/gtag/js?id=AW-11504981103"
