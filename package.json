@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.17.1",
     "chart.js": "^4.5.0",
     "crypto-js": "^4.2.0",
     "emailjs-com": "^3.2.0",

@@ -600,7 +600,7 @@ await fetch("/api/send-email/bookingEmail", {
 {showThankYou ? (
   <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg p-6 shadow-md text-gray-800">
     <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">
-    ✅🎉 Booking Confirmed! Booking Confirmed!
+    ✅🎉 Booking Confirmed!
     </h2>
 
     <p className="text-gray-700 mb-6 text-center max-w-xl">

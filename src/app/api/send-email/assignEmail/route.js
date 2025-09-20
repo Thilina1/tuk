@@ -52,7 +52,6 @@ export async function POST(request) {
             <tr><td style="padding: 8px; border: 1px solid #ccc;">TukTuks</td><td style="padding: 8px; border: 1px solid #ccc;">${data.tukCount}</td></tr>
             <tr><td style="padding: 8px; border: 1px solid #ccc;">Licenses</td><td style="padding: 8px; border: 1px solid #ccc;">${data.licenseCount}</td></tr>
             <tr><td style="padding: 8px; border: 1px solid #ccc;">Assigned TukTuks</td><td style="padding: 8px; border: 1px solid #ccc;">${tukList}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ccc;">Assigned Person</td><td style="padding: 8px; border: 1px solid #ccc;">${data.assignedPerson}</td></tr>
             <tr><td style="padding: 8px; border: 1px solid #ccc;">Total Rental Price</td><td style="padding: 8px; border: 1px solid #ccc;">$${data.rentalPrice}</td></tr>
           </table>
 

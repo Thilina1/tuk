@@ -207,8 +207,8 @@ useEffect(() => {
 
     .trim() === "";
   
-    if (missingTuks || missingPerson) {
-      alert("Please fill all required fields: Assigned Tuk Tuks and Assigned Person.");
+    if (missingTuks) {
+      alert("Please fill all required fields: Assigned Tuk Tuk.");
       return;
     }
   

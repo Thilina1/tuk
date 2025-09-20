@@ -305,8 +305,8 @@ const missingTuks =
 
 const missingPerson = !formValues.assignedPerson?.trim();
 
-    if (missingTuks || missingPerson) {
-      alert("Please fill all required fields: Assigned Tuk Tuks and Assigned Person.");
+    if (missingTuks) {
+      alert("Please fill all required fields: Assigned Tuk Tuks.");
       return;
     }
 
@@ -607,7 +607,7 @@ const missingPerson = !formValues.assignedPerson?.trim();
                   />
 
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-red-600 mb-1">Handover Agent (Train Transfer) *</label>
+                    <label className="block text-sm font-medium mb-1">Handover Agent (Train Transfer) *</label>
                     <Select
                       options={activePersons}
                       value={
@@ -739,7 +739,7 @@ const missingPerson = !formValues.assignedPerson?.trim();
 
             {/* Handover Agent (Start) */}
             <div>
-              <label className="block text-sm font-medium text-red-600 mb-1">Handover Agent (Start) *</label>
+              <label className="block text-sm font-medium mb-1">Handover Agent (Start)</label>
               <Select
                 options={activePersons}
                 value={formValues.assignedPerson ? activePersons.find((p) => p.value === formValues.assignedPerson) : null}
@@ -775,7 +775,7 @@ const missingPerson = !formValues.assignedPerson?.trim();
 
             {/* Return Agent */}
             <div>
-              <label className="block text-sm font-medium text-red-600 mb-1">Return Agent *</label>
+              <label className="block text-sm font-medium mb-1">Return Agent</label>
               <Select
                 options={activePersons}
                 value={
