@@ -220,9 +220,7 @@ useEffect(() => {
 
   const handleAssign = async () => {
     const missingTuks = !formValues.assignedTuks || formValues.assignedTuks.length !== formValues.tukCount || formValues.assignedTuks.some((tuk) => tuk.trim() === "");
-    const missingPerson = !formValues.assignedPerson || (formValues).assignedPerson
-
-    .trim() === "";
+    
   
     if (missingTuks) {
       alert("Please fill all required fields: Assigned Tuk Tuk.");

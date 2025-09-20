@@ -303,7 +303,6 @@ const missingTuks =
   formValues.assignedTuks.length !== formValues.tukCount ||
   formValues.assignedTuks.some((tuk) => !tuk?.trim());
 
-const missingPerson = !formValues.assignedPerson?.trim();
 
     if (missingTuks) {
       alert("Please fill all required fields: Assigned Tuk Tuks.");
