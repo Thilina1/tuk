@@ -2,6 +2,12 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 
+declare global {
+  interface Window {
+    gtag: (param1: string, param2: string, param3: object) => void;
+  }
+}
+
 type Point = { x: number; y: number };
 
 export default function WhatsAppButton() {
@@ -103,7 +109,19 @@ export default function WhatsAppButton() {
   }, [anchored]);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (hasMoved) e.preventDefault();
+    if (hasMoved) {
+      e.preventDefault();
+      return;
+    }
+
+    // Fire the conversion event
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-11504981103/WjtKCKrTk5obEO-ogO4q',
+        'value': 1.0,
+        'currency': 'USD'
+      });
+    }
   };
 
   // Styles: anchored => bottom-right; unanchored => left/top
