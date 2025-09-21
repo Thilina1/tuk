@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { collection, doc, getDocs, updateDoc, increment, Timestamp, addDoc, writeBatch} from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, increment, Timestamp, writeBatch} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa";
