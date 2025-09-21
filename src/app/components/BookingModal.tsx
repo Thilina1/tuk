@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { collection, doc, getDocs, updateDoc, increment, Timestamp } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, increment, Timestamp, addDoc, writeBatch} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa";
@@ -92,6 +92,39 @@ type MasterPrices = {
   updatedAt?: Timestamp | Date | string | number;
 };
 
+
+
+
+
+/** Get next booking ID from counter */
+const getNextBookingId = async (): Promise<string> => {
+  try {
+    const settingsSnap = await getDocs(collection(db, "settings"));
+    if (settingsSnap.empty) {
+      throw new Error("Settings collection not found");
+    }
+    
+    const settingsDoc = settingsSnap.docs[0];
+    const currentCount = settingsDoc.data().countContent || 0;
+    
+    // Use batch to ensure atomic increment
+    const batch = writeBatch(db);
+    batch.update(settingsDoc.ref, { countContent: increment(1) });
+    await batch.commit();
+    
+    return `BK${String(currentCount + 1).padStart(4, '0')}`; // BK0001, BK0002, etc.
+  } catch (error) {
+    console.error("Error getting next booking ID:", error);
+    // Fallback to timestamp-based ID
+    return `BK${Date.now().toString().slice(-6)}`;
+  }
+};
+
+
+
+
+
+
 /** time options (unchanged UI) */
 const timeOptions = Array.from({ length: 8 }, (_, i) => {
   const hour = i + 10;
@@ -119,6 +152,9 @@ const BookingModal = ({
   const [showThankYou, setShowThankYou] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [bookingId, setBookingId] = useState<string>("");
+  const [isLoadingBookingId, setIsLoadingBookingId] = useState(false);
+
   /** NEW: masterPrices state */
   const [prices, setPrices] = useState<MasterPrices | null>(null);
 
@@ -135,6 +171,25 @@ const BookingModal = ({
       }
     })();
   }, []);
+
+  // Add this useEffect to load booking ID when on payment step
+useEffect(() => {
+  if (step === 3 && !bookingId && !isLoadingBookingId) {
+    const loadBookingId = async () => {
+      setIsLoadingBookingId(true);
+      try {
+        const nextId = await getNextBookingId();
+        setBookingId(nextId);
+      } catch (error) {
+        console.error("Failed to load booking ID:", error);
+      } finally {
+        setIsLoadingBookingId(false);
+      }
+    };
+    
+    loadBookingId();
+  }
+}, [step, bookingId, isLoadingBookingId]);
 
   /** rental days */
   const rentalDays =
@@ -240,7 +295,9 @@ const BookingModal = ({
     0
   );
 
-  const orderId = `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
+
+
+const orderId = bookingId || `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
 
   const totalRental = useMemo(() => {
     let total =
@@ -276,11 +333,18 @@ const BookingModal = ({
 
   /** confirm booking (unchanged UI, logic uses dynamic prices) */
   const handleConfirmBooking = async () => {
+  // Only proceed if we have a proper booking ID
+  if (step === 3 && !bookingId) {
+    setValidationError("Loading booking details... Please wait.");
+    return;
+  }
+    
     setLoading(true);
     try {
       const docRef = doc(db, "bookings", docId);
 
       const baseUpdates = {
+        bookingId: bookingId, 
         orderId,
         RentalPrice: Number(totalRental.toFixed(2)),
         isBooked: true,
@@ -334,6 +398,7 @@ const BookingModal = ({
         extrasCounts: formValues.extras,
         mode: "PENDING_PAYMENT",
         messageType: "GUEST_CONFIRMATION",
+        bookingId: bookingId,
       };
 
       console.log("bookingEmail payload", emailPayload);

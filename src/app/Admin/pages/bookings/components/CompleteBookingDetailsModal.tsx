@@ -362,7 +362,7 @@ const missingTuks =
       <div className="bg-white max-h-[90vh] w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Scrollable content */}
         <div className="overflow-y-auto p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Confirm Booking</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Confirm Booking - {formValues.bookingId}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
             {/* Name Input */}
             <div>

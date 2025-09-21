@@ -86,6 +86,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
               <tr>
                 <th className="px-3 py-2 text-left">#</th>
                 <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Id</th>
                 <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
                 <th className="px-3 py-2 text-left">Pickup Location</th>
                 <th className="px-3 py-2 text-left">Pickup Date</th>
@@ -114,6 +115,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
                   >
                     <td className="px-3 py-2">{index + 1}</td>
                     <td className="px-3 py-2">{booking.name}</td>
+                    <td className="px-3 py-2">{booking.bookingId || "NA"}</td>
                     <td className="px-3 py-2">{booking.assignedTuks?.join(", ")}</td>
                     <td className="px-3 py-2">{booking.pickup}</td>
                     <td className="px-3 py-2">{booking.pickupDate}</td>
@@ -189,7 +191,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
             className="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Booking Details - {selectedBooking.bookingId}</h2>
               <div className="flex items-center gap-3 no-print">
                 <button
                   onClick={handlePrint}

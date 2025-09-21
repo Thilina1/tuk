@@ -38,6 +38,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
             <tr>
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">Id</th>
               <th className="px-3 py-2 text-left">Email</th>
               <th className="px-3 py-2 text-left">Action</th>
             </tr>
@@ -50,6 +51,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
               >
                 <td className="px-3 py-2">{index + 1}</td>
                 <td className="px-3 py-2">{booking.name}</td>
+                <td className="px-3 py-2 text-left">{booking.bookingId || "NA"}</td>
                 <td className="px-3 py-2">{booking.email}</td>
                 <td className="px-3 py-2 flex items-center gap-2">
                   <button
@@ -87,7 +89,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
             {/* modal header */}
             <div className="sticky top-0 bg-white py-4 flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-blue-800">
-                Finished Booking Details
+                Finished Booking Details - {selectedBooking.bookingId}
               </h2>
               <div className="flex items-center gap-2 no-print">
                 <button

@@ -66,6 +66,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
             <tr>
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">Id</th>
               <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
               <th className="px-3 py-2 text-left">Return Location</th>
               <th className="px-3 py-2 text-left">Return Date</th>
@@ -93,6 +94,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
                   >
                     <td className="px-3 py-2">{index + 1}</td>
                     <td className="px-3 py-2">{booking.name}</td>
+                    <td className="px-3 py-2 text-left">{booking.bookingId || "NA"}</td>
                     <td className="px-3 py-2">{booking.assignedTuks?.join(", ")}</td>
                     <td className="px-3 py-2">{booking.returnLoc}</td>
                     <td className="px-3 py-2">{booking.returnDate}</td>
@@ -156,7 +158,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-            <h2 className="text-lg font-bold mb-4">Booking Details5</h2>
+            <h2 className="text-lg font-bold mb-4">Booking Details - {selectedBooking.bookingId}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div><strong>Name:</strong> {selectedBooking.name}</div>
               <div><strong>Email:</strong> {selectedBooking.email}</div>

@@ -28,6 +28,7 @@ export default function CompleteBookingsTab({ bookings }: Props) {
             <tr>
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">Id</th>
               <th className="px-3 py-2 text-left">Pickup</th>
               <th className="px-3 py-2 text-left">Pickup Date</th>
               <th className="px-3 py-2 text-left">Return</th>
@@ -44,6 +45,7 @@ export default function CompleteBookingsTab({ bookings }: Props) {
               >
                 <td className="px-3 py-2">{index + 1}</td>
                 <td className="px-3 py-2">{booking.name}</td>
+                <td className="px-3 py-2 text-left">{booking.bookingId || "NA"}</td>
                 <td className="px-3 py-2">{booking.pickup}</td>
                 <td className="px-3 py-2">{booking.pickupDate}</td>
                 <td className="px-3 py-2">{booking.returnLoc}</td>

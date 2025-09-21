@@ -29,6 +29,8 @@ interface BookingData {
   isBooked: boolean;
   reedStatus?: Status;
   createdAt?: AnyDate;
+  bookingId?: number;
+
 }
 
 /* ------------ helpers: parse & format createdAt ---------------- */

@@ -283,7 +283,8 @@ export default function EditBookingModal({ booking, onClose }: Props) {
         <div className="w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] overflow-hidden flex flex-col">
           <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-[var(--tw-color-border)] bg-[var(--tw-color-card)]">
             <h2 className="text-lg md:text-xl font-semibold text-[var(--tw-color-text)]">
-              Confirm Booking Payment
+              Confirm Booking Payment - {formValues.bookingId}
+
             </h2>
             <button
               onClick={onClose}
@@ -430,7 +431,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
+            <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5 hidden">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">
                 Train Transfer
               </h3>
@@ -562,7 +563,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </a>
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700"
+                  className="hidden px-4 py-2 rounded-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700"
                   onClick={async () => {
                     try {
                       if (!paymentLink) return alert("Add a valid payment link first.");

@@ -61,7 +61,7 @@ export interface BookingData {
     price: number;
   };
   licenseName?: string;
-
+  bookingId?: number;
 
   hasIDP?: boolean;
   licenseAddress?: string;

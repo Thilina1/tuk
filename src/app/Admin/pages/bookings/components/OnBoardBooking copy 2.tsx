@@ -141,7 +141,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
       {selectedBooking && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow w-full max-w-2xl">
-            <h2 className="text-lg font-bold mb-4">Booking Details</h2>
+            <h2 className="text-lg font-bold mb-4">Booking Details - {selectedBooking.bookingId}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div><strong>Name:</strong> {selectedBooking.name}</div>
               <div><strong>Email:</strong> {selectedBooking.email}</div>
