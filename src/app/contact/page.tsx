@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Whatsapp from "../components/whatsapp";
 
 import Header from "./ContactHeader";
 import ContactInfo from "./ContactInfo";
@@ -18,6 +19,7 @@ export default function ContactUsPage() {
 
       <ContactCTA />
       <Footer />
+      <Whatsapp/>
     </main>
   );
 }

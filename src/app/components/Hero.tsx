@@ -420,7 +420,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       display: "inline-flex",
       alignItems: "center",
       gap: "0.5rem",
-      marginTop: "0.75rem",
+      marginTop: "1.3rem",
       padding: "0.625rem 1.25rem",
       borderRadius: "1rem",
       backgroundColor: "#22c55e",

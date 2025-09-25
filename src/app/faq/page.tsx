@@ -2,6 +2,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Content from './Content'
 import FaqHeader from "./FaqHeader";
+import Whatsapp from "../components/whatsapp";
+
 
 
 export default function AboutUsPage() {
@@ -11,6 +13,7 @@ export default function AboutUsPage() {
       <FaqHeader/>
         <Content />
       <Footer />
+      <Whatsapp/>
     </main>
   );
 }
