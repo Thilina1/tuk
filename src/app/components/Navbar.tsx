@@ -32,15 +32,15 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-md">
+    <nav className="sticky top-0 z-50 bg-gray-500 shadow-md">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="inline-block flex-1">
             <img
-              src="/hero/logo.png"
+              src="/logo/headerLogo.png"
               alt="Site logo"
-              className="w-14 h-auto md:w-30"
+              className="w-17 h-auto md:w-28"
             />
           </Link>
 
@@ -50,7 +50,7 @@ export default function Navbar() {
               <li key={idx}>
                 <Link
                   href={item.path}
-                  className="relative font-medium text-black hover:text-purple-600 transition-colors duration-200"
+                  className="relative font-medium text-white hover:text-purple-400 transition-colors duration-200"
                 >
                   {item.title}
                 </Link>
@@ -71,10 +71,10 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Menu */}
       {mounted && isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-white text-black flex flex-col">
+        <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-gray-700  text-white flex flex-col">
           {/* Top: Logo + Close */}
           <div className="relative flex items-center justify-center px-6 py-4">
-            <img src="/hero/logo.png" alt="Site logo" width={100} height={100} />
+            <img src="/logo/headerLogo.png" alt="Site logo" width={100} height={100} />
             <button
               onClick={() => setIsOpen(false)}
               className="absolute right-6 text-black p-2 rounded hover:bg-gray-100 transition"
@@ -91,7 +91,7 @@ export default function Navbar() {
                 <Link
                   href={item.path}
                   onClick={() => setIsOpen(false)}
-                  className="text-xl font-semibold text-black hover:text-purple-600 transition"
+                  className="text-xl font-semibold text-white hover:text-purple-600 transition"
                 >
                   {item.title}
                 </Link>

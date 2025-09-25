@@ -65,7 +65,7 @@ export default function WhoWeAre() {
                 whileInView={{ opacity: 1, y: 0 }}
                 className="italic text-white/80 text-center md:text-left mt-6"
               >
-                “The best way to experience Sri Lanka is in a TukTuk — with these guys!”
+                “The best way to experience Sri Lanka is in a TukTuk — with TUK TUK DRIVE!”
               </motion.blockquote>
 
               {/* Button */}

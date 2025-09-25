@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
 
         <div className="mb-4 text-center">
           <Image
-            src="/logo/logo.png"
+            src="/logo/TukTukDrive-Logo-Footer.png"
             alt="Tuktukdrive Logo"
             width={200}
             height={100}

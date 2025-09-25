@@ -317,8 +317,8 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       textShadow: "0 2px 6px rgba(0,0,0,0.6)",
     }}
   >
-    <span style={{ color: "#FFD700" }}>Lowest Prices in Sri Lanka</span>{" "}
-    Guaranteed!
+    <span style={{ color: "#FFD700" }}>Adventure Awaits: </span>{" "}
+    Drive Sri Lanka in Your Own Tuk-Tuk!
   </h2>
 
   {/* Budget line */}
@@ -330,23 +330,86 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       margin: "0.25rem 0",
     }}
   >
-    💰 Rate adjustments according to your budget.
+    Explore at your pace with the lowest prices, full insurance, and 24/7 support. Book now, no sign-up needed!
   </p>
 
-  {/* Book Now line */}
+
+
   <p
+  style={{
+    fontSize: "1.125rem",
+    fontWeight: "600",
+    color: "#fff",
+    marginTop: "0.5rem",
+ display: "inline-flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "0.75rem",
+  }}
+>
+  <span
     style={{
-      fontSize: "1.125rem",
-      fontWeight: "600",
-      color: "#fff",
-      marginTop: "0.5rem",
+      width: "3rem",
+      height: "3rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "50%",
+      backgroundColor: "rgba(255, 215, 0, 0.7)", // golden yellow with transparency
     }}
   >
-    📲 Book now to{" "}
-    <span style={{ fontSize: "1.5rem", fontWeight: "700", color: "#FFD700" }}>
-      grab limited-time offers!
-    </span>
-  </p>
+    <Image src="/icons/babyseat.png" alt="Baby Seat" width={28} height={28} />
+  </span>
+  <span
+    style={{
+      width: "3rem",
+      height: "3rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "50%",
+      backgroundColor: "rgba(255, 215, 0, 0.7)",
+      fontSize: "1.5rem",
+    }}
+  >
+    🏄‍♂️
+  </span>
+  <span
+    style={{
+      width: "3rem",
+      height: "3rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "50%",
+      backgroundColor: "rgba(255, 215, 0, 0.7)",
+      fontSize: "1.5rem",
+    }}
+  >
+    🔊
+  </span>
+  <span
+    style={{
+      width: "3rem",
+      height: "3rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "50%",
+      backgroundColor: "rgba(255, 215, 0, 0.7)", // golden yellow with transparency
+    }}
+  >
+    <Image src="/icons/train.png" alt="Baby Seat" width={28} height={28} />
+  </span>
+
+
+
+
+</p>
+
+
+<br></br>
+
 
   {/* WhatsApp CTA */}
   <a
@@ -370,8 +433,9 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
     onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}
     onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#22c55e")}
   >
-    <FaWhatsapp style={{ fontSize: "1.5rem" }} /> Chat on WhatsApp for
-    Personalized Quotes
+    Book Now via WhatsApp
+    <FaWhatsapp style={{ fontSize: "1.5rem" }} /> 
+    
   </a>
 
   {/* Hurry Up */}

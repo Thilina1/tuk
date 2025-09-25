@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     localStorage.removeItem("admin_logged_in");
-    router.push("/Admin/login");
+    router.push("/Admin");
   };
 
   useEffect(() => {

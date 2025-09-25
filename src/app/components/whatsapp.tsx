@@ -160,11 +160,11 @@ export default function WhatsAppButton() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: 56,
-          height: 56,
+          width: 80,
+          height: 80,
           borderRadius: 9999,
           backgroundColor: 'rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 4px 10px rgba(0,0,0,.15)',
+          boxShadow: '0 4px 10px rgba(246, 177, 0, 0.15)',
           transition: 'background-color .2s',
         }}
         aria-label="Open WhatsApp chat"
@@ -173,7 +173,7 @@ export default function WhatsAppButton() {
           src="https://lottie.host/a749ed34-1305-42a8-b492-4f817fe10487/kg0S0bnsxA.lottie"
           autoplay
           loop
-          style={{ width: 60, height: 60 }}
+          style={{ width: 80, height: 80 }}
         />
       </a>
     </div>

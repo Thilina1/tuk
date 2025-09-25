@@ -60,6 +60,13 @@ export default function Footer() {
           <p className="mt-3" style={{ color: "#d1d5db" }}>
             Epic road trips across Sri Lanka — one tuk tuk at a time.
           </p>
+          <Link href="/">
+            <img
+              src="/logo/headerLogo.png"
+              alt="Site logo"
+              className="w-17 h-auto md:w-28"
+            />
+          </Link>
         </div>
 
         {/* Navigation */}
