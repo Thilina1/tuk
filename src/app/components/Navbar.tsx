@@ -27,12 +27,13 @@ export default function Navbar() {
     { title: "About", path: "/about" },
     { title: "FAQ", path: "/faq" },
     { title: "Contact Us", path: "/contact" },
-    //{ title: "Pay", path: "/paymentCopy" },
-
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-gray-500 shadow-md">
+    <nav
+      className="sticky top-0 z-50 shadow-md"
+      style={{ backgroundColor: "#4B5563" }} // custom background
+    >
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -50,7 +51,16 @@ export default function Navbar() {
               <li key={idx}>
                 <Link
                   href={item.path}
-                  className="relative font-medium text-white hover:text-purple-400 transition-colors duration-200"
+                  className="relative font-medium transition-colors duration-200"
+                  style={{
+                    color: "#FFFFFF",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#A855F7") // purple hover
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "#FFFFFF")
+                  }
                 >
                   {item.title}
                 </Link>
@@ -61,8 +71,15 @@ export default function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden text-black p-2 rounded hover:bg-gray-100 transition"
+            className="md:hidden p-2 rounded transition"
             aria-label="Open menu"
+            style={{ color: "#000000", backgroundColor: "transparent" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#F3F4F6")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -71,14 +88,24 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Menu */}
       {mounted && isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full z-[9999] bg-gray-700  text-white flex flex-col">
+        <div
+          className="fixed top-0 left-0 w-full h-full z-[9999] flex flex-col"
+          style={{ backgroundColor: "#374151", color: "#FFFFFF" }} // dark gray bg
+        >
           {/* Top: Logo + Close */}
           <div className="relative flex items-center justify-center px-6 py-4">
             <img src="/logo/headerLogo.png" alt="Site logo" width={100} height={100} />
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-6 text-black p-2 rounded hover:bg-gray-100 transition"
+              className="absolute right-6 p-2 rounded transition"
               aria-label="Close menu"
+              style={{ color: "#000000", backgroundColor: "transparent" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#F3F4F6")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "transparent")
+              }
             >
               <X className="w-6 h-6" />
             </button>
@@ -91,7 +118,14 @@ export default function Navbar() {
                 <Link
                   href={item.path}
                   onClick={() => setIsOpen(false)}
-                  className="text-xl font-semibold text-white hover:text-purple-600 transition"
+                  className="text-xl font-semibold transition"
+                  style={{ color: "#FFFFFF" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#9333EA") // purple hover
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "#FFFFFF")
+                  }
                 >
                   {item.title}
                 </Link>
