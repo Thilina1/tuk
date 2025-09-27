@@ -8,8 +8,8 @@ export async function POST(req) {
   const { orderId, amount, currency } = data;
 
 
-  const merchant_id = "1231320"; 
-  const merchant_secret = "MzEyMTIwMjE5OTY0NjQzNDM4MzE5MTc1ODM4MDIxMDAyNjIwODc=";
+  const merchant_id = "247284"; 
+  const merchant_secret = "Mzg1MjE3MjA0NTE5MjI3NTU3ODczMjc1OTIyMTYzMTc5Mzc2NzMwNg==";
 
   
   const formattedAmount = parseFloat(amount)
