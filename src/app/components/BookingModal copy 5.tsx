@@ -132,7 +132,7 @@ const BookingModal = ({
     const { hash } = await response.json();
   
     const payment = {
-      sandbox: true,
+      sandbox: false,
       merchant_id: "1231320", // replace with real merchant_id
       return_url: "https://yourdomain.com/payment-success",
       cancel_url: "https://yourdomain.com/payment-cancel",
