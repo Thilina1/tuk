@@ -53,7 +53,7 @@ export default function ContactInfo() {
       }
 
       // Fetch the PayHere hash
-      const hashRes = await fetch("/api/payhere/checkout/api", {
+      const hashRes = await fetch("/api/get-payhere-hash", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -117,8 +117,9 @@ export default function ContactInfo() {
         console.log("Error:", error);
         setError(`Payment error: ${error}`);
       };
-    } catch (e) {
-      console.error("Payment initiation error:"); // Fixed logging
+    } catch (e: any) {
+      console.error("Payment initiation error:", e.message, e); // Fixed linting error
+      setError(e.message);
     } finally {
       setLoading(false);
     }
