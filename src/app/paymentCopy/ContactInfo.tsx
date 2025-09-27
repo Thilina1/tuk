@@ -53,7 +53,7 @@ export default function ContactInfo() {
       }
 
       // Fetch the PayHere hash
-      const hashRes = await fetch("/api/get-payhere-hash", {
+      const hashRes = await fetch("/api/payhere/checkout/api", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
