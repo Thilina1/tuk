@@ -117,9 +117,10 @@ export default function ContactInfo() {
         console.log("Error:", error);
         setError(`Payment error: ${error}`);
       };
-    } catch (e: any) {
-      console.error("Payment initiation error:", e.message, e); // Fixed linting error
-      setError(e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      console.error("Payment initiation error:", errorMessage, e);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
