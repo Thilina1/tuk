@@ -387,7 +387,7 @@ const BookingModal = ({
   
       // Prepare payment object
       const payment = {
-        sandbox: true,
+        sandbox: false,
         merchant_id: "247284", // Replace with your Merchant ID
         return_url: "https://yourdomain.com/payment-success", // Replace
         cancel_url: "https://yourdomain.com/payment-cancel", // Replace
