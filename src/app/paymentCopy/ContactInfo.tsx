@@ -76,7 +76,7 @@ export default function ContactInfo() {
       // Prepare payment object
       const payment = {
         sandbox: false,
-        merchant_id: "1231320", // Replace with your Merchant ID
+        merchant_id: "247284", // Replace with your Merchant ID
         return_url: "https://yourdomain.com/payment-success", // Replace
         cancel_url: "https://yourdomain.com/payment-cancel", // Replace
         notify_url: "https://yourdomain.com/api/payhere-notify", // Replace

@@ -321,7 +321,7 @@ const BookingModal = ({
       const docRef = doc(db, "bookings", docId);
   
       // Validate inputs
-      if (!formValues.name.trim() || !formValues.email.trim() || !formValues.licenseCountry.trim()) {
+      if (!formValues.name.trim() || !formValues.email.trim()) {
         setPaymentError("Please ensure all required fields (name, email, country) are filled.");
         setLoading(false);
         return;
@@ -388,7 +388,7 @@ const BookingModal = ({
       // Prepare payment object
       const payment = {
         sandbox: true,
-        merchant_id: "1231320", // Replace with your Merchant ID
+        merchant_id: "247284", // Replace with your Merchant ID
         return_url: "https://yourdomain.com/payment-success", // Replace
         cancel_url: "https://yourdomain.com/payment-cancel", // Replace
         notify_url: "https://yourdomain.com/api/payhere-notify", // Replace

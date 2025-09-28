@@ -133,7 +133,7 @@ const BookingModal = ({
   
     const payment = {
       sandbox: false,
-      merchant_id: "1231320", // replace with real merchant_id
+      merchant_id: "247284", // replace with real merchant_id
       return_url: "https://yourdomain.com/payment-success",
       cancel_url: "https://yourdomain.com/payment-cancel",
       notify_url: "https://yourdomain.com/api/payhere-notify",
