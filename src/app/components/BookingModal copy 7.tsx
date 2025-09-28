@@ -1,11 +1,10 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { collection, doc, getDocs, updateDoc, increment, Timestamp, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, increment, Timestamp, writeBatch} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Image from "next/image";
 import { FaIdCard, FaPassport, FaUser } from "react-icons/fa";
-import Script from "next/script";
 
 declare global {
   interface Window {
@@ -84,6 +83,7 @@ type CouponDoc = {
   maxUsers: number;
 };
 
+/** Firestore masterPrices shape (single source of truth;) */
 type MasterPrices = {
   dailyRates: { duration: string; pricePerDay: number }[];
   licenseFee: { amount: number; description?: string };
@@ -91,6 +91,10 @@ type MasterPrices = {
   refundableDeposit: { amount: number; description?: string };
   updatedAt?: Timestamp | Date | string | number;
 };
+
+
+
+
 
 /** Get next booking ID from counter */
 const getNextBookingId = async (): Promise<string> => {
@@ -103,6 +107,7 @@ const getNextBookingId = async (): Promise<string> => {
     const settingsDoc = settingsSnap.docs[0];
     const currentCount = settingsDoc.data().countContent || 0;
     
+    // Use batch to ensure atomic increment
     const batch = writeBatch(db);
     batch.update(settingsDoc.ref, { countContent: increment(1) });
     await batch.commit();
@@ -110,11 +115,17 @@ const getNextBookingId = async (): Promise<string> => {
     return `BK${String(currentCount + 1).padStart(4, '0')}`; // BK0001, BK0002, etc.
   } catch (error) {
     console.error("Error getting next booking ID:", error);
+    // Fallback to timestamp-based ID
     return `BK${Date.now().toString().slice(-6)}`;
   }
 };
 
-/** time options */
+
+
+
+
+
+/** time options (unchanged UI) */
 const timeOptions = Array.from({ length: 8 }, (_, i) => {
   const hour = i + 10;
   const value = hour.toString().padStart(2, "0") + ":00";
@@ -140,12 +151,14 @@ const BookingModal = ({
   const [couponError, setCouponError] = useState("");
   const [showThankYou, setShowThankYou] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [bookingId, setBookingId] = useState<string>("");
   const [isLoadingBookingId, setIsLoadingBookingId] = useState(false);
-  const [prices, setPrices] = useState<MasterPrices | null>(null);
-  const [sdkLoaded, setSdkLoaded] = useState(false);
-  const [paymentError, setPaymentError] = useState("");
 
+  /** NEW: masterPrices state */
+  const [prices, setPrices] = useState<MasterPrices | null>(null);
+
+  /** Load masterPrices (pick first doc; swap to a specific doc ID if needed) */
   useEffect(() => {
     (async () => {
       try {
@@ -159,24 +172,26 @@ const BookingModal = ({
     })();
   }, []);
 
-  useEffect(() => {
-    if (step === 3 && !bookingId && !isLoadingBookingId) {
-      const loadBookingId = async () => {
-        setIsLoadingBookingId(true);
-        try {
-          const nextId = await getNextBookingId();
-          setBookingId(nextId);
-        } catch (error) {
-          console.error("Failed to load booking ID:", error);
-        } finally {
-          setIsLoadingBookingId(false);
-        }
-      };
-      
-      loadBookingId();
-    }
-  }, [step, bookingId, isLoadingBookingId]);
+  // Add this useEffect to load booking ID when on payment step
+useEffect(() => {
+  if (step === 3 && !bookingId && !isLoadingBookingId) {
+    const loadBookingId = async () => {
+      setIsLoadingBookingId(true);
+      try {
+        const nextId = await getNextBookingId();
+        setBookingId(nextId);
+      } catch (error) {
+        console.error("Failed to load booking ID:", error);
+      } finally {
+        setIsLoadingBookingId(false);
+      }
+    };
+    
+    loadBookingId();
+  }
+}, [step, bookingId, isLoadingBookingId]);
 
+  /** rental days */
   const rentalDays =
     new Date(formValues.returnDate).getTime() > new Date(formValues.pickupDate).getTime()
       ? Math.ceil(
@@ -185,6 +200,7 @@ const BookingModal = ({
         ) + 1
       : 1;
 
+  /** parse "1–4 days" / "121+ days" */
   const normDash = (s: string) => s.replace(/–/g, "-");
   const parseRange = (duration: string): { min: number; max: number } => {
     const clean = normDash(duration).toLowerCase();
@@ -197,6 +213,7 @@ const BookingModal = ({
     return { min: 1, max: Number.POSITIVE_INFINITY };
   };
 
+  /** per-day charge from Firestore (fallback to your original slabs) */
   const getPerDayCharge = (days: number) => {
     if (prices?.dailyRates?.length) {
       const direct = prices.dailyRates.find((r) => {
@@ -223,10 +240,12 @@ const BookingModal = ({
     return 23;
   };
 
+  /** dynamic fees (safe fallbacks) */
   const perDayCharge = getPerDayCharge(rentalDays);
   const licenseCharge = prices?.licenseFee?.amount ?? 35;
   const deposit = prices?.refundableDeposit?.amount ?? 50;
 
+  /** map Firestore extras to your same display labels & icons */
   const DISPLAY_MAP: Record<string, { label: string; icon: string }> = {
     TrainTransfer: { label: "Train Transfer", icon: "/icons/train.png" },
     FullTimeDriver: { label: "Full-Time Driver", icon: "/icons/Driver.png" },
@@ -270,12 +289,15 @@ const BookingModal = ({
     });
   }, [prices]);
 
+  /** totals */
   const extrasTotal = extrasList.reduce(
     (sum, extra) => sum + (formValues.extras[extra.name] || 0) * extra.price,
     0
   );
 
-  const orderId = bookingId || `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
+
+
+const orderId = bookingId || `${formValues.email.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`;
 
   const totalRental = useMemo(() => {
     let total =
@@ -309,19 +331,20 @@ const BookingModal = ({
     deposit,
   ]);
 
+  /** confirm booking (unchanged UI, logic uses dynamic prices) */
   const handleConfirmBooking = async () => {
-    if (step === 3 && !bookingId) {
-      setValidationError("Loading booking details... Please wait.");
-      return;
-    }
-
+  // Only proceed if we have a proper booking ID
+  if (step === 3 && !bookingId) {
+    setValidationError("Loading booking details... Please wait.");
+    return;
+  }
+    
     setLoading(true);
-    setPaymentError("");
     try {
       const docRef = doc(db, "bookings", docId);
 
       const baseUpdates = {
-        bookingId,
+        bookingId: bookingId, 
         orderId,
         RentalPrice: Number(totalRental.toFixed(2)),
         isBooked: true,
@@ -375,8 +398,10 @@ const BookingModal = ({
         extrasCounts: formValues.extras,
         mode: "PENDING_PAYMENT",
         messageType: "GUEST_CONFIRMATION",
-        bookingId,
+        bookingId: bookingId,
       };
+
+      console.log("bookingEmail payload", emailPayload);
 
       await fetch("/api/send-email/bookingEmail", {
         method: "POST",
@@ -398,140 +423,48 @@ const BookingModal = ({
         }),
       }).catch(() => {});
 
-      await fetch("/api/send-email/bookingAdminMail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          name: formValues.name,
-          email: formValues.email,
-          whatsapp: formValues.whatsapp,
-          pickup: formValues.pickup,
-          pickupDate: formValues.pickupDate,
-          pickupTime: formValues.pickupTime,
-          returnLoc: formValues.returnLoc,
-          returnDate: formValues.returnDate,
-          returnTime: formValues.returnTime,
-          tukCount: formValues.tukCount,
-          licenseCount: formValues.licenseCount,
-          totalRental: Number(totalRental.toFixed(2)),
-          couponCode: appliedCoupon ? couponCode.trim() : undefined,
-          extrasCounts: formValues.extras,
-          status: "PENDING_PAYMENT",
-        }),
-      });
-
-      await fetch("/api/whatsapp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          template: "hello_world",
-          langCode: "en_US",
-          to: formValues.whatsapp,
-        }),
-      });
-
-      // Initiate PayHere payment
-      if (!sdkLoaded || !window.payhere) {
-        setPaymentError("Payment system not ready. Please try again.");
-        setLoading(false);
-        return;
-      }
-
-      // Validate inputs
-      if (!formValues.name.trim() || !formValues.email.trim()) {
-        setPaymentError("Please ensure all required fields (name, email, country) are filled.");
-        setLoading(false);
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email)) {
-        setPaymentError("Please enter a valid email address.");
-        setLoading(false);
-        return;
-      }
-
-      // Fetch PayHere hash
-      const hashRes = await fetch("/api/payhere/checkout/api", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          amount: Number(totalRental.toFixed(2)),
-          currency: "USD",
-        }),
-      });
-
-      if (!hashRes.ok) {
-        const hashText = await hashRes.text();
-        const errorMessage = hashText.includes("404")
-          ? "API route not found. Please check /api/payhere/checkout/api."
-          : hashText || `HTTP ${hashRes.status}`;
-        setPaymentError(errorMessage);
-        setLoading(false);
-        return;
-      }
-
-      const { hash } = await hashRes.json();
-
-      // Prepare payment object
-      const payment = {
-        sandbox: false,
-        merchant_id: "247284", // Replace with your Merchant ID
-        return_url: "https://yourdomain.com/payment-success", // Replace
-        cancel_url: "https://yourdomain.com/payment-cancel", // Replace
-        notify_url: "https://yourdomain.com/api/payhere-notify", // Replace
-        order_id: orderId,
-        items: `Tuk Tuk Rental - ${bookingId}`,
-        amount: totalRental.toFixed(2),
-        currency: "USD",
-        hash,
-        first_name: formValues.name.split(" ")[0] || "Guest",
-        last_name: formValues.name.split(" ").slice(1).join(" ") || "User",
-        email: formValues.email,
-        phone: formValues.whatsapp || undefined,
-        address: formValues.licenseAddress || undefined,
-        city: formValues.pickup || undefined,
-        country: formValues.licenseCountry || "UK",
-        delivery_address: formValues.pickup || undefined,
-        delivery_city: formValues.pickup || undefined, 
-        delivery_country: formValues.licenseCountry || undefined,
-        custom_1: bookingId,
-        custom_2: "",
-      };
-
-      // Start payment
-      window.payhere.startPayment(payment);
-
-      // Payment event handlers
-      window.payhere.onCompleted = async (orderId) => {
-        console.log("Payment completed. OrderID:", orderId);
-        try {
-          await updateDoc(docRef, { status: "PAID" });
-          setShowThankYou(true);
-        } catch (e) {
-          console.error("Failed to update payment status:", e);
-          setPaymentError("Payment completed, but failed to update booking status.");
-        }
-      };
-
-      window.payhere.onDismissed = () => {
-        console.log("Payment dismissed");
-        setPaymentError("Payment was cancelled.");
-        setLoading(false);
-      };
-
-      window.payhere.onError = (error) => {
-        console.log("Payment error:", error);
-        setPaymentError(`Payment error: ${error}`);
-        setLoading(false);
-      };
+      setShowThankYou(true);
     } catch (e) {
-      console.error("Confirm booking or payment initiation failed:", e);
-      setPaymentError(e instanceof Error ? e.message : String(e));
+      console.error("❌ Confirm booking failed:", e);
+    } finally {
       setLoading(false);
     }
+
+    await fetch("/api/send-email/bookingAdminMail", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        name: formValues.name,
+        email: formValues.email,
+        whatsapp: formValues.whatsapp,
+        pickup: formValues.pickup,
+        pickupDate: formValues.pickupDate,
+        pickupTime: formValues.pickupTime,
+        returnLoc: formValues.returnLoc,
+        returnDate: formValues.returnDate,
+        returnTime: formValues.returnTime,
+        tukCount: formValues.tukCount,
+        licenseCount: formValues.licenseCount,
+        totalRental: Number(totalRental.toFixed(2)),
+        couponCode: appliedCoupon ? couponCode.trim() : undefined,
+        extrasCounts: formValues.extras,
+        status: "PENDING_PAYMENT",
+      }),
+    });
+
+    await fetch("/api/whatsapp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        template: "hello_world",
+        langCode: "en_US",
+        to: formValues.whatsapp,
+      }),
+    });
   };
 
+  /** apply coupon (unchanged) */
   const handleApplyCoupon = async () => {
     setCouponError("");
     if (!couponCode.trim()) {
@@ -565,6 +498,7 @@ const BookingModal = ({
     });
   };
 
+  /** Next step (unchanged UI; writes steps 0-2 to Firestore) */
   const handleNext = async () => {
     setLoading(true);
     try {
@@ -626,6 +560,7 @@ const BookingModal = ({
     }
   };
 
+  /** ===== UI (unchanged) ===== */
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="relative bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 text-black shadow-2xl">
@@ -639,6 +574,7 @@ const BookingModal = ({
 
         <div className="relative w-full">
           <div className="px-4 mb-4">
+            {/* Progress Bar */}
             <div className="flex flex-row space-x-1">
               {[
                 { number: 1, title: "Rental Details", subtitle: "Request Details" },
@@ -687,6 +623,7 @@ const BookingModal = ({
         {showThankYou ? (
           <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg p-6 shadow-md text-gray-800">
             <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">✅🎉 Booking Confirmed!</h2>
+
             <p className="text-gray-700 mb-6 text-center max-w-xl">
               Your tuk-tuk adventure is ready to roll 🚐💨
               <br />
@@ -695,6 +632,7 @@ const BookingModal = ({
               We’ll be in touch soon with all the details.
               <br />
             </p>
+
             <button
               onClick={() => {
                 closeModal();
@@ -712,9 +650,6 @@ const BookingModal = ({
           <>
             {step === 0 && validationError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">{validationError}</div>
-            )}
-            {step === 3 && paymentError && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">{paymentError}</div>
             )}
 
             {step === 0 && (
@@ -858,10 +793,13 @@ const BookingModal = ({
                   </div>
 
                   <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm shadow-sm">
+                    {/* Summary Card */}
                     <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
                       <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
+
                       {(() => {
                         const money = (n: number = 0) => `$${Number(n).toLocaleString()}`;
+
                         const pickupPrice = Number(formValues.pickupPrice || 0);
                         const returnPrice = Number(formValues.returnPrice || 0);
                         const days = Number(rentalDays || 0);
@@ -870,6 +808,7 @@ const BookingModal = ({
                         const licenseTotal = licenseCharge * licenseCount;
                         const extras = Number(extrasTotal || 0);
                         const depositAmt = Number(deposit || 0);
+
                         const rental = dayRate * days;
                         const totalActual = pickupPrice + returnPrice + rental + licenseTotal + extras;
                         const grandTotal = totalActual + depositAmt;
@@ -896,14 +835,17 @@ const BookingModal = ({
                               <dt className="text-gray-700">Extras Total</dt>
                               <dd className="font-semibold tabular-nums text-gray-800">{money(extras)}</dd>
                             </div>
+
                             <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
                               <dt className="text-base font-semibold text-gray-800">Total Actual</dt>
                               <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(totalActual)}</dd>
                             </div>
+
                             <div className="flex justify-between">
                               <dt className="text-gray-700">Deposit (Refundable)</dt>
                               <dd className="font-semibold tabular-nums text-gray-800">{money(depositAmt)}</dd>
                             </div>
+
                             <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
                               <dt className="text-base font-semibold text-gray-800">Grand Total</dt>
                               <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(grandTotal)}</dd>
@@ -917,120 +859,132 @@ const BookingModal = ({
               </div>
             )}
 
-            {step === 1 && (
-              <div className="space-y-5">
-                <h3 className="text-lg font-semibold">Select Your Extras</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {extrasList.map((extra) => (
-                    <div
-                      key={extra.name}
-                      className="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Image src={extra.icon} alt={extra.name} width={32} height={32} className="w-8 h-8 object-contain" />
-                        <div>
-                          <div className="font-medium text-sm text-gray-900">{extra.name}</div>
-                          <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
-                        </div>
-                      </div>
-                      {["Full-Time Driver", "Train Transfer"].includes(extra.name) ? (
-                        <input
-                          type="number"
-                          min="0"
-                          value={formValues.extras[extra.name] || 0}
-                          onChange={(e) =>
-                            setFormValues({
-                              ...formValues,
-                              extras: {
-                                ...formValues.extras,
-                                [extra.name]: parseInt(e.target.value) || 0,
-                              },
-                            })
-                          }
-                          className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                          placeholder="0"
-                        />
-                      ) : (
-                        <select
-                          value={formValues.extras[extra.name] || 0}
-                          onChange={(e) =>
-                            setFormValues({
-                              ...formValues,
-                              extras: {
-                                ...formValues.extras,
-                                [extra.name]: parseInt(e.target.value),
-                              },
-                            })
-                          }
-                          className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                        >
-                          <option value="0">No</option>
-                          <option value={rentalDays}>{rentalDays} days</option>
-                        </select>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
-                  <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
-                  {(() => {
-                    const money = (n: number = 0) => `$${Number(n).toLocaleString()}`;
-                    const pickupPrice = Number(formValues.pickupPrice || 0);
-                    const returnPrice = Number(formValues.returnPrice || 0);
-                    const days = Number(rentalDays || 0);
-                    const dayRate = Number(perDayCharge || 0);
-                    const licenseCount = Number(formValues.licenseCount || 0);
-                    const licenseTotal = licenseCharge * licenseCount;
-                    const extras = Number(extrasTotal || 0);
-                    const depositAmt = Number(deposit || 0);
-                    const rental = dayRate * days;
-                    const totalActual = pickupPrice + returnPrice + rental + licenseTotal + extras;
-                    const grandTotal = totalActual + depositAmt;
+{step === 1 && (
+  <div className="space-y-5">
+    <h3 className="text-lg font-semibold">Select Your Extras</h3>
 
-                    return (
-                      <dl className="mt-3 space-y-1">
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Pickup - {formValues.pickup || "-"}</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(pickupPrice)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Return - {formValues.returnLoc || "-"}</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(returnPrice)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Rental for {days} days ({money(dayRate)})</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(rental)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Local License (${licenseCharge} × {licenseCount})</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(licenseTotal)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Extras Total</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(extras)}</dd>
-                        </div>
-                        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
-                          <dt className="text-base font-semibold text-gray-800">Total Actual</dt>
-                          <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(totalActual)}</dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-700">Deposit (Refundable)</dt>
-                          <dd className="font-semibold tabular-nums text-gray-800">{money(depositAmt)}</dd>
-                        </div>
-                        <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
-                          <dt className="text-base font-semibold text-gray-800">Grand Total</dt>
-                          <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(grandTotal)}</dd>
-                        </div>
-                      </dl>
-                    );
-                  })()}
-                </div>
-              </div>
-            )}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {extrasList.map((extra) => (
+        <div
+          key={extra.name}
+          className="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <Image src={extra.icon} alt={extra.name} width={32} height={32} className="w-8 h-8 object-contain" />
+            <div>
+              <div className="font-medium text-sm text-gray-900">{extra.name}</div>
+              <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
+            </div>
+          </div>
+
+          {/* Conditional rendering for Full-Time Driver and Train Transfer */}
+          {["Full-Time Driver", "Train Transfer"].includes(extra.name) ? (
+            <input
+              type="number"
+              min="0"
+              value={formValues.extras[extra.name] || 0}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  extras: {
+                    ...formValues.extras,
+                    [extra.name]: parseInt(e.target.value) || 0,
+                  },
+                })
+              }
+              className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              placeholder="0"
+            />
+          ) : (
+            <select
+              value={formValues.extras[extra.name] || 0}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  extras: {
+                    ...formValues.extras,
+                    [extra.name]: parseInt(e.target.value),
+                  },
+                })
+              }
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="0">No</option>
+              <option value={rentalDays}>{rentalDays} days</option>
+            </select>
+          )}
+        </div>
+      ))}
+    </div>
+
+    {/* Summary Card (unchanged) */}
+    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
+      <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
+
+      {(() => {
+        const money = (n: number = 0) => `$${Number(n).toLocaleString()}`;
+
+        const pickupPrice = Number(formValues.pickupPrice || 0);
+        const returnPrice = Number(formValues.returnPrice || 0);
+        const days = Number(rentalDays || 0);
+        const dayRate = Number(perDayCharge || 0);
+        const licenseCount = Number(formValues.licenseCount || 0);
+        const licenseTotal = licenseCharge * licenseCount;
+        const extras = Number(extrasTotal || 0);
+        const depositAmt = Number(deposit || 0);
+
+        const rental = dayRate * days;
+        const totalActual = pickupPrice + returnPrice + rental + licenseTotal + extras;
+        const grandTotal = totalActual + depositAmt;
+
+        return (
+          <dl className="mt-3 space-y-1">
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Pickup - {formValues.pickup || "-"}</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(pickupPrice)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Return - {formValues.returnLoc || "-"}</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(returnPrice)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Rental for {days} days ({money(dayRate)})</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(rental)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Local License (${licenseCharge} × {licenseCount})</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(licenseTotal)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Extras Total</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(extras)}</dd>
+            </div>
+
+            <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+              <dt className="text-base font-semibold text-gray-800">Total Actual</dt>
+              <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(totalActual)}</dd>
+            </div>
+
+            <div className="flex justify-between">
+              <dt className="text-gray-700">Deposit (Refundable)</dt>
+              <dd className="font-semibold tabular-nums text-gray-800">{money(depositAmt)}</dd>
+            </div>
+
+            <div className="flex justify-between pt-2 mt-2 border-t border-gray-200">
+              <dt className="text-base font-semibold text-gray-800">Grand Total</dt>
+              <dd className="text-base font-semibold text-emerald-600 tabular-nums">{money(grandTotal)}</dd>
+            </div>
+          </dl>
+        );
+      })()}
+    </div>
+  </div>
+)}
 
             {step === 2 && (
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold">License & Identity Details</h3>
+                {/* Important Notice */}
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg text-sm text-gray-800">
                   <p className="font-semibold">📢 Important Notice</p>
                   <p>
@@ -1049,6 +1003,7 @@ const BookingModal = ({
                     </a>
                   </p>
                 </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold">International Driving Permit (IDP)</label>
@@ -1064,6 +1019,7 @@ const BookingModal = ({
                       <option value="No">No</option>
                     </select>
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">Full Name</label>
                     <input
@@ -1074,6 +1030,7 @@ const BookingModal = ({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                     />
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">Address</label>
                     <input
@@ -1084,6 +1041,7 @@ const BookingModal = ({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                     />
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">Country</label>
                     <input
@@ -1094,6 +1052,7 @@ const BookingModal = ({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                     />
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">Postal Code</label>
                     <input
@@ -1104,6 +1063,7 @@ const BookingModal = ({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                     />
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">License Number</label>
                     <input
@@ -1114,6 +1074,7 @@ const BookingModal = ({
                       className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
                     />
                   </div>
+
                   <div>
                     <label className="text-sm font-semibold">Passport Number</label>
                     <input
@@ -1125,6 +1086,8 @@ const BookingModal = ({
                     />
                   </div>
                 </div>
+
+                {/* Document Submission Notice */}
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg text-sm text-gray-800">
                   <p className="font-semibold">📋 Document Submission Instructions</p>
                   <p>
@@ -1154,6 +1117,8 @@ const BookingModal = ({
                     <li>Your photo for the new local license (similar to a passport photo, with a white or light background).</li>
                   </ul>
                 </div>
+
+                {/* Hidden uploads (unchanged) */}
                 <div className="hidden">
                   <label className="flex items-center text-sm font-semibold mb-2">
                     <FaIdCard className="text-orange-500 mr-2" />
@@ -1174,6 +1139,7 @@ const BookingModal = ({
                     </ul>
                   )}
                 </div>
+
                 <div className="hidden">
                   <label className="flex items-center text-sm font-semibold mb-2">
                     <FaPassport className="text-blue-500 mr-2" />
@@ -1193,6 +1159,7 @@ const BookingModal = ({
                     </ul>
                   )}
                 </div>
+
                 <div className="hidden">
                   <label className="flex items-center text-sm font-semibold mb-2">
                     <FaUser className="text-green-600 mr-2" />
@@ -1215,202 +1182,210 @@ const BookingModal = ({
               </div>
             )}
 
-            {step === 3 && (
-              <div className="space-y-6 p-6 rounded-2xl bg-white shadow-xl border border-gray-100 text-gray-900">
-                <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-                  <div className="p-2 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl">
-                    <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Order Summary & Confirm</h3>
-                    <p className="text-sm text-gray-500">Review your booking details</p>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-100 p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-100 rounded-lg">
-                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                          </svg>
-                        </div>
-                        <div>
-                          <span className="text-sm font-semibold text-gray-700">Rental Price</span>
-                          <p className="text-xs text-gray-500">Base rental cost</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-xl font-bold text-gray-900">${totalRental.toFixed(2)}</span>
-                      </div>
-                    </div>
-                    {appliedCoupon ? (
-                      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-emerald-100 rounded-lg">
-                              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="font-semibold text-emerald-800">Coupon Applied!</p>
-                              <p className="text-sm text-emerald-700">{couponCode} - {appliedCoupon.discountMode} {appliedCoupon.discountValue}</p>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => {
-                              setAppliedCoupon(null);
-                              setCouponCode('');
-                            }}
-                            className="text-emerald-600 hover:text-emerald-800 text-sm font-medium transition-colors"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
-                        <div className="flex items-center justify-center gap-2">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <span className="text-sm text-gray-500">No discount applied</span>
-                        </div>
-                      </div>
-                    )}
-                    <div className="space-y-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Have a coupon code?</label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={couponCode}
-                          onChange={(e) => setCouponCode(e.target.value)}
-                          placeholder="Enter coupon code"
-                          className="flex-1 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                          onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                        />
-                        <button
-                          onClick={handleApplyCoupon}
-                          disabled={!couponCode.trim()}
-                          className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-medium hover:from-emerald-700 hover:to-emerald-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
-                        >
-                          Apply
-                        </button>
-                      </div>
-                      {couponError && (
-                        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-                          <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <p className="text-sm text-red-700">{couponError}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-6">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 bg-orange-100 rounded-lg">
-                        <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                        </svg>
-                      </div>
-                      <span className="text-lg font-semibold text-gray-900">Final Total</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-3xl font-bold text-orange-700">${totalRental.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={handleConfirmBooking}
-                  disabled={loading || !sdkLoaded || isLoadingBookingId}
-                  className="w-full py-4 px-6 rounded-xl flex items-center justify-center gap-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                  style={{ 
-                    background: loading || !sdkLoaded || isLoadingBookingId
-                      ? '#9CA3AF' 
-                      : 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)'
-                  }}
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-                        />
-                      </svg>
-                      <span>Processing your booking...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={24} height={24} />
-                      <span className="text-lg">Confirm Booking and Pay</span>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </>
-                  )}
-                </button>
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg mt-0.5">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div className="text-sm text-gray-700 leading-relaxed">
-                      <p>
-                        After confirming, you will be redirected to a secure payment page to complete your payment of ${totalRental.toFixed(2)}. Upon successful payment, we'll email your bill and our team will contact you via WhatsApp & email with further details.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <Script
-                  src="https://www.payhere.lk/lib/payhere.js"
-                  strategy="afterInteractive"
-                  onLoad={() => {
-                    console.log("✅ PayHere SDK loaded");
-                    setSdkLoaded(true);
-                  }}
-                />
-              </div>
-            )}
+{step === 3 && (
+  <div className="space-y-6 p-6 rounded-2xl bg-white shadow-xl border border-gray-100 text-gray-900">
+    {/* Header */}
+    <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+      <div className="p-2 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl">
+        <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div>
+        <h3 className="text-2xl font-bold text-gray-900">Order Summary & Confirm</h3>
+        <p className="text-sm text-gray-500">Review your booking details</p>
+      </div>
+    </div>
 
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
-              <button
-                onClick={() => setStep((prev) => Math.max(0, prev - 1))}
-                disabled={step === 0}
-                className="px-6 py-3 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:bg-gray-50 disabled:hover:bg-transparent"
-                style={{
-                  backgroundColor: "#F9FAFB",
-                  color: "#374151",
-                  border: "1px solid #E5E7EB"
-                }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                <span>Back</span>
-              </button>
-              
-              {step === 3 && (
-                <div className="text-center">
-                  <div className="text-sm text-gray-500 mb-2">Step {step + 1} of 4</div>
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                    <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                    <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                  </div>
+    {/* Billing Breakdown */}
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-100 p-6">
+      <div className="space-y-4">
+        {/* Rental Price */}
+        <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+            <div>
+              <span className="text-sm font-semibold text-gray-700">Rental Price</span>
+              <p className="text-xs text-gray-500">Base rental cost</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-xl font-bold text-gray-900">${totalRental.toFixed(2)}</span>
+          </div>
+        </div>
+
+        {/* Coupon Section */}
+        {appliedCoupon ? (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-              )}
+                <div>
+                  <p className="font-semibold text-emerald-800">Coupon Applied!</p>
+                  <p className="text-sm text-emerald-700">{couponCode} - {appliedCoupon.discountMode} {appliedCoupon.discountValue}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setAppliedCoupon(null);
+                  setCouponCode('');
+                }}
+                className="text-emerald-600 hover:text-emerald-800 text-sm font-medium transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="p-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
+            <div className="flex items-center justify-center gap-2">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-sm text-gray-500">No discount applied</span>
+            </div>
+          </div>
+        )}
+
+        {/* Coupon Input */}
+        <div className="space-y-3">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Have a coupon code?</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+              placeholder="Enter coupon code"
+              className="flex-1 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+            />
+            <button
+              onClick={handleApplyCoupon}
+              disabled={!couponCode.trim()}
+              className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-medium hover:from-emerald-700 hover:to-emerald-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+            >
+              Apply
+            </button>
+          </div>
+          {couponError && (
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
+              <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm text-red-700">{couponError}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+    {/* Final Total */}
+    <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-6">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-orange-100 rounded-lg">
+            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+            </svg>
+          </div>
+          <span className="text-lg font-semibold text-gray-900">Final Total</span>
+        </div>
+        <div className="text-right">
+          <span className="text-3xl font-bold text-orange-700">${totalRental.toFixed(2)}</span>
+          <p className="text-xs text-gray-600 mt-1">No payment required now</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Confirm Button */}
+    <button
+      onClick={handleConfirmBooking}
+      disabled={loading}
+      className="w-full py-4 px-6 rounded-xl flex items-center justify-center gap-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+      style={{ 
+        background: loading 
+          ? '#9CA3AF' 
+          : 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)'
+      }}
+    >
+      {loading ? (
+        <>
+          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+            />
+          </svg>
+          <span>Processing your booking...</span>
+        </>
+      ) : (
+        <>
+          <Image src="/icons/tuktuk.png" alt="Tuk Tuk" width={24} height={24} />
+          <span className="text-lg">Confirm Booking</span>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </>
+      )}
+    </button>
+
+    {/* Info Section */}
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+      <div className="flex items-start gap-3">
+        <div className="p-2 bg-blue-100 rounded-lg mt-0.5">
+          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div className="text-sm text-gray-700 leading-relaxed">
+          <p>
+After confirming, we’ll email your bill. Our team will contact you via WhatsApp & email with a secure payment link.
+If you need changes, we’ll update the booking first — then you pay Easy.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Navigation - Updated */}
+<div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
+  <button
+    onClick={() => setStep((prev) => Math.max(0, prev - 1))}
+    disabled={step === 0}
+    className="px-6 py-3 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:bg-gray-50 disabled:hover:bg-transparent"
+    style={{
+      backgroundColor: "#F9FAFB",
+      color: "#374151",
+      border: "1px solid #E5E7EB"
+    }}
+  >
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+    </svg>
+    <span>Back</span>
+  </button>
+  
+  {step === 3 && (
+    <div className="text-center">
+      <div className="text-sm text-gray-500 mb-2">Step {step + 1} of 4</div>
+      <div className="flex items-center gap-1 text-xs text-gray-400">
+        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+      </div>
+    </div>
+  )}
 
               {step < 3 && (
                 <button
@@ -1445,3 +1420,6 @@ const BookingModal = ({
 };
 
 export default BookingModal;
+
+
+
