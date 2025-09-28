@@ -314,12 +314,25 @@ const BookingModal = ({
       setValidationError("Loading booking details... Please wait.");
       return;
     }
-
+  
     setLoading(true);
     setPaymentError("");
     try {
       const docRef = doc(db, "bookings", docId);
-
+  
+      // Validate inputs
+      if (!formValues.name.trim() || !formValues.email.trim() || !formValues.licenseCountry.trim()) {
+        setPaymentError("Please ensure all required fields (name, email, country) are filled.");
+        setLoading(false);
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email)) {
+        setPaymentError("Please enter a valid email address.");
+        setLoading(false);
+        return;
+      }
+  
+      // Update Firestore with booking details
       const baseUpdates = {
         bookingId,
         orderId,
@@ -337,119 +350,18 @@ const BookingModal = ({
           deposit,
         },
       };
-
+  
       const pruneUndefined = <T extends object>(obj: T): T =>
         Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as T;
-
+  
       await updateDoc(docRef, pruneUndefined(baseUpdates));
-
+  
+      // Update coupon usage if applicable
       if (appliedCoupon) {
         const couponRef = doc(db, "discounts", appliedCoupon.id);
         await updateDoc(couponRef, { currentUsers: increment(1) });
       }
-
-      const emailPayload = {
-        name: formValues.name,
-        email: formValues.email,
-        whatsapp: formValues.whatsapp,
-        pickup: formValues.pickup,
-        pickupDate: formValues.pickupDate,
-        pickupTime: formValues.pickupTime,
-        returnLoc: formValues.returnLoc,
-        returnDate: formValues.returnDate,
-        returnTime: formValues.returnTime,
-        tukCount: formValues.tukCount,
-        licenseCount: formValues.licenseCount,
-        orderId,
-        totalRental: Number(totalRental.toFixed(2)),
-        couponCode: appliedCoupon ? couponCode.trim() : undefined,
-        billBreakdown: {
-          perDayCharge,
-          rentalDays,
-          licenseChargePer: licenseCharge,
-          extrasTotal,
-          pickupPrice: formValues.pickupPrice || 0,
-          returnPrice: formValues.returnPrice || 0,
-          deposit,
-        },
-        extrasCounts: formValues.extras,
-        mode: "PENDING_PAYMENT",
-        messageType: "GUEST_CONFIRMATION",
-        bookingId,
-      };
-
-      await fetch("/api/send-email/bookingEmail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(emailPayload),
-      });
-
-      await fetch("/api/send-email/opsNotify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          docId,
-          orderId,
-          totalRental,
-          customer: { name: formValues.name, email: formValues.email, whatsapp: formValues.whatsapp },
-          pickup: { date: formValues.pickupDate, time: formValues.pickupTime, loc: formValues.pickup },
-          return: { date: formValues.returnDate, time: formValues.returnTime, loc: formValues.returnLoc },
-          status: "PENDING_PAYMENT",
-        }),
-      }).catch(() => {});
-
-      await fetch("/api/send-email/bookingAdminMail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          name: formValues.name,
-          email: formValues.email,
-          whatsapp: formValues.whatsapp,
-          pickup: formValues.pickup,
-          pickupDate: formValues.pickupDate,
-          pickupTime: formValues.pickupTime,
-          returnLoc: formValues.returnLoc,
-          returnDate: formValues.returnDate,
-          returnTime: formValues.returnTime,
-          tukCount: formValues.tukCount,
-          licenseCount: formValues.licenseCount,
-          totalRental: Number(totalRental.toFixed(2)),
-          couponCode: appliedCoupon ? couponCode.trim() : undefined,
-          extrasCounts: formValues.extras,
-          status: "PENDING_PAYMENT",
-        }),
-      });
-
-      await fetch("/api/whatsapp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          template: "hello_world",
-          langCode: "en_US",
-          to: formValues.whatsapp,
-        }),
-      });
-
-      // Initiate PayHere payment
-      if (!sdkLoaded || !window.payhere) {
-        setPaymentError("Payment system not ready. Please try again.");
-        setLoading(false);
-        return;
-      }
-
-      // Validate inputs
-      if (!formValues.name.trim() || !formValues.email.trim()) {
-        setPaymentError("Please ensure all required fields (name, email, country) are filled.");
-        setLoading(false);
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email)) {
-        setPaymentError("Please enter a valid email address.");
-        setLoading(false);
-        return;
-      }
-
+  
       // Fetch PayHere hash
       const hashRes = await fetch("/api/payhere/checkout/api", {
         method: "POST",
@@ -460,7 +372,7 @@ const BookingModal = ({
           currency: "USD",
         }),
       });
-
+  
       if (!hashRes.ok) {
         const hashText = await hashRes.text();
         const errorMessage = hashText.includes("404")
@@ -470,13 +382,13 @@ const BookingModal = ({
         setLoading(false);
         return;
       }
-
+  
       const { hash } = await hashRes.json();
-
+  
       // Prepare payment object
       const payment = {
-        sandbox: false,
-        merchant_id: "247284", // Replace with your Merchant ID
+        sandbox: true,
+        merchant_id: "1231320", // Replace with your Merchant ID
         return_url: "https://yourdomain.com/payment-success", // Replace
         cancel_url: "https://yourdomain.com/payment-cancel", // Replace
         notify_url: "https://yourdomain.com/api/payhere-notify", // Replace
@@ -493,33 +405,130 @@ const BookingModal = ({
         city: formValues.pickup || undefined,
         country: formValues.licenseCountry || "UK",
         delivery_address: formValues.pickup || undefined,
-        delivery_city: formValues.pickup || undefined, 
+        delivery_city: formValues.pickup || undefined,
         delivery_country: formValues.licenseCountry || undefined,
         custom_1: bookingId,
         custom_2: "",
       };
-
+  
       // Start payment
+      if (!sdkLoaded || !window.payhere) {
+        setPaymentError("Payment system not ready. Please try again.");
+        setLoading(false);
+        return;
+      }
+  
       window.payhere.startPayment(payment);
-
+  
       // Payment event handlers
       window.payhere.onCompleted = async (orderId) => {
         console.log("Payment completed. OrderID:", orderId);
         try {
+          // Update Firestore to PAID status
           await updateDoc(docRef, { status: "PAID" });
+  
+          // Send guest confirmation email
+          const emailPayload = {
+            name: formValues.name,
+            email: formValues.email,
+            whatsapp: formValues.whatsapp,
+            pickup: formValues.pickup,
+            pickupDate: formValues.pickupDate,
+            pickupTime: formValues.pickupTime,
+            returnLoc: formValues.returnLoc,
+            returnDate: formValues.returnDate,
+            returnTime: formValues.returnTime,
+            tukCount: formValues.tukCount,
+            licenseCount: formValues.licenseCount,
+            orderId,
+            totalRental: Number(totalRental.toFixed(2)),
+            couponCode: appliedCoupon ? couponCode.trim() : undefined,
+            billBreakdown: {
+              perDayCharge,
+              rentalDays,
+              licenseChargePer: licenseCharge,
+              extrasTotal,
+              pickupPrice: formValues.pickupPrice || 0,
+              returnPrice: formValues.returnPrice || 0,
+              deposit,
+            },
+            extrasCounts: formValues.extras,
+            mode: "PAID",
+            messageType: "GUEST_CONFIRMATION",
+            bookingId,
+          };
+  
+          await fetch("/api/send-email/bookingEmail", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(emailPayload),
+          });
+  
+          // Send operations notification
+          await fetch("/api/send-email/opsNotify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              docId,
+              orderId,
+              totalRental,
+              customer: { name: formValues.name, email: formValues.email, whatsapp: formValues.whatsapp },
+              pickup: { date: formValues.pickupDate, time: formValues.pickupTime, loc: formValues.pickup },
+              return: { date: formValues.returnDate, time: formValues.returnTime, loc: formValues.returnLoc },
+              status: "PAID",
+            }),
+          }).catch(() => {});
+  
+          // Send admin booking email
+          await fetch("/api/send-email/bookingAdminMail", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId,
+              name: formValues.name,
+              email: formValues.email,
+              whatsapp: formValues.whatsapp,
+              pickup: formValues.pickup,
+              pickupDate: formValues.pickupDate,
+              pickupTime: formValues.pickupTime,
+              returnLoc: formValues.returnLoc,
+              returnDate: formValues.returnDate,
+              returnTime: formValues.returnTime,
+              tukCount: formValues.tukCount,
+              licenseCount: formValues.licenseCount,
+              totalRental: Number(totalRental.toFixed(2)),
+              couponCode: appliedCoupon ? couponCode.trim() : undefined,
+              extrasCounts: formValues.extras,
+              status: "PAID",
+            }),
+          });
+  
+          // Send WhatsApp notification
+          await fetch("/api/whatsapp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              template: "hello_world",
+              langCode: "en_US",
+              to: formValues.whatsapp,
+            }),
+          });
+  
           setShowThankYou(true);
         } catch (e) {
-          console.error("Failed to update payment status:", e);
-          setPaymentError("Payment completed, but failed to update booking status.");
+          console.error("Failed to update payment status or send notifications:", e);
+          setPaymentError("Payment completed, but failed to update booking status or send notifications.");
+        } finally {
+          setLoading(false);
         }
       };
-
+  
       window.payhere.onDismissed = () => {
         console.log("Payment dismissed");
         setPaymentError("Payment was cancelled.");
         setLoading(false);
       };
-
+  
       window.payhere.onError = (error) => {
         console.log("Payment error:", error);
         setPaymentError(`Payment error: ${error}`);
