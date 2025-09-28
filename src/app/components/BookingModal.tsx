@@ -1366,9 +1366,9 @@ const BookingModal = ({
                       </svg>
                     </div>
                     <div className="text-sm text-gray-700 leading-relaxed">
-                      <p>
-                        After confirming, you will be redirected to a secure payment page to complete your payment of ${totalRental.toFixed(2)}. Upon successful payment, we'll email your bill and our team will contact you via WhatsApp & email with further details.
-                      </p>
+<p>
+  After confirming, you will be redirected to a secure payment page to complete your payment of ${totalRental.toFixed(2)}. Upon successful payment, we&apos;ll email your bill and our team will contact you via WhatsApp & email with further details.
+</p>
                     </div>
                   </div>
                 </div>
