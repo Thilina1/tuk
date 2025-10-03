@@ -15,8 +15,30 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
-  description: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+  description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.",
+  openGraph: {
+    title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+    description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.",
+    url: "https://tuktukdrive.com",
+    siteName: "Tuk Tuk Drive",
+    images: [
+      {
+        url: "https://www.tuktukdrive.com/hero/tuktukDrive.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Sri Lanka Tuk Tuk Rental",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+    description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures.",
+    images: ["https://www.tuktukdrive.com/hero/tuktukDrive.jpeg"],
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
