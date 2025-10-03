@@ -307,7 +307,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
   className="promo-section"
 >
   {/* Heading */}
-  <h2
+  <h1
     style={{
       fontSize: "2.5rem",
       fontWeight: "800",
@@ -319,7 +319,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
   >
     <span style={{ color: "#FFD700" }}>Adventure Awaits: </span>{" "}
     Drive Sri Lanka in Your Own Tuk-Tuk!
-  </h2>
+  </h1>
 
   {/* Budget line */}
   <p
@@ -330,7 +330,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       margin: "0.25rem 0",
     }}
   >
-    Explore at your pace with the lowest prices, full insurance, and 24/7 support. Book now, no sign-up needed!
+    Explore at your pace on Tuk Tuk with the lowest prices, full insurance, and 24/7 support. Book now, no sign-up needed!
   </p>
 
 
