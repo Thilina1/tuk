@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Tuk Tuk Drive",
-  description: "Tuk Tuk Drive Sri Lanka",
+  title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+  description: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
 };
 
 export default function RootLayout({ children }) {
