@@ -5,6 +5,8 @@ import Link from "next/link";
 import { FaMoneyBillWave, FaTags } from "react-icons/fa";
 import { doc, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import Image from "next/image";
+
 
 // ---- Types ----
 type DailyRate = { duration: string; pricePerDay: number };
@@ -80,15 +82,32 @@ export default function PricingDetails() {
     >
       <div className="max-w-6xl mx-auto bg-white backdrop-blur-md rounded-2xl shadow-xl p-8 space-y-12 text-gray-800">
         <h2 className="text-4xl font-extrabold text-center">📊 TukTuk Rental Pricing Guide</h2>
+        
+        
         <p className="text-center text-gray-600 max-w-2xl mx-auto">
           Transparent pricing, no hidden charges. Plan your ride with ease.
         </p>
-
+          
         {/* Daily Rental */}
         <section className="rounded-xl border border-gray-200 shadow-sm p-6 bg-gradient-to-br from-[#FFF7ED] via-white to-[#F0FFF4] !bg-white">
-          <h3 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
-            <FaMoneyBillWave /> Daily Rental Rates
-          </h3>
+
+
+<div className="flex justify-center">
+  <h3 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
+    <FaMoneyBillWave /> Daily Rental Rates - Regular Tuk Tuk
+  </h3>
+</div>
+
+
+          <div className="mb-4 text-center">
+                  <Image
+                    src="/tukTuk/RegularTuk.png"
+                    alt="Contact Illustration"
+                    width={300}
+                    height={200}
+                    className="mx-auto rounded"
+                  />
+          </div>
 
           <table className="min-w-full text-sm text-left border border-gray-300 rounded-xl overflow-hidden bg-white">
             <thead className="bg-[#FFEDD5] text-gray-700">

@@ -41,7 +41,7 @@ export default function Navbar() {
             <img
               src="/logo/headerLogo.png"
               alt="Site logo"
-              className="w-17 h-auto md:w-28"
+              className="w-24 h-auto md:w-34"
             />
           </Link>
 
@@ -94,7 +94,7 @@ export default function Navbar() {
         >
           {/* Top: Logo + Close */}
           <div className="relative flex items-center justify-center px-6 py-4">
-            <img src="/logo/headerLogo.png" alt="Site logo" width={100} height={100} />
+            <img src="/logo/headerLogo.png" alt="Site logo" width={150} height={150} />
             <button
               onClick={() => setIsOpen(false)}
               className="absolute right-6 p-2 rounded transition"
@@ -107,7 +107,7 @@ export default function Navbar() {
                 (e.currentTarget.style.backgroundColor = "transparent")
               }
             >
-              <X className="w-6 h-6" />
+              <X className="w-14 h-14" />
             </button>
           </div>
 
