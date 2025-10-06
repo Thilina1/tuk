@@ -281,7 +281,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero/header1 (3).jpeg"
+          src="/hero/image copy.png"
           alt="Hero background"
           fill
           sizes="100vw"
