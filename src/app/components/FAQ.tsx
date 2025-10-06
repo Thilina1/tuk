@@ -186,7 +186,7 @@ export default function FAQPage() {
           <span style={{ color: '#facc15' }}> Rent a Self-Drive Tuk Tuk</span>
           </h3>
           <p className="text-base" style={{ color: '#475569' }}>
-          Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.
+          Tuk Tuk Drive: Sri Lanka&apos;s top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.
           </p>
         </div>
       </div>
