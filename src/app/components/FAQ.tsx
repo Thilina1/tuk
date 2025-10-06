@@ -182,10 +182,11 @@ export default function FAQPage() {
             />
           </div>
           <h3 className="text-2xl font-bold mb-3" style={{ color: '#1e293b' }}>
-            Embark on a Memorable Tour with <span style={{ color: '#facc15' }}>TukTukDrive.com</span>
+          Affordable Tuk Tuk Rental Sri Lanka | 
+          <span style={{ color: '#facc15' }}> Rent a Self-Drive Tuk Tuk</span>
           </h3>
           <p className="text-base" style={{ color: '#475569' }}>
-            Book your tuk-tuk now and explore Sri Lanka your way — with full insurance and no mileage limits.
+          Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.
           </p>
         </div>
       </div>
