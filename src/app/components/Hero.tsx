@@ -317,8 +317,8 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       textShadow: "0 2px 6px rgba(0,0,0,0.6)",
     }}
   >
-    <span style={{ color: "#FFD700" }}>Adventure Awaits: </span>{" "}
-    Drive Sri Lanka in Your Own Tuk-Tuk!
+    <span style={{ color: "#FFD700" }}> Adventure Awaits: </span>{" "}
+    Explore Sri Lanka in Your Own Tuk-Tuk!
   </h1>
 
   {/* Budget line */}
