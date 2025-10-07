@@ -330,7 +330,7 @@ const timeOptions = Array.from({ length: 8 }, (_, i) => {
       margin: "0.25rem 0",
     }}
   >
-    Explore at your pace on Tuk Tuk with the lowest prices, full insurance, and 24/7 support. Book now, no sign-up needed!
+    Low prices, Full insurance, 24/7 support. Book now, no sign-up!
   </p>
 
 
