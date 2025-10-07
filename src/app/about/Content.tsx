@@ -132,7 +132,7 @@ export default function AboutUs() {
           Book your TukTuk today and explore Sri Lanka your way.
         </p>
         <Link
-  href="/#book"
+  href="https://www.tuktukdrive.com/"
   className="mt-6 inline-block px-6 py-3 rounded-full font-semibold text-white shadow hover:scale-105 transition"
   style={{
     background: "linear-gradient(to right, #facc15, #fde047)",

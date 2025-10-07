@@ -134,7 +134,7 @@ export default function ArugamBay() {
           {/* Book Now */}
           <div className="text-center bg-gradient-to-r from-sky-400 to-cyan-500 rounded-xl p-6 shadow-lg">
             <Link
-              href="/#book"
+              href="https://www.tuktukdrive.com/"
               className="inline-block w-full bg-sky-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-sky-600 transition"
               style={{
                 backgroundImage: "linear-gradient(to right, #0ea5e9, #06b6d4)",

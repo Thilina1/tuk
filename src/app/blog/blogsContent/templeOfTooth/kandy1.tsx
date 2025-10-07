@@ -115,7 +115,7 @@ export default function TempleOfTheTooth() {
               </p>
             </div>
             <Link
-              href="/#book"
+              href="https://www.tuktukdrive.com/"
               className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
               style={{
                 backgroundImage: "linear-gradient(to right, #34d399, #10b981)",

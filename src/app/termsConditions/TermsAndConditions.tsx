@@ -101,9 +101,7 @@ export default function TermsAndConditions() {
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 Refunds for early returns, cancellations, or deposit refunds are subject to our{' '}
-                <Link href="/return-policy" className="hover:text-amber-400">
-                  Refund & Cancellation Policy
-                </Link>
+              
                 , available on our website.
               </li>
               <li>

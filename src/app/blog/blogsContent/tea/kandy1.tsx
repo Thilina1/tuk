@@ -139,7 +139,7 @@ export default function CeylonTeaHarvestPage() {
 
               <div className="text-center bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl p-6 shadow-lg">
                 <Link
-                  href="/#book"
+                  href="https://www.tuktukdrive.com/"
                   className="inline-block w-full bg-green-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-green-600 transition"
                   style={{
                     backgroundImage: "linear-gradient(to right, #22c55e, #10b981)",

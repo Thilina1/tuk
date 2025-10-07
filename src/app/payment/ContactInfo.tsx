@@ -201,7 +201,7 @@ export default function PricingDetails() {
         {/* CTA */}
         <div className="text-center">
           <Link
-            href="/#book"
+            href="https://www.tuktukdrive.com/"
             className="inline-block bg-gradient-to-r from-orange-400 to-amber-500 !bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:opacity-90 transition"
             style={{ backgroundImage: "linear-gradient(to right, #fb923c, #fbbf24)" }}
           >

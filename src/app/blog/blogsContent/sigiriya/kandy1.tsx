@@ -118,7 +118,7 @@ export default function SigiriyaPage() {
               {/* Book Now */}
               <div className="text-center bg-gradient-to-r from-orange-400 to-amber-500 rounded-xl p-6 shadow-lg">
                 <Link
-                  href="/#book"
+                  href="https://www.tuktukdrive.com/"
                   className="inline-block w-full bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-orange-600 transition"
                   style={{
                     backgroundImage: "linear-gradient(to right, #fb923c, #fbbf24)",
