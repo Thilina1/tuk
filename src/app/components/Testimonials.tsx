@@ -135,9 +135,17 @@ export default function GoogleReviews() {
         transition={{ duration: 0.7 }}
         className="text-center mb-8 relative z-10"
       >
-        <h3 className="text-3xl sm:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 tracking-tight leading-tight drop-shadow-lg">
-          What Our Happy Travelers Say!
-        </h3>
+<span className="text-4xl font-extrabold bg-clip-text text-transparent text-center md:text-left mb-2"
+  style={{
+    backgroundImage: `linear-gradient(to right, var(--gradient-start), var(--gradient-via), var(--gradient-end))`,
+    '--gradient-start': '#9333EA',
+    '--gradient-via': '#EC4899',
+    '--gradient-end': '#EF4444',
+  }}
+>
+  What Our Happy Travelers Say!
+</span>
+
         <p className="text-gray-600 mt-1 text-lg max-w-xl mx-auto drop-shadow-sm">
           Authentic reviews from memorable journeys with us.
         </p>
