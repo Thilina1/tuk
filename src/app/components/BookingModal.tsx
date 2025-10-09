@@ -853,7 +853,7 @@ const BookingModal = ({
                       </select>
                     </div>
                     <div className="flex-1">
-    <label className="text-sm font-semibold">Licenses</label>
+                      <label className="text-sm font-semibold">Licenses</label>
     <select
       value={formValues.licenseCount}
       onChange={(e) => setFormValues({ ...formValues, licenseCount: parseInt(e.target.value) })}
@@ -863,7 +863,7 @@ const BookingModal = ({
         <option key={val} value={val}>{val}</option>
       ))}
     </select>
-  </div>
+                  </div>
                   </div>
 
                   <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm shadow-sm">
