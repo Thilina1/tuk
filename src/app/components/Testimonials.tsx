@@ -135,16 +135,29 @@ export default function GoogleReviews() {
         transition={{ duration: 0.7 }}
         className="text-center mb-8 relative z-10"
       >
-<span className="text-4xl font-extrabold bg-clip-text text-transparent text-center md:text-left mb-2"
-  style={{
-    backgroundImage: `linear-gradient(to right, var(--gradient-start), var(--gradient-via), var(--gradient-end))`,
-    '--gradient-start': '#9333EA',
-    '--gradient-via': '#EC4899',
-    '--gradient-end': '#EF4444',
-  }}
->
-  What Our Happy Travelers Say!
-</span>
+<>
+  <style>
+    {`
+      .gradient-text {
+        --gradient-start: #9333EA;
+        --gradient-via: #EC4899;
+        --gradient-end: #EF4444;
+        background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-via), var(--gradient-end));
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .gradient-text {
+          --gradient-start: #A855F7;
+          --gradient-via: #F472B6;
+          --gradient-end: #F87171;
+        }
+      }
+    `}
+  </style>
+  <span className="text-4xl font-extrabold bg-clip-text text-transparent text-center md:text-left mb-2 gradient-text">
+    What Our Happy Travelers Say!
+  </span>
+</>
 
         <p className="text-gray-600 mt-1 text-lg max-w-xl mx-auto drop-shadow-sm">
           Authentic reviews from memorable journeys with us.
@@ -254,29 +267,60 @@ export default function GoogleReviews() {
         </motion.div>
       )}
 
-      {/* Button */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
-        className="text-center mt-8 relative z-10"
-      >
-        <a
-          href={`https://search.google.com/local/writereview?placeid=${PLACE_ID}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-extrabold rounded-full text-lg shadow-xl hover:from-yellow-400 hover:to-orange-400 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 group"
-        >
-          <Image
-            src="/icons/google-logo.png"
-            alt="Google Logo"
-            width={28}
-            height={28}
-            className="w-7 h-7 mr-3 filter brightness-0 invert group-hover:filter-none transition-filter duration-300"
-          />
-          Leave Us a Review!
-        </a>
-      </motion.div>
+<>
+  <style>
+    {`
+      .button-gradient {
+        --gradient-start: #9333EA;
+        --gradient-via: #EC4899;
+        --gradient-end: #EF4444;
+        background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-via), var(--gradient-end));
+      }
+
+      .button-gradient:hover {
+        --gradient-start: #A855F7;
+        --gradient-via: #F472B6;
+        --gradient-end: #F87171;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .button-gradient {
+          --gradient-start: #A855F7;
+          --gradient-via: #F472B6;
+          --gradient-end: #F87171;
+        }
+        .button-gradient:hover {
+          --gradient-start: #C084FC;
+          --gradient-via: #F9A8D4;
+          --gradient-end: #FCA5A5;
+        }
+      }
+    `}
+  </style>
+  {/* Button */}
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.7, duration: 0.8 }}
+    className="text-center mt-8 relative z-10"
+  >
+    <a
+      href={`https://search.google.com/local/writereview?placeid=${PLACE_ID}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center justify-center px-6 py-3 button-gradient text-white font-extrabold rounded-full text-base shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 group"
+    >
+      <Image
+        src="/icons/google-logo.png"
+        alt="Google Logo"
+        width={24}
+        height={24}
+        className="w-6 h-6 mr-3 filter brightness-0 invert group-hover:filter-none transition-filter duration-300"
+      />
+      Leave Us a Review!
+    </a>
+  </motion.div>
+</>
 
       {/* Embedded CSS */}
       <style jsx>{`
