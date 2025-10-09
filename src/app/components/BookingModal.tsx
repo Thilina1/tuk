@@ -853,17 +853,17 @@ const BookingModal = ({
                       </select>
                     </div>
                     <div className="flex-1">
-                      <label className="text-sm font-semibold">Licenses</label>
-                      <select
-                        value={formValues.licenseCount}
-                        onChange={(e) => setFormValues({ ...formValues, licenseCount: parseInt(e.target.value) })}
-                        className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-                      >
-                        {Array.from({ length: 9 }, (_, i) => i + 1).map((val) => (
-                          <option key={val}>{val}</option>
-                        ))}
-                      </select>
-                    </div>
+    <label className="text-sm font-semibold">Licenses</label>
+    <select
+      value={formValues.licenseCount}
+      onChange={(e) => setFormValues({ ...formValues, licenseCount: parseInt(e.target.value) })}
+      className="w-full border rounded-lg px-4 py-2 text-sm focus:ring-2 select-gradient"
+    >
+      {Array.from({ length: 10 }, (_, i) => i).map((val) => (
+        <option key={val} value={val}>{val}</option>
+      ))}
+    </select>
+  </div>
                   </div>
 
                   <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg text-sm shadow-sm">
