@@ -17,7 +17,7 @@
     "embla-carousel-react": "^8.6.0",
     "firebase": "^11.8.1",
     "formidable": "^3.5.4",
-    "framer-motion": "^12.22.0",
+    "framer-motion": "^12.23.22",
     "googleapis": "^155.0.0",
     "jsencrypt": "^3.3.2",
     "lucide-react": "^0.525.0",

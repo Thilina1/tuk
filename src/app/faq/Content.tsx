@@ -66,20 +66,6 @@ export default function FAQSection() {
           </p>
         </div>
 
-        {/* Category 1: Insurance & Accidents */}
-        <div>
-          <h3 className="flex items-center gap-2 text-xl font-bold" style={{ color: "#d97706" }}>
-            <FaShieldAlt /> Insurance & Accidents
-          </h3>
-          <div style={{ marginTop: "1rem", paddingLeft: "1.5rem", color: "#374151" }}>
-            <p><strong>Is my tuk-tuk fully insured?</strong><br />Yes, except for tent damage and repairs under LKR 5,000 (~$15).</p>
-            <p><strong>Who pays for small repairs?</strong><br />You pay. These are deducted from your deposit.</p>
-            <p><strong>What about big repairs?</strong><br />Call the insurer (number on card). First $15 is yours — the rest is covered.</p>
-            <p><strong>What to do in an accident?</strong><br />1. Call us (+94 770 063 780)<br />2. Contact insurer<br />3. Wait at the location</p>
-            <p><strong>Is tent damage covered?</strong><br />No — you’re responsible for this separately.</p>
-          </div>
-        </div>
-
         {/* Category 2: Licensing & Requirements */}
         <div>
           <h3 className="flex items-center gap-2 text-xl font-bold" style={{ color: "#d97706" }}>
