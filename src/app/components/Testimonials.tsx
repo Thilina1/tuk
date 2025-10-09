@@ -18,7 +18,6 @@ interface Review {
 // Component for animating the rating number
 const AnimatedRatingNumber = ({ value }: { value: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
-  const ref = useRef<number>(0);
 
   useEffect(() => {
     let start: number | null = null;
