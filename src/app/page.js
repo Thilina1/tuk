@@ -13,7 +13,6 @@ import Hero from "./components/Hero";
 import WhoWeAre from "./components/WhoAreWe";
 import FAQ from "./components/FAQ";
 import Whatsapp from "./components/whatsapp";
-import VehicleHead from "./components/vehiclehead";
 import { useState } from "react";
 
 export default function HomePage() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { FaShieldAlt, FaIdCard, FaMoneyBillWave } from "react-icons/fa";
+import { FaIdCard, FaMoneyBillWave } from "react-icons/fa";
 
 export default function FAQSection() {
   return (

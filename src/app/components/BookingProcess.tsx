@@ -101,7 +101,7 @@ export default function BookingProcess() {
           }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20" // Slightly wider gap, always 3 columns on md and up
         >
-          {steps.map((step, i) => (
+          {steps.map((step) => (
             <motion.div
               key={step.number}
               variants={stepCardVariants}

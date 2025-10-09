@@ -1,9 +1,19 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { FaStar, FaQuoteLeft, FaQuoteRight } from "react-icons/fa"; // Added quote icons for flair
+import { FaStar, FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
+
+// Define the Review interface
+interface Review {
+  author_name: string;
+  profile_photo_url?: string;
+  relative_time_description: string;
+  rating: number;
+  text: string;
+}
 
 // Component for animating the rating number
 const AnimatedRatingNumber = ({ value }: { value: number }) => {
@@ -30,18 +40,16 @@ const AnimatedRatingNumber = ({ value }: { value: number }) => {
   return <span className="font-bold">{displayValue.toFixed(1)}</span>;
 };
 
-
 export default function GoogleReviews() {
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]); // Use Review[] instead of any[]
   const [loading, setLoading] = useState(true);
-  const PLACE_ID = "ChIJBaqwbTSeYiwRL5bFDiOiUBY"; // Your actual place ID
-  const averageRating = 4.9; // Hardcoded for display, fetch dynamically if available
+  const PLACE_ID = "ChIJBaqwbTSeYiwRL5bFDiOiUBY";
+  const averageRating = 4.9;
 
   useEffect(() => {
     async function fetchReviews() {
-      // Mock data for demonstration if the API is not set up
-      // In a real application, ensure your /api/google-reviews endpoint returns data
-      const mockReviews = [
+      // Mock data for demonstration
+      const mockReviews: Review[] = [
         {
           author_name: "Eleanor Vance",
           profile_photo_url: "https://randomuser.me/api/portraits/women/1.jpg",
@@ -114,7 +122,7 @@ export default function GoogleReviews() {
 
   return (
     <section className="px-4 py-16 sm:px-6 bg-gradient-to-br from-blue-50 to-white text-gray-800 font-sans relative overflow-hidden">
-      {/* Background shapes for a playful touch with animations - more vibrant colors */}
+      {/* Background shapes for a playful touch with animations */}
       <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden opacity-60">
         <div className="absolute w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply blur-3xl -top-10 -left-10 animate-blob-slow transform-gpu"></div>
         <div className="absolute w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply blur-3xl bottom-1/4 right-5 animate-blob-slow animation-delay-2000 transform-gpu"></div>
@@ -126,38 +134,37 @@ export default function GoogleReviews() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="text-center mb-8 relative z-10" // Increased bottom margin
+        className="text-center mb-8 relative z-10"
       >
         <h3 className="text-3xl sm:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 tracking-tight leading-tight drop-shadow-lg">
-          What Our Happy Travelers Say about us!
+          What Our Happy Travelers Say!
         </h3>
-        <p className="text-gray-600 mt-1 text-lg max-w-xl mx-auto drop-shadow-sm"> {/* Larger text */}
+        <p className="text-gray-600 mt-1 text-lg max-w-xl mx-auto drop-shadow-sm">
           Authentic reviews from memorable journeys with us.
         </p>
       </motion.div>
 
-      {/* Rating summary in a glazy box with REAL Google Logo - more prominent */}
+      {/* Rating summary */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.8, type: "spring", stiffness: 100, damping: 10 }} // Enhanced spring animation
-        className="flex flex-col sm:flex-row items-center justify-center mb-8 space-y-4 sm:space-y-0 sm:space-x-8 p-6 bg-white/80 backdrop-blur-xl rounded-3xl max-w-lg mx-auto shadow-3xl border border-blue-100 relative z-10 transform hover:scale-105 transition-transform duration-300" // More prominent shadow, rounded corners, hover effect
+        transition={{ delay: 0.3, duration: 0.8, type: "spring", stiffness: 100, damping: 10 }}
+        className="flex flex-col sm:flex-row items-center justify-center mb-8 space-y-4 sm:space-y-0 sm:space-x-8 p-6 bg-white/80 backdrop-blur-xl rounded-3xl max-w-lg mx-auto shadow-3xl border border-blue-100 relative z-10 transform hover:scale-105 transition-transform duration-300"
       >
-        <div className="flex items-center space-x-4"> {/* Increased spacing */}
-          {/* Real Google Logo */}
+        <div className="flex items-center space-x-4">
           <Image
             src="/icons/google-logo.png"
             alt="Google Logo"
-            width={40} // Slightly larger
+            width={40}
             height={40}
             className="w-10 h-10 sm:w-11 sm:h-11"
           />
-          <span className="text-4xl sm:text-5xl text-yellow-500 font-extrabold"> {/* Larger, bolder rating */}
+          <span className="text-4xl sm:text-5xl text-yellow-500 font-extrabold">
             <AnimatedRatingNumber value={averageRating} />
           </span>
         </div>
-        <div className="h-8 w-px bg-gray-300 hidden sm:block"></div> {/* Separator */}
-        <span className="text-gray-700 text-lg sm:text-xl flex items-center whitespace-nowrap"> {/* Larger text, no wrap */}
+        <div className="h-8 w-px bg-gray-300 hidden sm:block"></div>
+        <span className="text-gray-700 text-lg sm:text-xl flex items-center whitespace-nowrap">
           <FaStar className="text-yellow-400 text-xl mr-2" /> Based on authentic reviews
         </span>
       </motion.div>
@@ -170,29 +177,29 @@ export default function GoogleReviews() {
       ) : (
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto relative z-10" // Increased gap
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto relative z-10"
         >
           <AnimatePresence>
-            {reviews.slice(0, 4).map((r, i) => ( // Displaying 8 reviews
+            {reviews.slice(0, 4).map((r, i) => (
               <motion.div
-                key={r.author_name + i} // Using author_name for key to ensure uniqueness if time is not always unique
+                key={r.author_name + i}
                 initial={{ opacity: 0, y: 70, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -50, scale: 0.7 }}
-                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} // Smoother, slightly longer animation
+                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{
-                  scale: 1.06, // More noticeable hover scale
-                  rotate: i % 2 === 0 ? 1 : -1, // More noticeable rotation
-                  boxShadow: "0 18px 40px rgba(255, 165, 0, 0.4), 0 8px 15px rgba(0, 150, 255, 0.2)", // Enhanced shadow
-                  transition: { duration: 0.3 }
+                  scale: 1.06,
+                  rotate: i % 2 ===0 ? 1 : -1,
+                  boxShadow: "0 18px 40px rgba(255, 165, 0, 0.4), 0 8px 15px rgba(0, 150, 255, 0.2)",
+                  transition: { duration: 0.3 },
                 }}
-                className="p-6 rounded-3xl bg-white/90 border border-yellow-300 shadow-xl backdrop-blur-lg overflow-hidden min-h3080px] flex flex-col justify-between hover:border-blue-400 transition-all duration-300 transform" // More rounded, stronger shadow, border colors
+                className="p-6 rounded-3xl bg-white/90 border border-yellow-300 shadow-xl backdrop-blur-lg overflow-hidden min-h-[280px] flex flex-col justify-between hover:border-blue-400 transition-all duration-300 transform"
               >
-                {/* Reviewer info with profile picture */}
+                {/* Reviewer info */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4"> {/* Increased gap */}
+                  <div className="flex items-center gap-4">
                     {r.profile_photo_url ? (
-                      <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-yellow-400 shadow-md"> {/* Border and shadow */}
+                      <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-yellow-400 shadow-md">
                         <img
                           src={r.profile_photo_url}
                           alt={`${r.author_name}'s profile`}
@@ -205,34 +212,33 @@ export default function GoogleReviews() {
                         />
                       </div>
                     ) : null}
-                    <div className={`${r.profile_photo_url ? 'hidden' : ''} initial-letter-fallback w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0`}> {/* Larger fallback text */}
+                    <div className={`${r.profile_photo_url ? 'hidden' : ''} initial-letter-fallback w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0`}>
                       {r.author_name?.charAt(0) || "A"}
                     </div>
-
                     <div>
-                      <p className="font-bold text-gray-900 text-lg">{r.author_name || "Anonymous"}</p> {/* Bolder, larger name */}
-                      <p className="text-sm text-gray-500 mt-1">{r.relative_time_description}</p> {/* Slightly larger time */}
+                      <p className="font-bold text-gray-900 text-lg">{r.author_name || "Anonymous"}</p>
+                      <p className="text-sm text-gray-500 mt-1">{r.relative_time_description}</p>
                     </div>
                   </div>
                   <FaStar className="text-yellow-400 text-lg mr-1" />
                 </div>
 
-                {/* Rating below profile for clarity on the card */}
+                {/* Rating */}
                 <div className="flex mb-3">
                   {Array(5)
                     .fill(0)
                     .map((_, j) => (
                       <FaStar
                         key={j}
-                        className={j < Math.round(r.rating) ? "text-yellow-400 text-lg" : "text-gray-300 text-lg"} // Larger stars
+                        className={j < Math.round(r.rating) ? "text-yellow-400 text-lg" : "text-gray-300 text-lg"}
                       />
                     ))}
                 </div>
 
-                {/* Text - now scrollable to display full content with a slightly smaller text size */}
-                <div className="text-gray-800 text-base leading-relaxed italic flex-grow overflow-y-auto custom-scrollbar pr-3 max-h-[100px] relative"> {/* Increased max-height, added relative */}
-                  <FaQuoteLeft className="absolute top-0 left-0 text-yellow-300 text-opacity-50 text-2xl" /> {/* Quote icon */}
-                  <span className="ml-6 mr-6">&ldquo;{r.text}&rdquo;</span> {/* Indent text */}
+                {/* Text */}
+                <div className="text-gray-800 text-base leading-relaxed italic flex-grow overflow-y-auto custom-scrollbar pr-3 max-h-[100px] relative">
+                  <FaQuoteLeft className="absolute top-0 left-0 text-yellow-300 text-opacity-50 text-2xl" />
+                  <span className="ml-6 mr-6">&ldquo;{r.text}&rdquo;</span>
                   <FaQuoteRight className="absolute bottom-0 right-0 text-blue-300 text-opacity-50 text-2xl" />
                 </div>
               </motion.div>
@@ -241,24 +247,23 @@ export default function GoogleReviews() {
         </motion.div>
       )}
 
-      {/* Button with REAL Google Logo */}
+      {/* Button */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.8 }}
-        className="text-center mt-8 relative z-10" // Increased top margin
+        className="text-center mt-8 relative z-10"
       >
         <a
           href={`https://search.google.com/local/writereview?placeid=${PLACE_ID}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-extrabold rounded-full text-lg shadow-xl hover:from-yellow-400 hover:to-orange-400 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 group" // Larger padding, text, shadow, more pronounced hover
+          className="inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-extrabold rounded-full text-lg shadow-xl hover:from-yellow-400 hover:to-orange-400 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 group"
         >
-          {/* Real Google Logo on button */}
           <Image
             src="/icons/google-logo.png"
             alt="Google Logo"
-            width={28} // Slightly larger
+            width={28}
             height={28}
             className="w-7 h-7 mr-3 filter brightness-0 invert group-hover:filter-none transition-filter duration-300"
           />
@@ -266,23 +271,22 @@ export default function GoogleReviews() {
         </a>
       </motion.div>
 
-      {/* Embedded CSS for custom keyframes and custom scrollbar */}
+      {/* Embedded CSS */}
       <style jsx>{`
-        /* Keyframes for background blobs (soft, slow, continuous movement) */
         @keyframes blob-slow {
           0%, 100% {
             transform: translate(0, 0) scale(1);
           }
           33% {
-            transform: translate(20px, -40px) scale(1.05); /* Slightly larger movement */
+            transform: translate(20px, -40px) scale(1.05);
           }
           66% {
-            transform: translate(-15px, 30px) scale(0.95); /* Slightly larger movement */
+            transform: translate(-15px, 30px) scale(0.95);
           }
         }
 
         .animate-blob-slow {
-          animation: blob-slow 18s infinite ease-in-out; /* Slower, smoother animation */
+          animation: blob-slow 18s infinite ease-in-out;
         }
 
         .animation-delay-2000 {
@@ -293,24 +297,23 @@ export default function GoogleReviews() {
           animation-delay: 4s;
         }
 
-        /* Custom Scrollbar for review content - more subtle and modern */
         .custom-scrollbar::-webkit-scrollbar {
-          width: 8px; /* Slightly wider scrollbar */
+          width: 8px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f8f8f8; /* Lighter track */
+          background: #f8f8f8;
           border-radius: 10px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #d4d4d4; /* Subtle thumb color */
+          background: #d4d4d4;
           border-radius: 10px;
-          border: 2px solid #f8f8f8; /* Inner border for smoother look */
+          border: 2px solid #f8f8f8;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #b0b0b0; /* Darker on hover */
+          background: #b0b0b0;
         }
       `}</style>
     </section>
