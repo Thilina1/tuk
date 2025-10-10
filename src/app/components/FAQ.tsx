@@ -6,56 +6,6 @@ import Image from 'next/image';
 
 const faqSections = [
   {
-    title: '🛡️ Insurance & Accident',
-    items: [
-      {
-        question: 'Is my tuk-tuk fully insured?',
-        answer: (
-          <div>
-            Yes, all tuk-tuks come with full insurance coverage, including rental protection. However:
-            <ul className="list-disc ml-6 mt-2">
-              <li>Tent cover damage is not included.</li>
-              <li>Repairs under LKR 5,000 (~$15) are not claimable through insurance.</li>
-            </ul>
-          </div>
-        ),
-      },
-      {
-        question: 'Who pays for small repairs (under $15)?',
-        answer: 'If the repair cost is below $15, it will be deducted from your deposit. No need to involve insurance or delay your journey.',
-      },
-      {
-        question: 'What happens if the repair is over $15?',
-        answer: (
-          <div>
-            Contact the insurance company using the number on your insurance card and wait for their assessment.
-            <ul className="list-disc ml-6 mt-2">
-              <li>First $15 will still be deducted from your deposit.</li>
-              <li>The remaining cost will be covered by insurance.</li>
-            </ul>
-          </div>
-        ),
-      },
-      {
-        question: 'What do I do in case of an accident?',
-        answer: (
-          <div>
-            <ol className="list-decimal ml-6 mt-2">
-              <li>Call us immediately at +94 77 006 3780</li>
-              <li>Contact the insurance company (number on your insurance card)</li>
-              <li>Stay at the location until instructions are given</li>
-            </ol>
-            <p className="mt-2">These steps ensure the process goes smoothly and quickly.</p>
-          </div>
-        ),
-      },
-      {
-        question: 'Is tent damage covered?',
-        answer: 'No, tent cover damage is not covered by insurance. Any related costs must be paid by the client.',
-      },
-    ],
-  },
-  {
     title: '🪪 Licensing & Requirements',
     items: [
       {
