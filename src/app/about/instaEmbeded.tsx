@@ -50,36 +50,29 @@ export default function InstagramEmbedSection() {
       </p>
 
       {/* Spinner */}
-      {!loaded && (
+      {/* {!loaded && (
         <div className="flex justify-center items-center py-10">
           <div className="w-10 h-10 border-4 border-t-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
         </div>
       )}
 
       {/* Instagram Cards */}
-      <div
-        className={`grid ${
-          loaded ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3" : "hidden"
-        } gap-6 max-w-7xl mx-auto`}
-      >
-        {instagramEmbeds.map((url, index) => (
-          <div
-            key={index}
-            className="rounded-xl overflow-hidden shadow-md bg-white flex items-center justify-center min-h-[460px]"
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `
-                  <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%; min-height:450px; max-width:100%; margin:auto;"></blockquote>
-                `,
+      <div>
+                
+            {/* Fallback image or loading spinner */}
+            <img
+              src="/hero/instagram.png"
+              alt="Loading Instagram post..."
+              style={{
+                display: "block",
+                margin: "auto",
+                width: "100%",
               }}
             />
-          </div>
-        ))}
+        
+
       </div>
 
-      {/* More on Instagram Button */}
-      {loaded && (
         <div className="mt-10 flex justify-center">
           <a
             href="https://www.instagram.com/tuktukdrive"
@@ -94,7 +87,6 @@ export default function InstagramEmbedSection() {
             <span>More on Instagram</span>
           </a>
         </div>
-      )}
 
       <Script async src="//www.instagram.com/embed.js" />
     </section>
