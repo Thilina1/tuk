@@ -117,7 +117,7 @@ export default function Kandy() {
               </p>
             </div>
             <a
-              href="/book"
+              href="/index"
               className="mt-4 inline-block text-center font-semibold bg-amber-400 text-amber-900 px-4 py-2 rounded-full shadow hover:bg-amber-300 transition"
             >
               Book Now →
