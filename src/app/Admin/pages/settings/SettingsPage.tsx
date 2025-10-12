@@ -11,7 +11,7 @@ type SettingsFirestore = {
   whatsappPhoneId?: string;
   whatsappGraphVersion?: string;
   whatsappNumber?: string; // E.164 without +
-  updatedAt?: Timestamp;    // Firestore Timestamp when read
+  updatedAt?: Timestamp; // Firestore Timestamp when read
 };
 
 type SettingsForm = {
@@ -20,7 +20,7 @@ type SettingsForm = {
   whatsappToken: string;
   whatsappPhoneId: string;
   whatsappGraphVersion: string;
-  whatsappNumber: string;    // E.164 without +
+  whatsappNumber: string; // E.164 without +
   updatedAt?: Timestamp | null;
 };
 
@@ -181,7 +181,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto">
       <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
@@ -254,7 +254,7 @@ export default function SettingsPage() {
             Loading settings…
           </div>
         ) : loadError ? (
-          <div className="text-sm text-red-600 flex items-center gap-2 bg-red-50 rounded-lg p-4">
+          <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm flex items-center gap-2">
             <svg
               className="h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
