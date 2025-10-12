@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
-import { FaUserPlus, FaEdit, FaTrash, FaEyeSlash } from "react-icons/fa";
+import { FaUserPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 type AdminUser = {
   id: string;
