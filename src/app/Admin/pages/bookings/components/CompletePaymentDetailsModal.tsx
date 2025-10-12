@@ -79,13 +79,13 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   const handleChange = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
-
-  const handleExtrasChange = (key: string, value: number) => {
-    setFormValues((prev) => ({
-      ...prev,
-      extras: { ...prev.extras, [key]: value },
-    }));
-  };
+  //handle change remove after active change price
+  // const handleExtrasChange = (key: string, value: number) => {
+  //   setFormValues((prev) => ({
+  //     ...prev,
+  //     extras: { ...prev.extras, [key]: value },
+  //   }));
+  // };
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -152,14 +152,15 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     );
   };
 
-  const rentalDaysss =
-  new Date(formValues.returnDate).getTime() > new Date(formValues.pickupDate).getTime()
-    ? Math.ceil(
-        (new Date(formValues.returnDate).getTime() -
-          new Date(formValues.pickupDate).getTime()) /
-          (1000 * 60 * 60 * 24)
-      ) + 1
-    : 1;
+  //active deactive
+  // const rentalDaysss =
+  // new Date(formValues.returnDate).getTime() > new Date(formValues.pickupDate).getTime()
+  //   ? Math.ceil(
+  //       (new Date(formValues.returnDate).getTime() -
+  //         new Date(formValues.pickupDate).getTime()) /
+  //         (1000 * 60 * 60 * 24)
+  //     ) + 1
+  //   : 1;
 
   const handleAssign = async () => {
     try {

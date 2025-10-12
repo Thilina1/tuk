@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 import { FaInstagram } from "react-icons/fa";
 
 // ✅ TypeScript fix for Instagram global object
@@ -16,24 +16,20 @@ declare global {
 }
 
 export default function InstagramEmbedSection() {
-  const instagramEmbeds = [
-    "https://www.instagram.com/p/DEwP1g0o9f1/?utm_source=ig_embed",
-    "https://www.instagram.com/p/DHfzvxyoLGJ/?utm_source=ig_embed",
-    "https://www.instagram.com/p/DDL6xq8I-qq/?utm_source=ig_embed",
-  ];
 
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (window?.instgrm?.Embeds?.process) {
-        window.instgrm.Embeds.process();
-        setLoaded(true);
-      }
-    }, 2000);
+  // const [loaded, setLoaded] = useState(false);
 
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (window?.instgrm?.Embeds?.process) {
+  //       window.instgrm.Embeds.process();
+  //       setLoaded(true);
+  //     }
+  //   }, 2000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <section

@@ -267,13 +267,13 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   const handleChange = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
-
-  const handleExtrasChange = (key: string, value: number) => {
-    setFormValues((prev) => ({
-      ...prev,
-      extras: { ...prev.extras, [key]: value },
-    }));
-  };
+  //handle change remove after active change price
+  // const handleExtrasChange = (key: string, value: number) => {
+  //   setFormValues((prev) => ({
+  //     ...prev,
+  //     extras: { ...prev.extras, [key]: value },
+  //   }));
+  // };
 
   /** 💰 Calculation (now dynamic) */
   const calculateTotal = () => {
