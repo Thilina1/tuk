@@ -116,30 +116,14 @@ export default function Navbar() {
                 }}
               >
                 <MessageCircle className="w-6 h-6" />
-                <span>WhatsApp</span>
+                <span>Chat with us</span>
               </button>
             </div>
 
             {/* Mobile Header: WhatsApp Button & Menu Toggle */}
             <div className="md:hidden flex items-center space-x-4">
                 {/* WhatsApp Button (Mobile Header - prominent icon only) */}
-                <button
-                    onClick={handleWhatsAppClick}
-                    className="p-3 rounded-full shadow-md transition-colors duration-300 transform hover:scale-105"
-                    aria-label="Chat on WhatsApp"
-                    style={{
-                      backgroundColor: greenButtonEnd, // Using darker green for mobile icon
-                      color: whiteColor,
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = greenButtonHoverEnd)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = greenButtonEnd)
-                    }
-                >
-                    <MessageCircle className="w-7 h-7" />
-                </button>
+                
 
                 {/* Mobile Menu Toggle */}
                 <button

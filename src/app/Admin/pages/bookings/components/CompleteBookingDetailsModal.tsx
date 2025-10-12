@@ -656,17 +656,36 @@ const missingTuks =
                     <span className="text-gray-700">
                       {extra.name} <span className="text-gray-500">(${extra.price} each)</span>
                     </span>
-                    <select
-                      value={formValues.extras?.[extra.name] || 0}
-                      onChange={(e) => handleExtrasChange(extra.name, parseInt(e.target.value))}
-                      className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-                    >
-                      {Array.from({ length: 11 }, (_, i) => (
-                        <option key={i} value={i}>
-                          {i}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="font-semibold text-sm text-[var(--tw-color-text)] text-right">
+  {(() => {
+    const isFlatFee = extra.name === "Full-Time Driver" || extra.name === "Train Transfer";
+    const quantity = formValues.extras?.[extra.name] || 0;
+
+    // If quantity is 0, return "No"
+    if (quantity === 0) {
+      return "No";
+    }
+
+    if (isFlatFee) {
+      // Flat-fee items: Display quantity only (e.g., "1")
+      return quantity;
+    }
+
+    // Calculate rental days for per-day items
+    const returnTime = new Date(formValues.returnDate).getTime();
+    const pickupTime = new Date(formValues.pickupDate).getTime();
+    
+    const days = returnTime > pickupTime
+      ? Math.ceil((returnTime - pickupTime) / (1000 * 60 * 60 * 24)) + 1
+      : 1;
+
+    // Per-day items: Display "X days (Y items)"
+    // Use Math.round() to ensure a whole number and remove floating points
+    const ratio = Math.round(quantity / days);
+    
+    return `${days} days (${ratio} items)`;
+  })()}
+</div>
                   </div>
                 ))}
               </div>

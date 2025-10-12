@@ -222,15 +222,41 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
               </div>
 
               {/* Extras */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Extras</h3>
-                <p className="text-sm text-gray-700">
-                  {Object.entries(selectedBooking.extras || {})
-                    .filter(([, count]) => (count as number) > 0)
-                    .map(([key, value]) => `${key} (${value})`)
-                    .join(", ") || "None"}
-                </p>
-              </div>
+              <div className="border border-gray-300 p-6 rounded-lg shadow-sm mb-4">
+  <h3 className="text-lg font-semibold text-gray-800 mb-4">Extras</h3>
+  <div>
+    <strong>Extras:</strong>{" "}
+    {(() => {
+      const extras = Object.entries(selectedBooking.extras || {}).filter(
+        ([, count]) => (count as number) > 0
+      );
+
+      if (extras.length === 0) {
+        return "No";
+      }
+
+      // Calculate rental days for per-day items
+      const returnTime = new Date(selectedBooking.returnDate).getTime();
+      const pickupTime = new Date(selectedBooking.pickupDate).getTime();
+      const days = returnTime > pickupTime
+        ? Math.ceil((returnTime - pickupTime) / (1000 * 60 * 60 * 24)) + 1
+        : 1;
+
+      return extras
+        .map(([key, value]) => {
+          const isFlatFee = key === "Full-Time Driver" || key === "Train Transfer";
+          if (isFlatFee) {
+            // Flat-fee items: Display quantity only (e.g., "Full-Time Driver (1)")
+            return `${key} (${value})`;
+          }
+          // Per-day items: Display "X days, Y items"
+          const ratio = Math.round((value as number) / days);
+          return `${key} (${days} days, ${ratio} items)`;
+        })
+        .join(", ");
+    })()}
+  </div>
+</div>
 
               {/* License & Identity */}
               <div className="border border-gray-200 p-4 rounded-lg shadow-sm">

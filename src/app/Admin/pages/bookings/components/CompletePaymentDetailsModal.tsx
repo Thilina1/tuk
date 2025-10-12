@@ -6,9 +6,6 @@ import { db } from "@/config/firebase";
 import { BookingData } from "../BookingsPage";
 import Select, {  SingleValue } from "react-select";
 
-// Types you already use
-
-
 interface Props {
   booking: BookingData;
   onClose: () => void;
@@ -20,11 +17,6 @@ interface LocationOption {
   price: number;
   status?: string;
 }
-
-
-
-
-
 
 const extrasList = [
   { name: "Baby Seat", price: 2 },
@@ -82,10 +74,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [paymentLink, setPaymentLink] = useState<string>("");
   const [activeLocations, setActiveLocations] = useState<LocationOption[]>([]);
-  // Comment out unused activeTuks to suppress no-unused-vars
-  // const [activeTuks, setActiveTuks] = useState<TukTukOption[]>([]);
-  //const [activePersons, setActivePersons] = useState<PersonOption[]>([]);
-  //const [trainTransfers, setTrainTransfers] = useState<TrainTransferOption[]>([]);
   const [enableTrainTransfer, setEnableTrainTransfer] = useState(!!formValues.trainTransfer);
 
   const handleChange = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
@@ -164,25 +152,14 @@ export default function EditBookingModal({ booking, onClose }: Props) {
     );
   };
 
-  // Comment out unused activeTuks fetch to suppress no-unused-vars
-  /*
-  useEffect(() => {
-    const fetchActiveTuks = async () => {
-      const snapshot = await getDocs(collection(db, "tuktuks"));
-      const activeList = snapshot.docs
-        .map((docSnap) => ({ id: docSnap.id, ...(docSnap.data() as TukTukDoc) }))
-        .filter((doc) => doc.active)
-        .map((doc) => ({
-          label: `${doc.vehicleNumber} (${doc.district || "Unknown"})`,
-          value: doc.vehicleNumber,
-        }));
-      setActiveTuks(activeList);
-    };
-    fetchActiveTuks();
-  }, []);
-  */
-
-
+  const rentalDaysss =
+  new Date(formValues.returnDate).getTime() > new Date(formValues.pickupDate).getTime()
+    ? Math.ceil(
+        (new Date(formValues.returnDate).getTime() -
+          new Date(formValues.pickupDate).getTime()) /
+          (1000 * 60 * 60 * 24)
+      ) + 1
+    : 1;
 
   const handleAssign = async () => {
     try {
@@ -203,30 +180,6 @@ export default function EditBookingModal({ booking, onClose }: Props) {
 
       await updateDoc(docRef, updatedData);
 
-      // await fetch("/api/send-email/assignEmail", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     name: formValues.name,
-      //     email: formValues.email,
-      //     whatsapp: formValues.whatsapp,
-      //     pickup: formValues.pickup,
-      //     pickupDate: formValues.pickupDate,
-      //     pickupTime: formValues.pickupTime,
-      //     returnLoc: formValues.returnLoc,
-      //     returnDate: formValues.returnDate,
-      //     returnTime: formValues.returnTime,
-      //     tukCount: formValues.tukCount,
-      //     licenseCount: formValues.licenseCount,
-      //     extras: formValues.extras,
-      //     assignedTuks: formValues.assignedTuks,
-      //     holdBackAssignedPerson: formValues.holdBackAssignedPerson,
-      //     assignedPerson: formValues.assignedPerson,
-      //     trainTransferAssignedPerson: formValues.trainTransferAssignedPerson,
-      //     trainTransfer: formValues.trainTransfer,
-      //     rentalPrice: enableRecalculation ? calculateTotal() : booking.RentalPrice,
-      //   }),
-      // });
 
       // console.log("✅ Email sent after assignment");
       onClose();
@@ -431,7 +384,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5 hidden">
+            <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5">
               <h3 className="text-sm font-semibold text-[var(--tw-color-text)] mb-4">
                 Train Transfer
               </h3>
@@ -470,17 +423,38 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                       {extra.name}{" "}
                       <span className="text-[var(--tw-color-muted)]">(${extra.price} each)</span>
                     </span>
-                    <select
-                      value={formValues.extras?.[extra.name] || 0}
-                      onChange={(e) => handleExtrasChange(extra.name, parseInt(e.target.value))}
-                      className="border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] text-[var(--tw-color-text)] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-300"
-                    >
-                      {Array.from({ length: 11 }, (_, i) => (
-                        <option key={i} value={i}>
-                          {i}
-                        </option>
-                      ))}
-                    </select>
+                    
+                    <div className="font-semibold text-sm text-[var(--tw-color-text)] text-right">
+  {(() => {
+    const isFlatFee = extra.name === "Full-Time Driver" || extra.name === "Train Transfer";
+    const quantity = formValues.extras?.[extra.name] || 0;
+
+    // If quantity is 0, return "No"
+    if (quantity === 0) {
+      return "No";
+    }
+
+    if (isFlatFee) {
+      // Flat-fee items: Display quantity only (e.g., "1")
+      return quantity;
+    }
+
+    // Calculate rental days for per-day items
+    const returnTime = new Date(formValues.returnDate).getTime();
+    const pickupTime = new Date(formValues.pickupDate).getTime();
+    
+    const days = returnTime > pickupTime
+      ? Math.ceil((returnTime - pickupTime) / (1000 * 60 * 60 * 24)) + 1
+      : 1;
+
+    // Per-day items: Display "X days (Y items)"
+    // Use Math.round() to ensure a whole number and remove floating points
+    const ratio = Math.round(quantity / days);
+    
+    return `${days} days (${ratio} items)`;
+  })()}
+</div>
+                    
                   </div>
                 ))}
               </div>
@@ -499,7 +473,7 @@ export default function EditBookingModal({ booking, onClose }: Props) {
               </div>
             )}
             <div className="rounded-2xl border border-[var(--tw-color-border)] bg-[var(--tw-color-card)] p-4 md:p-5 flex flex-col gap-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 hidden">
                 <input
                   id="recalcCheckbox"
                   type="checkbox"

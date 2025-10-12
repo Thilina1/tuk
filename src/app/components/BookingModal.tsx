@@ -930,56 +930,151 @@ const BookingModal = ({
               <div className="space-y-5">
                 <h3 className="text-lg font-semibold">Select Your Extras</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {extrasList.map((extra) => (
-                    <div
-                      key={extra.name}
-                      className="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Image src={extra.icon} alt={extra.name} width={32} height={32} className="w-8 h-8 object-contain" />
-                        <div>
-                          <div className="font-medium text-sm text-gray-900">{extra.name}</div>
-                          <div className="text-xs text-gray-500">${extra.price} {extra.type}</div>
-                        </div>
-                      </div>
-                      {["Full-Time Driver", "Train Transfer"].includes(extra.name) ? (
-                        <input
-                          type="number"
-                          min="0"
-                          value={formValues.extras[extra.name] || 0}
-                          onChange={(e) =>
-                            setFormValues({
-                              ...formValues,
-                              extras: {
-                                ...formValues.extras,
-                                [extra.name]: parseInt(e.target.value) || 0,
-                              },
-                            })
-                          }
-                          className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                          placeholder="0"
-                        />
-                      ) : (
-                        <select
-                          value={formValues.extras[extra.name] || 0}
-                          onChange={(e) =>
-                            setFormValues({
-                              ...formValues,
-                              extras: {
-                                ...formValues.extras,
-                                [extra.name]: parseInt(e.target.value),
-                              },
-                            })
-                          }
-                          className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                        >
-                          <option value="0">No</option>
-                          <option value={rentalDays}>{rentalDays} days</option>
-                        </select>
-                      )}
-                    </div>
-                  ))}
-                </div>
+  {extrasList.map((extra) => (
+    <div
+  key={extra.name}
+  className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg shadow-sm p-3 hover:shadow-md transition text-center min-h-[150px]" // Added justify-center and min-h for better vertical centering
+>
+  <div className="flex flex-col items-center gap-2"> {/* Added gap for spacing */}
+    <Image
+ src={extra.icon}
+ alt={extra.name}
+      width={32}
+      height={32}
+      className="w-8 h-8 object-contain"
+    />
+    <div className="flex items-center justify-center"> {/* Ensure text is centered */}
+      <span className="font-medium text-sm text-gray-900">{extra.name} </span>
+      <span className="text-xs text-gray-500 ml-2">-</span><span className="text-xs text-gray-500 ml-2 mr-2">${extra.price} {extra.type}</span>
+    </div>
+  </div>
+  {["Full-Time Driver", "Train Transfer"].includes(extra.name) ? (
+    <div className="flex items-center justify-center gap-2 mt-2"> {/* Centered and spaced */}
+      <button
+        onClick={() =>
+          setFormValues({
+            ...formValues,
+            extras: {
+              ...formValues.extras,
+              [extra.name]: Math.max(0, (formValues.extras[extra.name] || 0) - 1),
+            },
+          })
+        }
+        className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md text-gray-600 hover:bg-gray-300 focus:outline-none"
+      >
+        <span> - </span>
+      </button>
+      <input
+        type="number"
+        min="0"
+        value={formValues.extras[extra.name] || 0}
+        onChange={(e) =>
+          setFormValues({
+            ...formValues,
+            extras: {
+              ...formValues.extras,
+              [extra.name]: parseInt(e.target.value) || 0,
+            },
+          })
+        }
+        className="w-16 border border-gray-300 rounded-md px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-400"
+        placeholder="0"
+      />
+      <button
+        onClick={() =>
+          setFormValues({
+            ...formValues,
+            extras: {
+              ...formValues.extras,
+              [extra.name]: (formValues.extras[extra.name] || 0) + 1,
+            },
+          })
+        }
+        className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md text-gray-600 hover:bg-gray-300 focus:outline-none"
+      >
+        <span>+</span>
+      </button>
+    </div>
+  ) : (
+    <div className="flex flex-col items-center justify-center gap-2 mt-2"> {/* Centered and spaced */}
+      <select
+        value={formValues.extras[extra.name] > 0 ? rentalDays : 0}
+        onChange={(e) => {
+          const value = parseInt(e.target.value);
+          setFormValues({
+            ...formValues,
+            extras: {
+              ...formValues.extras,
+              [extra.name]: value === 0 ? 0 : rentalDays,
+            },
+          });
+        }}
+        className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+      >
+        <option value="0">No</option>
+        <option value={rentalDays}>{rentalDays} days</option>
+      </select>
+      <div className="flex items-center justify-center gap-2"> {/* Centered buttons and input */}
+        <button
+          onClick={() =>
+            setFormValues({
+              ...formValues,
+              extras: {
+                ...formValues.extras,
+                [extra.name]: Math.max(rentalDays, formValues.extras[extra.name] - rentalDays),
+              },
+            })
+          }
+          disabled={formValues.extras[extra.name] === 0}
+          className={`w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md text-gray-600 hover:bg-gray-300 focus:outline-none ${
+            formValues.extras[extra.name] === 0 ? "cursor-not-allowed opacity-50" : ""
+          }`}
+        >
+          <span>-</span>
+        </button>
+        <input
+          type="number"
+          min="1"
+          value={formValues.extras[extra.name] === 0 ? 0 : Math.floor(formValues.extras[extra.name] / rentalDays) || 1}
+          onChange={(e) => {
+            const count = Math.max(1, parseInt(e.target.value) || 1);
+            setFormValues({
+              ...formValues,
+              extras: {
+                ...formValues.extras,
+                [extra.name]: count * rentalDays,
+              },
+            });
+          }}
+          disabled={formValues.extras[extra.name] === 0}
+          className={`w-16 border border-gray-300 rounded-md px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-400 ${
+            formValues.extras[extra.name] === 0 ? "bg-gray-100 cursor-not-allowed" : ""
+          }`}
+          placeholder="0"
+        />
+        <button
+          onClick={() =>
+            setFormValues({
+              ...formValues,
+              extras: {
+                ...formValues.extras,
+                [extra.name]: (formValues.extras[extra.name] || 0) + rentalDays,
+              },
+            })
+          }
+          disabled={formValues.extras[extra.name] === 0}
+          className={`w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md text-gray-600 hover:bg-gray-300 focus:outline-none ${
+            formValues.extras[extra.name] === 0 ? "cursor-not-allowed opacity-50" : ""
+          }`}
+        >
+          <span>+</span>
+        </button>
+      </div>
+    </div>
+  )}
+</div>
+  ))}
+</div>
                 <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-5 text-sm">
                   <h3 className="text-base font-semibold text-gray-900">Total Rentals Detail</h3>
                   {(() => {
