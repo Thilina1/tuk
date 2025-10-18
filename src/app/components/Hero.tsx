@@ -118,16 +118,7 @@ function VehicleDropdown({
     return deactivateDate ? deactivateDate > new Date() : false;
   };
 
-  // Format date for display
-  const formatUntil = (date: Date | Timestamp | string | null) => {
-    if (!date) return "";
-    const d = date instanceof Timestamp ? date.toDate() : new Date(date);
-    return new Intl.DateTimeFormat(undefined, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(d);
-  };
+
 
   return (
     <div className="relative">

@@ -94,9 +94,7 @@ export default function Vehicles() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const cardHover = {
-    hover: { scale: 1.03, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12)" }, // Slightly more pronounced shadow
-  };
+
 
   return (
     <section

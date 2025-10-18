@@ -40,7 +40,7 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
               <li>2025 manufactured tuk tuks</li>
               <li>Guaranteed 100% perfect technical condition during rental</li>
             </ul>
-            <h3 className="demand-alert">HURRY UP! IT'S HIGH DEMAND SEASON</h3>
+            <h3 className="demand-alert">HURRY UP! IT&apos;S HIGH DEMAND SEASON</h3>
             <button className="book-now-button" onClick={onClose}>
               Book Now!
             </button>
