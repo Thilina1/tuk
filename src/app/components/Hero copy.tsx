@@ -487,42 +487,20 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
         ref={sectionRef}
         className="relative w-full text-white overflow-hidden min-h-screen bg-fixed bg-cover bg-center"
       >
-    <style jsx global>{`
-      select option {
-      color: black !important;
-      background-color: white !important;
-    }
-
-    .hero-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    /* Mobile view (default) */
-    .hero-background {
-      content: url("/hero/mobilehero.jpg");
-    }
-
-    /* Desktop view */
-    @media (min-width: 768px) {
-      .hero-background {
-        content: url("/hero/webhero.jpg");
-      }
-    }
+        <style jsx global>{`
+          select option {
+            color: black !important;
+            background-color: white !important;
+          }
         `}</style>
 
         <div className="absolute inset-0 z-0">
           <Image
-            src="/hero/webhero.jpg" // Fallback image for Next.js Image component
+            src="/hero/image copy.png"
             alt="Hero background"
             fill
             sizes="100vw"
-            className="hero-background"
+            style={{ objectFit: "cover" }}
             priority
             quality={60}
           />
