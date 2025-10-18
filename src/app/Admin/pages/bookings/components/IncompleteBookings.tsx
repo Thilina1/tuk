@@ -30,6 +30,7 @@ interface BookingData {
   reedStatus?: Status;
   createdAt?: AnyDate;
   bookingId?: number;
+  selectedVehicleName?: string;
 
 }
 
@@ -183,6 +184,7 @@ export default function IncompleteBookings({
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Email</th>
+              <th className="px-3 py-2 text-left">Vehicle Type</th>
               <th className="px-3 py-2 text-left">Whatsapp</th>
               <th className="px-3 py-2 text-left">Pickup Location</th>
               <th className="px-3 py-2 text-left">Pickup Date</th>
@@ -205,6 +207,7 @@ export default function IncompleteBookings({
                   </td>
                   <td className="px-3 py-2">{booking.name}</td>
                   <td className="px-3 py-2">{booking.email}</td>
+                  <td className="px-3 py-2">{booking.selectedVehicleName || "Regular"}</td>                  
                   <td className="px-3 py-2">+{booking.whatsapp}</td>
                   <td className="px-3 py-2">{booking.pickup}</td>
                   <td className="px-3 py-2">{booking.pickupDate}</td>
@@ -263,6 +266,7 @@ export default function IncompleteBookings({
                 <Detail label="Name" value={selected.name} />
                 <Detail label="Email" value={selected.email} />
                 <Detail label="Whatsapp" value={`+${selected.whatsapp}`} />
+                <Detail label="Vehicle Type" value={selected.selectedVehicleName || "Regular"} />
                 <Detail label="Pickup Location" value={selected.pickup} />
                 <Detail label="Pickup Date-union Date" value={selected.pickupDate} />
                 <Detail label="Pickup Time" value={selected.pickupTime} />

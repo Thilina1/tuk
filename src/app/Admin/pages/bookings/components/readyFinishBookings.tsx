@@ -67,6 +67,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Id</th>
+              <th className="px-3 py-2 text-left">Vehicle Type</th>
               <th className="px-3 py-2 text-left">Assigned Tuk Tuks</th>
               <th className="px-3 py-2 text-left">Return Location</th>
               <th className="px-3 py-2 text-left">Return Date</th>
@@ -95,6 +96,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
                     <td className="px-3 py-2">{index + 1}</td>
                     <td className="px-3 py-2">{booking.name}</td>
                     <td className="px-3 py-2 text-left">{booking.bookingId || "NA"}</td>
+                    <td className="px-3 py-2">{booking.selectedVehicleName || "Regular"}</td>
                     <td className="px-3 py-2">{booking.assignedTuks?.join(", ")}</td>
                     <td className="px-3 py-2">{booking.returnLoc}</td>
                     <td className="px-3 py-2">{booking.returnDate}</td>
@@ -162,6 +164,7 @@ export default function ReadyFinishBookings({ bookings }: { bookings: BookingDat
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div><strong>Name:</strong> {selectedBooking.name}</div>
               <div><strong>Email:</strong> {selectedBooking.email}</div>
+              <div><strong>Vehicle Type:</strong> {selectedBooking.selectedVehicleName || "Regular"}</div>
               <div><strong>WhatsApp:</strong> +{selectedBooking.whatsapp}</div>
               <div><strong>Total Price:</strong> ${selectedBooking.RentalPrice || "—"}</div>
               <div><strong>Pickup:</strong> {selectedBooking.pickup}</div>

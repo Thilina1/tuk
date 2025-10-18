@@ -179,6 +179,9 @@ export default function AssignedBookings({ bookings }: { bookings: BookingData[]
                   <strong className="font-semibold">WhatsApp:</strong> +{selectedBooking.whatsapp}
                 </div>
                 <div>
+                  <strong className="font-semibold">Vehicle Type:</strong> {selectedBooking.selectedVehicleName || "Regular"}
+                </div>
+                <div>
                   <strong className="font-semibold">Total Price:</strong>{" "}
                   {money(selectedBooking.RentalPrice) || "—"}
                 </div>

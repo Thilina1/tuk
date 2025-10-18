@@ -184,8 +184,16 @@ export default function OnBoardedBookings({ bookings }: { bookings: BookingData[
                   {selectedBooking.email || "—"}
                 </div>
                 <div>
+                  <strong className="font-semibold text-gray-900">Vehicle Type:</strong>{" "}
+                  {selectedBooking.selectedVehicleName || "—"}
+                </div>
+                <div>
                   <strong className="font-semibold text-gray-900">WhatsApp:</strong>{" "}
                   {selectedBooking.whatsapp ? `+${selectedBooking.whatsapp}` : "—"}
+                </div>
+                <div>
+                  <strong className="font-semibold text-gray-900">Vehicle Type:</strong>{" "}
+                  {selectedBooking.selectedVehicleName ? `+${selectedBooking.selectedVehicleName || "Regular"}` : "—"}
                 </div>
                 <div>
                   <strong className="font-semibold text-gray-900">Total Price:</strong>{" "}

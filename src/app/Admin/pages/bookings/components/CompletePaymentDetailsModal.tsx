@@ -288,6 +288,16 @@ export default function EditBookingModal({ booking, onClose }: Props) {
                 Trip Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="space-y-2">
+  <label className={labelCls}>Vehicle Type</label>
+  <input
+    type="text"
+    value={formValues.selectedVehicleName || "Regular"}
+    className={inputCls}
+    readOnly
+  />
+</div>
+
                 <div className="space-y-2">
                   <label className={labelCls}>Pickup</label>
                   <Select

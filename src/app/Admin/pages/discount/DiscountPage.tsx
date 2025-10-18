@@ -283,7 +283,6 @@ export default function DiscountPage() {
                   onChange={(e) => setDiscountMode(e.target.value as "percentage" | "reduce")}
                 >
                   <option value="percentage">Percentage (%)</option>
-                  <option value="reduce">Reduce Count</option>
                 </select>
               </div>
               <div className="md:col-span-2">

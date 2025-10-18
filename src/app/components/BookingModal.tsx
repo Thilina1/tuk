@@ -22,6 +22,13 @@ type Extras = {
   [key: string]: number;
 };
 
+type Vehicle = {
+  id: string;
+  name: string;
+  isActive: boolean;
+  deactivateUntil?: Timestamp | Date | null | string;
+};
+
 type AppliedCoupon = {
   id: string;
   discountMode: string;
@@ -60,6 +67,8 @@ type BookingFormValues = {
     pickupTime: string;
     price: number;
   };
+  selectedVehicleId: string; // New field for selected vehicle ID
+  selectedVehicleName: string;
 };
 
 type Props = {
@@ -70,6 +79,8 @@ type Props = {
   closeModal: () => void;
   docId: string;
   locationOptions: { name: string; price: number }[];
+  vehicleOptions: Vehicle[];
+
 };
 
 type CouponDoc = {
@@ -84,8 +95,21 @@ type CouponDoc = {
   maxUsers: number;
 };
 
+
+// Vehicle icon mapping
+const vehicleIconMap: Record<string, string> = {
+  regularTukTuk: "/tukIcon/regular.png",
+  eTukTuk: "/tukIcon/etuk.png",
+  cambioTukTuks: "/tukIcon/cab.png",
+  scooterBikes: "/tukIcon/bike.png",
+};
+
 type MasterPrices = {
   dailyRates: { duration: string; pricePerDay: number }[];
+  eTukRates: { duration: string; pricePerDay: number }[];
+  bikeRates: { duration: string; pricePerDay: number }[];
+  cabRates: { duration: string; pricePerDay: number }[];
+
   licenseFee: { amount: number; description?: string };
   optionalExtras: { name: string; price: number; type: string }[];
   refundableDeposit: { amount: number; description?: string };
@@ -133,6 +157,7 @@ const BookingModal = ({
   closeModal,
   docId,
   locationOptions,
+  vehicleOptions,
 }: Props) => {
   const [validationError, setValidationError] = useState("");
   const [couponCode, setCouponCode] = useState("");
@@ -197,21 +222,53 @@ const BookingModal = ({
     return { min: 1, max: Number.POSITIVE_INFINITY };
   };
 
-  const getPerDayCharge = (days: number) => {
-    if (prices?.dailyRates?.length) {
-      const direct = prices.dailyRates.find((r) => {
+  const getPerDayCharge = (days: number, vehicleId: string) => {
+    if (!prices) {
+      // Default prices if Firebase data is unavailable
+      if (days >= 121) return 8;
+      if (days >= 91) return 10;
+      if (days >= 36) return 11;
+      if (days >= 20) return 12;
+      if (days >= 16) return 13;
+      if (days >= 9) return 15;
+      if (days >= 5) return 16;
+      if (days >= 1) return 23;
+      return 23;
+    }
+  
+    let rateArray: { duration: string; pricePerDay: number }[] = [];
+    switch (vehicleId) {
+      case "regularTukTuk":
+        rateArray = prices.dailyRates || [];
+        break;
+      case "eTukTuk":
+        rateArray = prices.eTukRates || [];
+        break;
+      case "scooterBikes":
+        rateArray = prices.bikeRates || [];
+        break;
+      case "cambioTukTuks":
+        rateArray = prices.cabRates || [];
+        break;
+      default:
+        rateArray = prices.dailyRates || [];
+    }
+  
+    if (rateArray.length) {
+      const direct = rateArray.find((r) => {
         const { min, max } = parseRange(r.duration);
         return days >= min && days <= max;
       });
       if (direct) return direct.pricePerDay;
-
-      const candidates = prices.dailyRates
+  
+      const candidates = rateArray
         .map((r) => ({ ...r, ...parseRange(r.duration) }))
         .filter((r) => days >= r.min)
         .sort((a, b) => b.min - a.min);
       if (candidates[0]) return candidates[0].pricePerDay;
     }
-
+  
+    // Fallback default prices if no matching range is found
     if (days >= 121) return 8;
     if (days >= 91) return 10;
     if (days >= 36) return 11;
@@ -222,8 +279,9 @@ const BookingModal = ({
     if (days >= 1) return 23;
     return 23;
   };
+  
 
-  const perDayCharge = getPerDayCharge(rentalDays);
+  const perDayCharge = getPerDayCharge(rentalDays, formValues.selectedVehicleId);
   const licenseCharge = prices?.licenseFee?.amount ?? 35;
   const deposit = prices?.refundableDeposit?.amount ?? 50;
 
@@ -579,22 +637,22 @@ const BookingModal = ({
     try {
       const docRef = doc(db, "bookings", docId);
       setValidationError("");
-
+  
       if (step === 0) {
-        const required = ["name", "email", "whatsapp", "pickupDate", "pickupTime", "returnDate", "returnTime"];
+        const required = ["name", "email", "whatsapp", "pickupDate", "pickupTime", "returnDate", "returnTime", "selectedVehicleId"];
         const hasEmpty = required.some((f) => !formValues[f as keyof BookingFormValues]);
         if (hasEmpty) {
-          setValidationError("Please fill in all required fields.");
+          setValidationError("Please fill in all required fields, including vehicle selection.");
           return;
         }
-
+  
         const pickupDateTime = new Date(`${formValues.pickupDate}T${formValues.pickupTime}`);
         const returnDateTime = new Date(`${formValues.returnDate}T${formValues.returnTime}`);
         if (pickupDateTime >= returnDateTime) {
           setValidationError("Return date & time must be after pickup date & time.");
           return;
         }
-
+  
         await updateDoc(docRef, {
           pickupDate: formValues.pickupDate,
           returnDate: formValues.returnDate,
@@ -605,15 +663,17 @@ const BookingModal = ({
           name: formValues.name,
           email: formValues.email,
           whatsapp: formValues.whatsapp,
+          selectedVehicleId: formValues.selectedVehicleId,
+          selectedVehicleName: formValues.selectedVehicleName,
         });
       }
-
+  
       if (step === 1) {
         await updateDoc(docRef, {
           extras: formValues.extras,
         });
       }
-
+  
       if (step === 2) {
         await updateDoc(docRef, {
           licenseName: formValues.licenseName,
@@ -627,7 +687,7 @@ const BookingModal = ({
           selfieWithLicense: (formValues.selfieWithLicense || []).map((f) => f.name),
         });
       }
-
+  
       if (step < 3) setStep((prev) => prev + 1);
       else closeModal();
     } finally {
@@ -788,6 +848,69 @@ const BookingModal = ({
                       </select>
                     </div>
                   </div>
+
+
+
+
+                  <div className="flex-1">
+        <label className="text-sm font-semibold">Select Vehicle</label>
+        <select
+          className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          value={formValues.selectedVehicleId}
+          onChange={(e) => {
+            const selectedVehicle = vehicleOptions.find((v) => v.id === e.target.value);
+            setFormValues((prev) => ({
+              ...prev,
+              selectedVehicleId: selectedVehicle?.id || "",
+              selectedVehicleName: selectedVehicle?.name || "",
+            }));
+          }}
+        >
+          <option value="">Select a Vehicle</option>
+          {vehicleOptions.map((vehicle) => (
+            <option key={vehicle.id} value={vehicle.id} disabled={!vehicle.isActive}>
+              {vehicle.name} {!vehicle.isActive && "(Unavailable)"}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex flex-row flex-nowrap gap-2 mt-4 pb-1">
+        {vehicleOptions
+          .filter((vehicle) => vehicle.isActive)
+          .map((vehicle) => (
+            <button
+              key={vehicle.id}
+              onClick={() => {
+                setFormValues((prev) => ({
+                  ...prev,
+                  selectedVehicleId: vehicle.id,
+                  selectedVehicleName: vehicle.name,
+                }));
+              }}
+              className={`flex flex-col items-center justify-center text-center p-2 rounded-lg shadow-md transition-all w-20 h-25 sm:w-20 sm:h-25 ${
+                formValues.selectedVehicleId === vehicle.id
+                  ? "bg-orange-100 border-2 border-orange-500"
+                  : "bg-white hover:bg-gray-50"
+              }`}
+            >
+              <Image
+                src={vehicleIconMap[vehicle.id] || "/tukIcon/default.png"}
+                alt={vehicle.name}
+                width={48}
+                height={48}
+                loading="lazy"
+                className="mb-1 object-contain w-12 h-12"
+              />
+              <h4 className="font-semibold text-gray-800 text-xs sm:text-sm leading-tight line-clamp-2">{vehicle.name}</h4>
+            </button>
+          ))}
+      </div>
+
+
+
+
+
                 </div>
 
                 <div className="space-y-4">
@@ -1548,4 +1671,4 @@ const BookingModal = ({
   );
 };
 
-export default BookingModal;
+export default BookingModal; 

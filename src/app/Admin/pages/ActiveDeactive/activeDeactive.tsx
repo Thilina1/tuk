@@ -7,13 +7,13 @@ import { doc, getDoc, setDoc, serverTimestamp, Timestamp } from "firebase/firest
 interface VehicleStatus {
   isActive: boolean;
   deactivateUntil: Timestamp | null;
+  basePrice: number | null; // New field for base price
   updatedAt?: Timestamp;
 }
 
 type VehicleType = "regularTukTuk" | "eTukTuk" | "cambioTukTuks" | "scooterBikes";
 
 const COLLECTION = "vehicleStatus";
-const FROZEN_VEHICLES: VehicleType[] = ["eTukTuk", "cambioTukTuks", "scooterBikes"];
 const VEHICLE_TYPES: { id: VehicleType; label: string }[] = [
   { id: "regularTukTuk", label: "Regular Tuk Tuk" },
   { id: "eTukTuk", label: "E-Tuk Tuk" },
@@ -23,10 +23,10 @@ const VEHICLE_TYPES: { id: VehicleType; label: string }[] = [
 
 export default function TukTukActivation() {
   const [vehicleStatuses, setVehicleStatuses] = useState<Record<VehicleType, VehicleStatus>>({
-    regularTukTuk: { isActive: true, deactivateUntil: null },
-    eTukTuk: { isActive: false, deactivateUntil: null },
-    cambioTukTuks: { isActive: false, deactivateUntil: null },
-    scooterBikes: { isActive: false, deactivateUntil: null },
+    regularTukTuk: { isActive: true, deactivateUntil: null, basePrice: null },
+    eTukTuk: { isActive: false, deactivateUntil: null, basePrice: null },
+    cambioTukTuks: { isActive: false, deactivateUntil: null, basePrice: null },
+    scooterBikes: { isActive: false, deactivateUntil: null, basePrice: null },
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,17 +58,20 @@ export default function TukTukActivation() {
             newStatuses[id] = {
               isActive: data.isActive ?? vehicleStatuses[id].isActive,
               deactivateUntil: data.deactivateUntil ?? null,
+              basePrice: data.basePrice ?? null, // Load basePrice
               updatedAt: data.updatedAt,
             };
-            newSectionStates[id].dirty = !data.isActive || !!data.deactivateUntil;
+            newSectionStates[id].dirty = !data.isActive || !!data.deactivateUntil || data.basePrice !== null;
           } else {
-            // Initialize with default values (frozen for specified vehicles)
-            const isActive = FROZEN_VEHICLES.includes(id) ? false : true;
+            // Initialize with default values
+            const isActive = true;
+            const basePrice = null; // Default to null for new documents
             await setDoc(
               docRef,
               {
                 isActive,
                 deactivateUntil: null,
+                basePrice,
                 updatedAt: serverTimestamp(),
               },
               { merge: true }
@@ -76,8 +79,9 @@ export default function TukTukActivation() {
             newStatuses[id] = {
               isActive,
               deactivateUntil: null,
+              basePrice,
             };
-            newSectionStates[id].dirty = !isActive;
+            newSectionStates[id].dirty = !isActive || basePrice !== null;
           }
         }
 
@@ -103,9 +107,8 @@ export default function TukTukActivation() {
     }));
   };
 
-  // Save handler for vehicle status (only for non-frozen vehicles)
+  // Save handler for vehicle status
   const saveVehicleStatus = async (vehicleType: VehicleType) => {
-    if (FROZEN_VEHICLES.includes(vehicleType)) return; // No saving for frozen vehicles
     if (sectionStates[vehicleType].saving || !sectionStates[vehicleType].dirty) return;
     try {
       updateSectionState(vehicleType, { saving: true });
@@ -115,6 +118,7 @@ export default function TukTukActivation() {
         {
           isActive: vehicleStatuses[vehicleType].isActive,
           deactivateUntil: vehicleStatuses[vehicleType].deactivateUntil,
+          basePrice: vehicleStatuses[vehicleType].basePrice, // Save basePrice
           updatedAt: serverTimestamp(),
         },
         { merge: true }
@@ -128,18 +132,20 @@ export default function TukTukActivation() {
     }
   };
 
-  // Update vehicle status (only for non-frozen vehicles)
+  // Update vehicle status
   const updateVehicleStatus = (
     vehicleType: VehicleType,
-    isActive: boolean,
-    deactivateUntil: Timestamp | null = null
+    updates: Partial<VehicleStatus>
   ) => {
-    if (FROZEN_VEHICLES.includes(vehicleType)) return; // No updates for frozen vehicles
-    // If isActive is false, clear deactivateUntil
-    const newDeactivateUntil = isActive ? deactivateUntil : null;
+    // If isActive is false, clear deactivateUntil and keep basePrice
+    const newDeactivateUntil = updates.isActive === false ? null : updates.deactivateUntil ?? vehicleStatuses[vehicleType].deactivateUntil;
     setVehicleStatuses((prev) => ({
       ...prev,
-      [vehicleType]: { ...prev[vehicleType], isActive, deactivateUntil: newDeactivateUntil },
+      [vehicleType]: {
+        ...prev[vehicleType],
+        ...updates,
+        deactivateUntil: newDeactivateUntil,
+      },
     }));
     updateSectionState(vehicleType, { dirty: true, saveMsg: null });
   };
@@ -161,9 +167,8 @@ export default function TukTukActivation() {
     return now > deactivateDate;
   };
 
-  // Get disabled reason for save button or frozen controls
+  // Get disabled reason for save button
   const getDisabledReason = (vehicleType: VehicleType) => {
-    if (FROZEN_VEHICLES.includes(vehicleType)) return "This vehicle type is permanently deactivated.";
     if (sectionStates[vehicleType].saving) return "Saving in progress...";
     if (!sectionStates[vehicleType].dirty) return "No changes to save.";
     return "";
@@ -220,76 +225,53 @@ export default function TukTukActivation() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {VEHICLE_TYPES.map(({ id, label }) => (
-            <section
-              key={id}
-              className={`border border-gray-200 rounded-lg p-6 shadow-sm ${
-                FROZEN_VEHICLES.includes(id) ? "bg-gray-100 opacity-70" : ""
-              }`}
-            >
+            <section key={id} className="border border-gray-200 rounded-lg p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-semibold text-gray-900">{label}</h3>
-                  {FROZEN_VEHICLES.includes(id) && (
-                    <svg
-                      className="h-5 w-5 text-gray-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                </div>
+                <div className="relative group">
+                  <button
+                    onClick={() => saveVehicleStatus(id)}
+                    disabled={!sectionStates[id].dirty || sectionStates[id].saving}
+                    className={`px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-md transition ${
+                      !sectionStates[id].dirty || sectionStates[id].saving
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-orange-500 hover:bg-orange-600"
+                    }`}
+                  >
+                    {sectionStates[id].saving ? (
+                      <span className="flex items-center gap-2">
+                        <svg
+                          className="animate-spin h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        Saving...
+                      </span>
+                    ) : (
+                      "Save Status"
+                    )}
+                  </button>
+                  {(!sectionStates[id].dirty || sectionStates[id].saving) && (
+                    <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg py-2 px-3 -mt-12 right-0">
+                      {getDisabledReason(id)}
+                    </div>
                   )}
                 </div>
-                {!FROZEN_VEHICLES.includes(id) && (
-                  <div className="relative group">
-                    <button
-                      onClick={() => saveVehicleStatus(id)}
-                      disabled={!sectionStates[id].dirty || sectionStates[id].saving}
-                      className={`px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-md transition ${
-                        !sectionStates[id].dirty || sectionStates[id].saving
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-orange-500 hover:bg-orange-600"
-                      }`}
-                    >
-                      {sectionStates[id].saving ? (
-                        <span className="flex items-center gap-2">
-                          <svg
-                            className="animate-spin h-4 w-4 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                          </svg>
-                          Saving...
-                        </span>
-                      ) : (
-                        "Save Status"
-                      )}
-                    </button>
-                    {(!sectionStates[id].dirty || sectionStates[id].saving) && (
-                      <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg py-2 px-3 -mt-12 right-0">
-                        {getDisabledReason(id)}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
-              {sectionStates[id].saveMsg && !FROZEN_VEHICLES.includes(id) && (
+              {sectionStates[id].saveMsg && (
                 <div
                   className={`mb-4 p-3 rounded-lg text-sm flex items-center gap-2 ${
                     sectionStates[id].saveMsg.includes("✅")
@@ -327,31 +309,23 @@ export default function TukTukActivation() {
                 </div>
               )}
               <div className="space-y-4">
-                <div className="flex items-center gap-4 relative group">
+                <div className="flex items-center gap-4">
                   <label className="text-sm font-semibold text-gray-900">Active</label>
                   <input
                     type="checkbox"
                     checked={vehicleStatuses[id].isActive}
-                    onChange={(e) => updateVehicleStatus(id, e.target.checked, vehicleStatuses[id].deactivateUntil)}
-                    disabled={FROZEN_VEHICLES.includes(id)}
-                    className="h-5 w-5 text-orange-500 focus:ring-orange-500 border-gray-300 rounded disabled:cursor-not-allowed"
+                    onChange={(e) => updateVehicleStatus(id, { isActive: e.target.checked })}
+                    className="h-5 w-5 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
                   />
                   <span className={`text-sm ${isVehicleActive(id) ? "text-green-600" : "text-red-600"}`}>
-                    {FROZEN_VEHICLES.includes(id)
-                      ? "Permanently Deactivated"
-                      : isVehicleActive(id)
+                    {isVehicleActive(id)
                       ? "Active"
                       : vehicleStatuses[id].deactivateUntil
                       ? `Deactivated until ${vehicleStatuses[id].deactivateUntil!.toDate().toLocaleDateString()}`
                       : "Fully Deactivated"}
                   </span>
-                  {FROZEN_VEHICLES.includes(id) && (
-                    <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg py-2 px-3 -mt-10">
-                      {getDisabledReason(id)}
-                    </div>
-                  )}
                 </div>
-                <div className="relative group">
+                <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Deactivate Until (Optional)
                   </label>
@@ -360,16 +334,30 @@ export default function TukTukActivation() {
                     value={formatDateForInput(vehicleStatuses[id].deactivateUntil)}
                     onChange={(e) => {
                       const date = e.target.value ? new Date(e.target.value) : null;
-                      updateVehicleStatus(id, vehicleStatuses[id].isActive, date ? Timestamp.fromDate(date) : null);
+                      updateVehicleStatus(id, { deactivateUntil: date ? Timestamp.fromDate(date) : null });
                     }}
-                    disabled={FROZEN_VEHICLES.includes(id) || !vehicleStatuses[id].isActive}
+                    disabled={!vehicleStatuses[id].isActive}
                     className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
-                  {FROZEN_VEHICLES.includes(id) && (
-                    <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg py-2 px-3 -mt-14 right-0">
-                      {getDisabledReason(id)}
-                    </div>
-                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Base Price (Optional)
+                  </label>
+                  <input
+                    type="number"
+                    value={vehicleStatuses[id].basePrice ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      updateVehicleStatus(id, {
+                        basePrice: value ? parseFloat(value) : null,
+                      });
+                    }}
+                    placeholder="Enter base price"
+                    className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all"
+                    min="0"
+                    step="0.01"
+                  />
                 </div>
               </div>
             </section>

@@ -146,6 +146,7 @@ export default function OnBoardBookings({ bookings }: { bookings: BookingData[] 
               <div><strong>Name:</strong> {selectedBooking.name}</div>
               <div><strong>Email:</strong> {selectedBooking.email}</div>
               <div><strong>WhatsApp:</strong> +{selectedBooking.whatsapp}</div>
+              <div><strong>Vehicle Type:</strong> {selectedBooking.selectedVehicleName || "Regular"}</div>
               <div><strong>Total Price:</strong> ${selectedBooking.RentalPrice || "—"}</div>
               <div><strong>Pickup:</strong> {selectedBooking.pickup}</div>
               <div><strong>Pickup Date/Time:</strong> {selectedBooking.pickupDate} {selectedBooking.pickupTime}</div>

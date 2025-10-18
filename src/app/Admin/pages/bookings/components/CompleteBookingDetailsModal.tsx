@@ -400,6 +400,16 @@ const missingTuks =
               />
             </div>
 
+<div className="space-y-2">
+  <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
+  <input
+    type="text"
+    value={formValues.selectedVehicleName || "Regular"}
+    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transitio"
+    readOnly
+  />
+</div>    
+
             {/* Pickup Location */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>

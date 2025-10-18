@@ -69,7 +69,7 @@ export interface BookingData {
   postalCode?: string;
   licenseNumber?: string;
   passportNumber?: string;
-
+  selectedVehicleName?:string;
 
 }
 

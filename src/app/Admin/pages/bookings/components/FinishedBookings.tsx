@@ -89,7 +89,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
             {/* modal header */}
             <div className="sticky top-0 bg-white py-4 flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-blue-800">
-                Finished Booking Details - {selectedBooking.bookingId}
+                Finished Booking Details - {selectedBooking.bookingId || "Regular"}
               </h2>
               <div className="flex items-center gap-2 no-print">
                 <button
@@ -116,6 +116,7 @@ export default function FinishedBookings({ bookings }: { bookings: BookingData[]
                   <div><strong>Name:</strong> {selectedBooking.name}</div>
                   <div><strong>Email:</strong> {selectedBooking.email}</div>
                   <div><strong>WhatsApp:</strong> +{selectedBooking.whatsapp}</div>
+                  <div><strong>Vehicle Type:</strong> {selectedBooking.selectedVehicleName || "Regular"}</div>
                   <div><strong>Total Price:</strong> {money(selectedBooking.RentalPrice) || "—"}</div>
                   <div><strong>Pickup Location:</strong> {selectedBooking.pickup}</div>
                   <div><strong>Pickup Date/Time:</strong> {selectedBooking.pickupDate} {selectedBooking.pickupTime}</div>
