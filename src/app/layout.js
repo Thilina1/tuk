@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+  title: "Tuk Tuk Rental in Sri Lanka - Tuktuk Rental - Drive your own tuktuk",
   description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.",
   openGraph: {
     title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
@@ -33,7 +33,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+    title: "Tuk Tuk Rental in Sri Lanka - Tuktuk Rental - Drive your own tuktuk",
     description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures.",
     images: ["https://www.tuktukdrive.com/hero/tuktukDrive.jpeg"],
   },

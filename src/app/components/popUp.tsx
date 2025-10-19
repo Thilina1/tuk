@@ -37,7 +37,7 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
             <ul className="safety-features">
               <li>Authorised by Sri Lankan Government</li>
               <li>Issuing 100% legal & valid Sri Lankan permit</li>
-              <li>2025 manufactured tuk tuks</li>
+              <li>2025 manufactured tuk tuks available</li>
               <li>Guaranteed 100% perfect technical condition during rental</li>
             </ul>
             <h3 className="demand-alert">HURRY UP! IT&apos;S HIGH DEMAND SEASON</h3>
