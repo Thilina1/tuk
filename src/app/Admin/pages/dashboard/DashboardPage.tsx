@@ -130,7 +130,7 @@ export default function DashboardPage() {
   return (
     <div className="p-6 space-y-8 min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <span className="material-symbols-outlined">dashboard</span> Dashboard Overview
+        <span className="material-symbols-outlined"></span> Dashboard Overview
       </h1>
 
       {loading ? (
