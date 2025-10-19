@@ -118,6 +118,8 @@ function VehicleDropdown({
     return deactivateDate ? deactivateDate > new Date() : false;
   };
 
+
+
   return (
     <div className="relative">
       <label className="text-xs font-medium text-white">Select Vehicle Type</label>
@@ -149,7 +151,7 @@ function VehicleDropdown({
                 />
                 <span>
                   {selectedVehicle.name}
-                  {isVehicleUnavailable(selectedVehicle)}
+                  {isVehicleUnavailable(selectedVehicle) }
                 </span>
               </>
             ) : (
@@ -483,65 +485,52 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
     <>
       <section
         ref={sectionRef}
-        className="relative min-h-screen bg-fixed bg-center bg-cover bg-no-repeat text-white flex items-start justify-center px-6 sm:px-8 hero-booking-section"
-        style={{ backgroundImage: "url('/hero/mobilehero.jpg')" }}
+        className="relative w-full text-white overflow-hidden min-h-screen bg-fixed bg-cover bg-center"
       >
-        <style jsx>{`
-          .hero-booking-section {
-            position: relative;
-            min-height: 100vh;
-          }
+    <style jsx global>{`
+      select option {
+      color: black !important;
+      background-color: white !important;
+    }
 
-          .content-container {
-            position: relative;
-            z-index: 20;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 1.5rem 0;
-            overflow-y: auto;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-          }
+    .hero-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
 
-          @media (min-width: 768px) {
-            .content-container {
-              flex-direction: row;
-              align-items: center;
-              justify-content: space-between;
-              padding-top: 1.5rem;
-            }
+    /* Mobile view (default) */
+    .hero-background {
+      content: url("/hero/mobilehero.jpg");
+    }
 
-            .hero-booking-section {
-              background-image: url('/hero/webhero.jpg');
-              background-attachment: scroll;
-            }
-          }
-
-          @media (min-width: 1024px) {
-            .promo-section {
-              text-align: left !important;
-              margin-left: 2rem !important;
-              margin-right: 0 !important;
-            }
-            .social-icons {
-              justify-content: flex-start !important;
-            }
-          }
-
-          select option {
-            color: black !important;
-            background-color: white !important;
-          }
+    /* Desktop view */
+    @media (min-width: 768px) {
+      .hero-background {
+        content: url("/hero/webhero.jpg");
+      }
+    }
         `}</style>
 
-        {/* Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/hero/webhero.jpg" // Fallback image for Next.js Image component
+            alt="Hero background"
+            fill
+            sizes="100vw"
+            className="hero-background"
+            priority
+            quality={60}
+          />
+        </div>
+
         <div className="absolute inset-0 bg-black/60 z-10" />
 
-        {/* Content */}
-        <div className="content-container">
+        <div className="relative z-20 max-w-7xl mx-auto px-6 pt-14 md:pt-6 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between min-h-[90vh] md:min-h-[85vh]">
           <div
             style={{
               position: "relative",
@@ -748,6 +737,21 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
               </a>
             </div>
           </div>
+
+          <style>
+            {`
+              @media (min-width: 1024px) {
+                .promo-section {
+                  text-align: left !important;
+                  margin-left: 2rem !important;
+                  margin-right: 0 !important;
+                }
+                .social-icons {
+                  justify-content: flex-start !important;
+                }
+              }
+            `}
+          </style>
 
           <div className="w-full md:w-[350px] bg-white/20 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
             <form onSubmit={handleSubmit} className="space-y-3">
