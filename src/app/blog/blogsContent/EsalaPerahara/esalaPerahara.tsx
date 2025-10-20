@@ -134,9 +134,7 @@ export default function EsalaPeraheraPage() {
                 >
                   🐘 Book Your Cultural Ride
                 </Link>
-                <p className="text-sm text-white mt-2">
-                  No upfront payment required to witness the tradition.
-                </p>
+              
               </div>
 
               {/* Pro Tips */}

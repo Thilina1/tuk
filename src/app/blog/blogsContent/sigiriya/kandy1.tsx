@@ -126,9 +126,7 @@ export default function SigiriyaPage() {
                 >
                   🚀 Book Your TukTuk Now
                 </Link>
-                <p className="text-sm text-white mt-2">
-                  No upfront payment required to get started.
-                </p>
+                
               </div>
 
               {/* Pro Tips */}

@@ -147,9 +147,7 @@ export default function CeylonTeaHarvestPage() {
                 >
                   🍃 Book Your Tea Trail
                 </Link>
-                <p className="text-sm text-white mt-2">
-                  Taste the legacy with no upfront cost.
-                </p>
+             
               </div>
 
               <div

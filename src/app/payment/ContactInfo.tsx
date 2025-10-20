@@ -277,7 +277,6 @@ export default function PricingDetails() {
           >
             🚀 Book Your TukTuk Now
           </Link>
-          <p className="text-sm text-gray-500 mt-2">No upfront payment required to get started.</p>
         </div>
       </div>
     </div>

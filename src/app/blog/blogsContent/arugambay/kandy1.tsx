@@ -142,9 +142,7 @@ export default function ArugamBay() {
             >
               🏃‍♀️ Book Your Arugam Ride
             </Link>
-            <p className="text-sm text-white mt-2">
-              No upfront payment needed to start the adventure.
-            </p>
+         
           </div>
 
           {/* Pro Tips */}
