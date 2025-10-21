@@ -111,7 +111,7 @@ export default function Navbar() {
                 }}
               >
                 <MessageCircle className="w-6 h-6" />
-                <span>Chat with us</span>
+                <span>Enquire Now</span>
               </button>
             </div>
 
@@ -204,7 +204,7 @@ export default function Navbar() {
               }}
             >
               <MessageCircle className="w-7 h-7" />
-              <span>Chat with us!</span>
+              <span>Enquire Now</span>
             </button>
           </div>
         )}
