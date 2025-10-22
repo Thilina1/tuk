@@ -547,7 +547,7 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
               position: "relative",
               zIndex: 10,
               textAlign: "center",
-              maxWidth: "768px",
+              maxWidth: "808px",
               margin: "0 auto",
             }}
             className="promo-section"
@@ -749,7 +749,7 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
             </div>
           </div>
 
-          <div className="w-full md:w-[350px] bg-white/20 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
+          <div className="w-full md:w-[425px] bg-white/20 text-white rounded-xl p-4 shadow-md mt-6 md:mt-0 mb-8">
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className="text-xs font-medium">Full Name</label>
