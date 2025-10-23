@@ -536,7 +536,7 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
             background-color: white !important;
           }
         `}</style>
-
+ 
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/60 z-10" />
 
