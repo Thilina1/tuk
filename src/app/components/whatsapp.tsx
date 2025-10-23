@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
 
@@ -53,12 +55,12 @@ const ChatPopup: FC<{onClose: () => void; phoneNumber: string}> = ({onClose, pho
                 />
                 <div className="bg-gray-600 text-white py-2 px-4 rounded-lg shadow-md">
                     <p>Hello 👋</p>
-                    <p>How can we help you?</p>
+                    <p>Can we help you?</p>
                 </div>
             </div>
 
             {/* Action Button */}
-            <a href={`https://wa.me/${94770063780}?text=Hello! I need more info about Booking https://tuktukdrive.com/.`} target="_blank" rel="noopener noreferrer" className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg">
+            <a href={`https://wa.me/${phoneNumber}?text=Hello! I have a question about TukTuk Rentals.`} target="_blank" rel="noopener noreferrer" className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg">
                 <span>Open chat</span>
                 <SendIcon />
             </a>
