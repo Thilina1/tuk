@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
@@ -10,8 +10,8 @@ interface WhatsAppWidgetProps {
 }
 
 const POPUP_WIDTH = 360;
-const POPUP_HEIGHT = 280; 
-const BUTTON_SIZE = 64; 
+const POPUP_HEIGHT = 280;
+const BUTTON_SIZE = 64;
 
 const WhatsAppIcon: FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" className={`${className} text-white`}>
@@ -21,7 +21,7 @@ const WhatsAppIcon: FC<{ className?: string }> = ({ className = "w-8 h-8" }) => 
 
 const SendIcon: FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
     </svg>
 );
 
@@ -31,36 +31,34 @@ const CloseIcon: FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
     </svg>
 );
 
-
-const ChatPopup: FC<{onClose: () => void; phoneNumber: string}> = ({onClose, phoneNumber}) => (
+const ChatPopup: FC<{ onClose: () => void; phoneNumber: string }> = ({ onClose, phoneNumber }) => (
     <div className={`w-[360px] max-w-[calc(100vw-32px)] h-[${POPUP_HEIGHT}px] rounded-2xl shadow-2xl flex flex-col bg-[#272a2e] animate-scale-in-br overflow-hidden`}>
-        {/* Header */}
         <div className="bg-[#22c55e] p-3 flex items-center justify-between text-white">
             <div className="flex items-center gap-3">
                 <WhatsAppIcon className="w-7 h-7" />
                 <h3 className="font-bold text-lg">WhatsApp</h3>
             </div>
             <button onClick={onClose} className="p-1 rounded-full bg-black/20 hover:bg-black/30 transition-colors" aria-label="Close chat">
-                 <CloseIcon />
+                <CloseIcon />
             </button>
         </div>
-
-        {/* Body */}
         <div className="flex-grow p-6 flex flex-col justify-between">
-            {/* Message Bubble */}
             <div className="relative self-start max-w-[85%]">
-                <div 
+                <div
                     className="absolute left-[-4px] bottom-0 w-3 h-3 bg-gray-600"
-                    style={{clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'}}
+                    style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
                 />
                 <div className="bg-gray-600 text-white py-2 px-4 rounded-lg shadow-md">
                     <p>Hello 👋</p>
-                    <p>Can we help you?</p>
+                    <p>How can we help you?</p>
                 </div>
             </div>
-
-            {/* Action Button */}
-            <a href={`https://wa.me/${phoneNumber}?text=Hello! I have a question about TukTuk Rentals.`} target="_blank" rel="noopener noreferrer" className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg">
+            <a
+                href={`https://wa.me/${phoneNumber}?text=Hello! I need more info about Booking https://tuktukdrive.com/.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg"
+            >
                 <span>Open chat</span>
                 <SendIcon />
             </a>
@@ -68,12 +66,10 @@ const ChatPopup: FC<{onClose: () => void; phoneNumber: string}> = ({onClose, pho
     </div>
 );
 
-
-export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
+export default function WhatsAppWidget({ phoneNumber = "+94770063780" }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [showNotification, setShowNotification] = useState(true);
-
     const [anchored, setAnchored] = useState(true);
     const [position, setPosition] = useState<Point>({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
@@ -82,72 +78,88 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
 
     const PADDING = 16;
 
-    const clamp = useCallback((x: number, y: number): Point => {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
+    const clamp = useCallback(
+        (x: number, y: number): Point => {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
 
-        if (isOpen && !anchored) {
-            // Clamping for the open popup
-            const maxX = vw - PADDING - BUTTON_SIZE;
-            const minX = PADDING + POPUP_WIDTH - BUTTON_SIZE;
-            const maxY = vh - PADDING - BUTTON_SIZE;
-            const minY = PADDING + POPUP_HEIGHT - BUTTON_SIZE;
-             return {
-                x: Math.max(minX, Math.min(maxX, x)),
-                y: Math.max(minY, Math.min(maxY, y)),
-            };
-        } else {
-            // Clamping for the button itself
-            const minX = PADDING;
-            const maxX = vw - PADDING - BUTTON_SIZE;
-            const minY = PADDING;
-            const maxY = vh - PADDING - BUTTON_SIZE;
-            return {
-                x: Math.max(minX, Math.min(maxX, x)),
-                y: Math.max(minY, Math.min(maxY, y)),
-            };
-        }
-    }, [isOpen, anchored]);
-
-    const beginDrag = useCallback((clientX: number, clientY: number) => {
-        setDragging(true);
-        setHasMoved(false);
-        if (isOpen) setIsOpen(false);
-
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (rect) {
-            if (anchored) {
-                setAnchored(false);
-                setPosition({ x: rect.left, y: rect.top });
+            if (isOpen && !anchored) {
+                const maxX = vw - PADDING - BUTTON_SIZE;
+                const minX = PADDING + POPUP_WIDTH - BUTTON_SIZE;
+                const maxY = vh - PADDING - BUTTON_SIZE;
+                const minY = PADDING + POPUP_HEIGHT - BUTTON_SIZE;
+                return {
+                    x: Math.max(minX, Math.min(maxX, x)),
+                    y: Math.max(minY, Math.min(maxY, y)),
+                };
+            } else {
+                const minX = PADDING;
+                const maxX = vw - PADDING - BUTTON_SIZE;
+                const minY = PADDING;
+                const maxY = vh - PADDING - BUTTON_SIZE;
+                return {
+                    x: Math.max(minX, Math.min(maxX, x)),
+                    y: Math.max(minY, Math.min(maxY, y)),
+                };
             }
-            setOffset({ x: clientX - rect.left, y: clientY - rect.top });
-        }
-    }, [anchored, isOpen]);
-    
-    const onMouseDown = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        beginDrag(e.clientX, e.clientY);
-    }, [beginDrag]);
+        },
+        [isOpen, anchored]
+    );
 
-    const onTouchStart = useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
-        const t = e.touches[0];
-        beginDrag(t.clientX, t.clientY);
-    }, [beginDrag]);
+    const beginDrag = useCallback(
+        (clientX: number, clientY: number) => {
+            setDragging(true);
+            setHasMoved(false);
+            if (isOpen) setIsOpen(false);
 
-    const onMouseMove = useCallback((e: MouseEvent) => {
-        if (!dragging) return;
-        setHasMoved(true);
-        setPosition(clamp(e.clientX - offset.x, e.clientY - offset.y));
-    }, [dragging, offset, clamp]);
+            const rect = containerRef.current?.getBoundingClientRect();
+            if (rect) {
+                if (anchored) {
+                    setAnchored(false);
+                    setPosition({ x: rect.left, y: rect.top });
+                }
+                setOffset({ x: clientX - rect.left, y: clientY - rect.top });
+            }
+        },
+        [anchored, isOpen]
+    );
 
-    const onTouchMove = useCallback((e: TouchEvent) => {
-        if (!dragging) return;
-        e.preventDefault();
-        const t = e.touches[0];
-        setHasMoved(true);
-        setPosition(clamp(t.clientX - offset.x, t.clientY - offset.y));
-    }, [dragging, offset, clamp]);
-    
+    const onMouseDown = useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            beginDrag(e.clientX, e.clientY);
+        },
+        [beginDrag]
+    );
+
+    const onTouchStart = useCallback(
+        (e: React.TouchEvent<HTMLButtonElement>) => {
+            const t = e.touches[0];
+            beginDrag(t.clientX, t.clientY);
+        },
+        [beginDrag]
+    );
+
+    const onMouseMove = useCallback(
+        (e: MouseEvent) => {
+            if (!dragging) return;
+            setHasMoved(true);
+            setPosition(clamp(e.clientX - offset.x, e.clientY - offset.y));
+        },
+        [dragging, offset, clamp]
+    );
+
+    const onTouchMove = useCallback(
+        (e: TouchEvent) => {
+            if (!dragging) return;
+            e.preventDefault();
+            const t = e.touches[0];
+            setHasMoved(true);
+            setPosition(clamp(t.clientX - offset.x, t.clientY - offset.y));
+        },
+        [dragging, offset, clamp]
+    );
+
     const onMouseUp = useCallback(() => setDragging(false), []);
     const onTouchEnd = useCallback(() => setDragging(false), []);
 
@@ -159,13 +171,13 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
         window.addEventListener('touchmove', onTouchMove, options);
         window.addEventListener('touchend', onTouchEnd);
         return () => {
-          window.removeEventListener('mousemove', onMouseMove);
-          window.removeEventListener('mouseup', onMouseUp);
-          window.removeEventListener('touchmove', onTouchMove, options);
-          window.removeEventListener('touchend', onTouchEnd);
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('touchmove', onTouchMove, options);
+            window.removeEventListener('touchend', onTouchEnd);
         };
-      }, [dragging, onMouseMove, onMouseUp, onTouchMove, onTouchEnd]);
-    
+    }, [dragging, onMouseMove, onMouseUp, onTouchMove, onTouchEnd]);
+
     useEffect(() => {
         const onResize = () => {
             if (!anchored) setPosition((p) => clamp(p.x, p.y));
@@ -174,7 +186,6 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
         return () => window.removeEventListener('resize', onResize);
     }, [anchored, clamp]);
 
-    // Effect to handle clicks outside the component
     useEffect(() => {
         if (!isOpen) return;
 
@@ -192,7 +203,7 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
 
     const handleClick = () => {
         if (hasMoved) return;
-        setIsOpen(prev => {
+        setIsOpen((prev) => {
             const willBeOpen = !prev;
             if (willBeOpen) {
                 setShowNotification(false);
@@ -200,22 +211,22 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
             return willBeOpen;
         });
     };
-    
+
     const containerStyle: React.CSSProperties = anchored
         ? {
-            position: 'fixed',
-            right: `calc(env(safe-area-inset-right, 0px) + ${PADDING}px)`,
-            bottom: `calc(env(safe-area-inset-bottom, 0px) + ${PADDING}px)`,
-            zIndex: 9999,
-            userSelect: 'none',
-        }
+              position: 'fixed',
+              right: `calc(env(safe-area-inset-right, 0px) + ${PADDING}px)`,
+              bottom: `calc(env(safe-area-inset-bottom, 0px) + ${PADDING}px)`,
+              zIndex: 9999,
+              userSelect: 'none',
+          }
         : {
-            position: 'fixed',
-            left: `${isOpen ? position.x + BUTTON_SIZE - POPUP_WIDTH : position.x}px`,
-            top: `${isOpen ? position.y + BUTTON_SIZE - POPUP_HEIGHT : position.y}px`,
-            zIndex: 9999,
-            userSelect: 'none',
-        };
+              position: 'fixed',
+              left: `${isOpen ? position.x + BUTTON_SIZE - POPUP_WIDTH : position.x}px`,
+              top: `${isOpen ? position.y + BUTTON_SIZE - POPUP_HEIGHT : position.y}px`,
+              zIndex: 9999,
+              userSelect: 'none',
+          };
 
     return (
         <div ref={containerRef} style={containerStyle}>
@@ -227,7 +238,9 @@ export default function WhatsAppWidget({ phoneNumber }: WhatsAppWidgetProps) {
                         onMouseDown={onMouseDown}
                         onTouchStart={onTouchStart}
                         onClick={handleClick}
-                        className={`w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 ${dragging ? 'cursor-grabbing' : 'cursor-pointer'}`}
+                        className={`w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 ${
+                            dragging ? 'cursor-grabbing' : 'cursor-pointer'
+                        }`}
                         aria-label="Open WhatsApp chat"
                     >
                         <WhatsAppIcon />
