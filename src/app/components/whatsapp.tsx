@@ -244,7 +244,7 @@ export default function WhatsAppWidget({ phoneNumber = "+94770063780" }) {
                     </button>
                     {showNotification && (
                         <div className="absolute top-0 right-0 w-6 h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white shadow-md">
-                            1
+ 1
                         </div>
                     )}
                 </div>
