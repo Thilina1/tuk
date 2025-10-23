@@ -5,9 +5,6 @@ import type { FC } from 'react';
 
 type Point = { x: number; y: number };
 
-interface WhatsAppWidgetProps {
-    phoneNumber: string;
-}
 
 const POPUP_WIDTH = 360;
 const POPUP_HEIGHT = 280;
