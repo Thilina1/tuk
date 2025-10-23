@@ -235,10 +235,10 @@ export default function WhatsAppWidget({ phoneNumber = "+94770063780" }) {
                         onMouseDown={onMouseDown}
                         onTouchStart={onTouchStart}
                         onClick={handleClick}
-                        className={`w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 ${
+                        className={`w-16 h-16 rounded-full bg-[#22c55e] hover:bg-[#16a34a] shadow-lg flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#22c55e]/50 ${
                             dragging ? 'cursor-grabbing' : 'cursor-pointer'
                         }`}
-                        aria-label="Open WhatsApp chat"
+ aria-label="Open WhatsApp chat"
                     >
                         <WhatsAppIcon />
                     </button>
