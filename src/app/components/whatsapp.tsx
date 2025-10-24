@@ -29,39 +29,54 @@ const CloseIcon: FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
 );
 
 const ChatPopup: FC<{ onClose: () => void; phoneNumber: string }> = ({ onClose, phoneNumber }) => (
-    <div className={`w-[360px] max-w-[calc(100vw-32px)] h-[${POPUP_HEIGHT}px] rounded-2xl shadow-2xl flex flex-col bg-[#272a2e] animate-scale-in-br overflow-hidden`}>
-        <div className="bg-[#22c55e] p-3 flex items-center justify-between text-white">
-            <div className="flex items-center gap-3">
-                <WhatsAppIcon className="w-7 h-7" />
-                <h3 className="font-bold text-lg">WhatsApp</h3>
-            </div>
-            <button onClick={onClose} className="p-1 rounded-full bg-black/20 hover:bg-black/30 transition-colors" aria-label="Close chat">
-                <CloseIcon />
-            </button>
+    <div
+      className="rounded-2xl shadow-2xl flex flex-col bg-[#272a2e] animate-scale-in-br overflow-hidden"
+      style={{
+        // Centered fixed popup with equal left/right margins and a safe max width
+        position: 'fixed',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        bottom: `calc(env(safe-area-inset-bottom, 0px) + 16px)`,
+        width: 'calc(100vw - 32px)', // ensures 16px margins both sides on very small screens
+        maxWidth: `${POPUP_WIDTH}px`,
+        height: `${POPUP_HEIGHT}px`,
+        boxSizing: 'border-box',
+        zIndex: 10000,
+      }}
+    >
+      <div className="bg-[#22c55e] p-3 flex items-center justify-between text-white">
+        <div className="flex items-center gap-3">
+          <WhatsAppIcon className="w-7 h-7" />
+          <h3 className="font-bold text-lg">WhatsApp</h3>
         </div>
-        <div className="flex-grow p-6 flex flex-col justify-between">
-            <div className="relative self-start max-w-[85%]">
-                <div
-                    className="absolute left-[-4px] bottom-0 w-3 h-3 bg-gray-600"
-                    style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
-                />
-                <div className="bg-gray-600 text-white py-2 px-4 rounded-lg shadow-md">
-                    <p>Hello 👋</p>
-                    <p>How can we help you?</p>
-                </div>
-            </div>
-            <a
-                href={`https://wa.me/${phoneNumber}?text=Hello! I need more info about Booking https://tuktukdrive.com/.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg"
-            >
-                <span>Open chat</span>
-                <SendIcon />
-            </a>
+        <button onClick={onClose} className="p-1 rounded-full bg-black/20 hover:bg-black/30 transition-colors" aria-label="Close chat">
+          <CloseIcon />
+        </button>
+      </div>
+      <div className="flex-grow p-6 flex flex-col justify-between">
+        <div className="relative self-start max-w-[85%]">
+          <div
+            className="absolute left-[-4px] bottom-0 w-3 h-3 bg-gray-600"
+            style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
+          />
+          <div className="bg-gray-600 text-white py-2 px-4 rounded-lg shadow-md">
+            <p>Hello 👋</p>
+            <p>How can we help you?</p>
+          </div>
         </div>
+        <a
+          href={`https://wa.me/${phoneNumber}?text=Hello! I need more info about Booking https://tuktukdrive.com/.`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="self-end mt-4 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 px-5 rounded-full flex items-center gap-2 transition-all duration-300 shadow-lg"
+        >
+          <span>Open chat</span>
+          <SendIcon />
+        </a>
+      </div>
     </div>
-);
+  );
+  
 
 export default function WhatsAppWidget({ phoneNumber = "+94770063780" }) {
     const containerRef = useRef<HTMLDivElement>(null);
