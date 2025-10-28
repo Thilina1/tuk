@@ -71,7 +71,7 @@ export default function InstagramEmbedSection() {
 
         <div className="mt-10 flex justify-center">
           <a
-            href="https://www.instagram.com/tuktukdrive"
+            href="https://www.instagram.com/tuktukdrive_srilanka/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-white font-semibold px-5 py-3 rounded-full shadow-lg hover:scale-105 transition"
