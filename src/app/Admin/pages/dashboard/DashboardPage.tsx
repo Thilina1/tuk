@@ -188,7 +188,7 @@ export default function DashboardPage() {
 
             <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <span className="material-symbols-outlined"></span> Revenue Trend (Last 7 Days)
+                <span className="material-symbols-outlined"></span> Revenue Trend (Last 30 Days)
               </h2>
               <Line
                 data={{
@@ -219,7 +219,7 @@ export default function DashboardPage() {
             </div>
             <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <span className="material-symbols-outlined"></span> Booking Count (Last 7 Days)
+                <span className="material-symbols-outlined"></span> Booking Count (Last 30 Days)
               </h2>
               <Line
                 data={{
