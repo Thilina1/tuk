@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Tuk Tuk Rental in Sri Lanka - Tuktuk Rental - Drive your own tuktuk",
-  description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.",
+  title: "Tuktuk Drive Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+  description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
   openGraph: {
     title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
-    description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures for travelers exploring vibrant roads.",
+    description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
     url: "https://tuktukdrive.com",
     siteName: "Tuk Tuk Drive",
     images: [
@@ -33,8 +33,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tuk Tuk Rental in Sri Lanka - Tuktuk Rental - Drive your own tuktuk",
-    description: "Tuk Tuk Drive: Sri Lanka's top tuk tuk rental, offering reliable, affordable self-drive adventures.",
+    title: "Tuktuk Drive Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
+    description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
     images: ["https://www.tuktukdrive.com/hero/tuktukDrive.jpeg"],
   },
 };
