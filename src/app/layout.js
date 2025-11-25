@@ -15,10 +15,10 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Tuktuk Drive Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
-  description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
+  description: "Looking for Tuktuk rental in Sri Lanka? Best rates on self-drive Tuk Tuk rentals. Unlimited km, full insurance & easy booking. Rent a Tuktuk today.",
   openGraph: {
     title: "Affordable Tuk Tuk Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
-    description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
+    description: "Looking for Tuktuk rental in Sri Lanka? Best rates on self-drive Tuk Tuk rentals. Unlimited km, full insurance & easy booking. Rent a Tuktuk today.",
     url: "https://tuktukdrive.com",
     siteName: "Tuk Tuk Drive",
     images: [
@@ -34,7 +34,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tuktuk Drive Rental Sri Lanka | Rent a Self-Drive Tuk Tuk",
-    description: "Affordable rates, flexible rental options, and easy booking. Discover the freedom of traveling with a unique Self driving Tuktuk experience!.",
+    description: "Looking for Tuktuk rental in Sri Lanka? Best rates on self-drive Tuk Tuk rentals. Unlimited km, full insurance & easy booking. Rent a Tuktuk today.",
     images: ["https://www.tuktukdrive.com/hero/tuktukDrive.jpeg"],
   },
 };
