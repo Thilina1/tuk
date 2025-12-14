@@ -33,9 +33,10 @@ ChartJS.register(
 type Booking = {
   country: string;
   name: string;
+  email?: string;
   createdAt?: { toDate: () => Date };
-  pickupDate?: { toDate: () => Date };
-  returnDate?: { toDate: () => Date };
+  pickupDate?: string;
+  returnDate?: string;
   RentalPrice: number;
   isBooked: boolean;
   pickup?: string;
@@ -52,6 +53,8 @@ export default function DashboardPage() {
   const [upcomingPickups, setUpcomingPickups] = useState<Booking[]>([]);
   const [upcomingReturns, setUpcomingReturns] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAllPickups, setShowAllPickups] = useState(false);
+  const [showAllReturns, setShowAllReturns] = useState(false);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -75,8 +78,8 @@ export default function DashboardPage() {
         snapshot.forEach((doc) => {
           const data = doc.data() as Booking;
           const createdAt = data.createdAt?.toDate?.() ?? null;
-          const pickupDate = data.pickupDate?.toDate?.() ?? null;
-          const returnDate = data.returnDate?.toDate?.() ?? null;
+          const pickupDate = data.pickupDate ? new Date(data.pickupDate) : null;
+          const returnDate = data.returnDate ? new Date(data.returnDate) : null;
 
           if (typeof data.RentalPrice === 'number' && data.status !== '' && data.status !== 'PENDING_PAYMENT') {
             totalAll += data.RentalPrice;
@@ -91,12 +94,12 @@ export default function DashboardPage() {
           if (data.isBooked) bookedCount++;
           else notBookedCount++;
 
-          if (pickupDate && pickupDate >= startOfToday && pickupDate <= sevenDaysLater) {
-            pickups.push({ ...data, pickupDate: { toDate: () => pickupDate } });
+          if (pickupDate && pickupDate >= startOfToday && pickupDate <= sevenDaysLater && data.isBooked) {
+            pickups.push(data);
           }
 
-          if (returnDate && returnDate >= startOfToday && returnDate <= sevenDaysLater) {
-            returns.push({ ...data, returnDate: { toDate: () => returnDate } });
+          if (returnDate && returnDate >= startOfToday && returnDate <= sevenDaysLater && data.isBooked) {
+            returns.push(data);
           }
         });
 
@@ -106,8 +109,8 @@ export default function DashboardPage() {
         setIsBookedStats({ booked: bookedCount, notBooked: notBookedCount });
         setRevenueChartData({ labels: sortedDays, data: sortedDays.map((day) => dayRevenueMap[day]) });
         setCountChartData({ labels: sortedDays, data: sortedDays.map((day) => dayCountMap[day]) });
-        setUpcomingPickups(pickups.sort((a, b) => a.pickupDate!.toDate().getTime() - b.pickupDate!.toDate().getTime()));
-        setUpcomingReturns(returns.sort((a, b) => a.returnDate!.toDate().getTime() - b.returnDate!.toDate().getTime()));
+        setUpcomingPickups(pickups.sort((a, b) => new Date(a.pickupDate!).getTime() - new Date(b.pickupDate!).getTime()));
+        setUpcomingReturns(returns.sort((a, b) => new Date(a.returnDate!).getTime() - new Date(b.returnDate!).getTime()));
 
       } catch (err) {
         console.error("Error loading bookings", err);
@@ -118,6 +121,22 @@ export default function DashboardPage() {
 
     fetchBookings();
   }, []);
+
+  const getRowColor = (dateStr: string | undefined) => {
+    if (!dateStr) return '';
+    const today = new Date();
+    const pickupDate = new Date(dateStr);
+    today.setHours(0,0,0,0);
+    pickupDate.setHours(0,0,0,0);
+    const diffTime = pickupDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) {
+      return 'bg-red-100 text-red-800';
+    } else if (diffDays === 1) {
+      return 'bg-yellow-100 text-yellow-800';
+    }
+    return '';
+  };
 
   const lineChartOptions: any = {
     responsive: true,
@@ -316,18 +335,28 @@ export default function DashboardPage() {
               </h2>
               <ul className="text-sm text-gray-800 space-y-3">
                 {upcomingPickups.length > 0 ? (
-                  upcomingPickups.map((b, i) => (
-                    <li key={i} className="border-b border-gray-200 pb-2 flex justify-between items-center">
-                      <div>
-                        <span className="font-medium">{b.pickup || 'N/A'}</span> — {new Date(b.pickupDate!.toDate()).toLocaleDateString()}
+                  (showAllPickups ? upcomingPickups : upcomingPickups.slice(0, 4)).map((b, i) => (
+                    <li key={i} className={`border-b border-gray-200 pb-3 mb-2 flex justify-between items-start p-2 rounded-md ${getRowColor(b.pickupDate)}`}>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-800">{b.name}</span>
+                        <span className="text-gray-500 text-sm">{b.email}</span>
+                        <span className="text-gray-600">{b.pickup || 'N/A'}</span>
+                        <span className="text-xs text-gray-500">{b.pickupDate}</span>
                       </div>
-                      <span className="text-emerald-600 font-semibold">${b.RentalPrice.toLocaleString()}</span>
+                      <div className="text-right">
+                        <span className="text-emerald-600 font-bold">${b.RentalPrice.toLocaleString()}</span>
+                      </div>
                     </li>
                   ))
                 ) : (
                   <li className="text-gray-500">No upcoming pickups.</li>
                 )}
               </ul>
+              {upcomingPickups.length > 4 && (
+                <button onClick={() => setShowAllPickups(!showAllPickups)} className="text-blue-500 hover:underline mt-4">
+                  {showAllPickups ? 'Show less' : 'View full list'}
+                </button>
+              )}
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
@@ -335,18 +364,28 @@ export default function DashboardPage() {
               </h2>
               <ul className="text-sm text-gray-800 space-y-3">
                 {upcomingReturns.length > 0 ? (
-                  upcomingReturns.map((b, i) => (
-                    <li key={i} className="border-b border-gray-200 pb-2 flex justify-between items-center">
-                      <div>
-                        <span className="font-medium">{b.returnLoc || 'N/A'}</span> — {new Date(b.returnDate!.toDate()).toLocaleDateString()}
+                  (showAllReturns ? upcomingReturns : upcomingReturns.slice(0, 4)).map((b, i) => (
+                    <li key={i} className={`border-b border-gray-200 pb-3 mb-2 flex justify-between items-start p-2 rounded-md ${getRowColor(b.returnDate)}`}>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-800">{b.name}</span>
+                         <span className="text-gray-500 text-sm">{b.email}</span>
+                        <span className="text-gray-600">{b.returnLoc || 'N/A'}</span>
+                        <span className="text-xs text-gray-500">{b.returnDate}</span>
                       </div>
-                      <span className="text-blue-600 font-semibold">${b.RentalPrice.toLocaleString()}</span>
+                      <div className="text-right">
+                        <span className="text-blue-600 font-bold">${b.RentalPrice.toLocaleString()}</span>
+                      </div>
                     </li>
                   ))
                 ) : (
                   <li className="text-gray-500">No upcoming returns.</li>
                 )}
               </ul>
+              {upcomingReturns.length > 4 && (
+                <button onClick={() => setShowAllReturns(!showAllReturns)} className="text-blue-500 hover:underline mt-4">
+                  {showAllReturns ? 'Show less' : 'View full list'}
+                </button>
+              )}
             </div>
           </div>
         </>
