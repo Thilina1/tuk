@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { label: "Discounts", icon: "💲", href: "/Admin/pages/discount" },
   { label: "Master Prices", icon: "💵", href: "/Admin/pages/masterPrices" },
   { label: "Activation Manager", icon: "✅", href: "/Admin/pages/ActiveDeactive" },
+  { label: "Blogs", icon: "📝", href: "/Admin/pages/blogs" },
   { label: "Settings", icon: "⚙️", href: "/Admin/pages/settings" },
 ];
 
