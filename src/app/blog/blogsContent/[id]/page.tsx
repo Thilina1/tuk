@@ -16,6 +16,7 @@ import {
 import Footer from "../../../components/Footer";
 import Navbar from "../../../components/Navbar";
 import { colorPalettes, Palette } from '@/config/colorPalettes';
+import Whatsapp from "../../../components/whatsapp";
 
 // Define the interface based on your form structure
 interface BlogPost {
@@ -213,6 +214,7 @@ export default function BlogPostDetail() {
         </main>
       </div>
       <Footer />
+      <Whatsapp/>
     </>
   );
 }
