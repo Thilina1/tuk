@@ -213,7 +213,8 @@ export default function PricingDetails() {
               <strong>{money(licenseFee?.amount)} per license</strong>.
             </li>
             {licenseFee?.description && <li>{licenseFee.description}</li>}
-            <li>IDP recommended for foreign visitors; all drivers must be 18+.</li>
+            <li>IDP mandatory for foreign visitors.</li>
+            <li>all drivers must be 18+.</li>
           </ul>
         </section>
 
