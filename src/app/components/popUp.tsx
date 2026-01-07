@@ -30,7 +30,7 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
         <div className="tuk-tuk-ad-container">
         <div className="top-section">
         <h1 className="ad-title" style={{ margin: '0 35px' }}>Most Affordable Tuk Tuk Rental Service in Sri Lanka</h1>
-          <img src="/add/add1.jpeg" alt="Tuk Tuk Comparison" style={{ width: '100%', height: 'auto', display: 'block', marginBottom: '10px' }} />
+          <img src="/add/tukTukPopUp.png" alt="Tuk Tuk Comparison" style={{ width: '100%', height: 'auto', display: 'block', marginBottom: '5px' }} />
         </div>
           <div className="bottom-section">
             <h2 className="bottom-title">Ride Sri Lanka Legally & Safely With <span className="highlight-text">Tuk Tuk Drive</span></h2>

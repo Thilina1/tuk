@@ -13,7 +13,7 @@ import Hero from "./components/Hero";
 import WhoWeAre from "./components/WhoAreWe";
 import FAQ from "./components/FAQ";
 import Whatsapp from "./components/whatsapp";
-//import PopUp from "./components/popUp";
+import PopUp from "./components/popUp";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname from Next.js
 
@@ -21,30 +21,30 @@ const HAS_SHOWN_AD_KEY = "hasShownAdPopup";
 
 export default function HomePage() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  // const [showAdPopup, setShowAdPopup] = useState(false);
+  const [showAdPopup, setShowAdPopup] = useState(false);
   const pathname = usePathname(); // Get the current URL path
 
-  // useEffect(() => {
-  //   // Check if the popup has been shown in this session
-  //   const hasShownAd = sessionStorage.getItem(HAS_SHOWN_AD_KEY);
+  useEffect(() => {
+    // Check if the popup has been shown in this session
+    const hasShownAd = sessionStorage.getItem(HAS_SHOWN_AD_KEY);
 
-  //   // Show popup only if it hasn't been shown in this session and the current path is the base URL ("/")
-  //   if (!hasShownAd && pathname === "/") {
-  //     setShowAdPopup(true);
-  //     // Set the flag in sessionStorage to prevent showing the popup again in this session
-  //     sessionStorage.setItem(HAS_SHOWN_AD_KEY, "true");
-  //   }
-  // }, [pathname]); // Re-run effect when pathname changes
+    // Show popup only if it hasn't been shown in this session and the current path is the base URL ("/")
+    if (!hasShownAd && pathname === "/") {
+      setShowAdPopup(true);
+      // Set the flag in sessionStorage to prevent showing the popup again in this session
+      sessionStorage.setItem(HAS_SHOWN_AD_KEY, "true");
+    }
+  }, [pathname]); // Re-run effect when pathname changes
 
-  // const handleCloseAdPopup = () => {
-  //   setShowAdPopup(false);
-  // };
+  const handleCloseAdPopup = () => {
+    setShowAdPopup(false);
+  };
 
-      //{showAdPopup && <PopUp onClose={handleCloseAdPopup} />}
 
 
   return (
     <main>
+      {showAdPopup && <PopUp onClose={handleCloseAdPopup} />}
       <Navbar />
       <Hero onModalChange={setIsBookingOpen} />
       <Reviews />
