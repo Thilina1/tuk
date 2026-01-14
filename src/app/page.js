@@ -12,8 +12,9 @@ import BlogSection from "./components/BlogGrid";
 import Hero from "./components/Hero";
 import WhoWeAre from "./components/WhoAreWe";
 import FAQ from "./components/FAQ";
+import FreelyIncluded from "./components/FreelyIncluded";
 import Whatsapp from "./components/whatsapp";
-//import PopUp from "./components/popUp";
+import PopUp from "./components/popUp";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname from Next.js
 
@@ -40,11 +41,11 @@ export default function HomePage() {
     setShowAdPopup(false);
   };
 
-      //{showAdPopup && <PopUp onClose={handleCloseAdPopup} />}
 
 
   return (
     <main>
+      {showAdPopup && <PopUp onClose={handleCloseAdPopup} />}
       <Navbar />
       <Hero onModalChange={setIsBookingOpen} />
       <Reviews />
@@ -56,6 +57,7 @@ export default function HomePage() {
       <BlogSection />
       <Locations />
       <FAQ />
+      <FreelyIncluded />
       <Footer />
       {!isBookingOpen && <Whatsapp />}
     </main>
