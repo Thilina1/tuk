@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect } from 'react';
 
@@ -44,9 +44,15 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
               <p><strong>Lowest Price - Guaranteed</strong></p>
               <p>Starting from Just <span>$7 per Day...</span></p>
             </div>
-            <button className="book-now-button" onClick={onClose}>
-              Book Now
-            </button>
+            <a
+              href="https://wa.me/94770063780?text=Hello!%20I'm%20interested%20in%20renting%20a%20tuk-tuk%20and%20would%20like%20more%20details."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="book-now-button"
+            >
+              <svg style={{ width: '24px', height: '24px', marginRight: '8px' }} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.35 3.43 16.84L2.06 22L7.31 20.62C8.75 21.41 10.36 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2ZM16.63 15.2C16.42 15.76 15.34 16.32 14.89 16.36C14.44 16.4 13.71 16.22 13.01 15.92C11.91 15.45 10.94 14.54 10.19 13.56C9.56 12.76 9.1 11.83 8.94 11.32C8.78 10.81 9.29 10.54 9.49 10.34C9.69 10.14 9.9 10.02 10.1 10.02C10.3 10.02 10.5 10.02 10.7 10.53C10.9 11.04 11.38 11.75 11.48 11.85C11.58 11.95 11.53 12.1 11.43 12.2C11.33 12.3 11.03 12.65 10.88 12.8C10.73 12.95 10.58 13.03 10.76 13.28C10.94 13.53 11.38 14.12 11.95 14.63C12.67 15.29 13.31 15.58 13.56 15.68C13.81 15.78 13.96 15.75 14.08 15.63C14.21 15.51 14.61 15.06 14.81 14.81C15.01 14.56 15.21 14.51 15.46 14.61C15.71 14.71 16.42 15.05 16.63 15.2Z"/></svg>
+              Book Now via WhatsApp
+            </a>
             <h3 className="demand-alert">⚡ Hurry up – Demand is already high this Season!</h3>
           </div>
         </div>
@@ -124,6 +130,10 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
           color: white; padding: 12px 25px; border: none; border-radius: 5px;
           cursor: pointer; font-size: 1.2em; font-weight: bold; width: 100%; max-width: 400px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
         }
         .book-now-button:hover { background-color: #45a049; }
 
