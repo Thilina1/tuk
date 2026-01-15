@@ -562,90 +562,45 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
                 textShadow: "0 2px 6px rgba(0,0,0,0.6)",
               }}
             >
-              <span style={{ color: "#FFD700" }}> Adventure Awaits: </span>{" "}
-              Explore Sri Lanka in Your Own Tuk-Tuk!
+              Explore Sri Lanka in Your Own 
+              {" "} <span style={{ color: "#FFD700" }}> Tuk-Tuk! </span> 
+
             </h1>
 
-            <p
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: "500",
-                color: "#FFD700",
-                margin: "0.25rem 0",
-              }}
-            >
-              Low prices, Full insurance, 24/7 support. Book now, no sign-up!
-            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-white mt-6 mb-6 text-left text-base">
+  <div className="flex items-center gap-3">
+    <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>100% Legal License</span>
+  </div>
+  <div className="flex items-center gap-3">
+    <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>Fully Comprehensive Insurance</span>
+  </div>
+  <div className="flex items-center gap-3">
+    <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>24/7 Island-wide Support</span>
+  </div>
+  <div className="flex items-center gap-3">
+    <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>Lowest Price Guaranteed</span>
+  </div>
+  <div className="flex items-center gap-3 sm:col-span-2">
+    <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>2025 Brand New, Cabrio & Electric Tuks</span>
+  </div>
 
-            <p
-              style={{
-                fontSize: "1.125rem",
-                fontWeight: "600",
-                color: "#fff",
-                marginTop: "0.5rem",
-                display: "inline-flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "0.75rem",
-              }}
-            >
-              <span
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(255, 215, 0, 0.7)",
-                }}
-              >
-                <Image src="/icons/babyseat.png" alt="Baby Seat" width={28} height={28} />
-              </span>
-              <span
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(255, 215, 0, 0.7)",
-                  fontSize: "1.5rem",
-                }}
-              >
-                🏄‍♂️
-              </span>
-              <span
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(255, 215, 0, 0.7)",
-                  fontSize: "1.5rem",
-                }}
-              >
-                🔊
-              </span>
-              <span
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(255, 215, 0, 0.7)",
-                }}
-              >
-                <Image src="/icons/train.png" alt="Train Transfer" width={28} height={28} />
-              </span>
-            </p>
+</div>
 
-            <br />
+<div className="sm:col-span-2 mt-3">
+    <p className="font-bold text-lg" style={{color: "#FFD700"}}>
+      Starting from just <span className="text-white text-xl">$7 per Day!</span>
+    </p>
+</div>
+
+<br/>
+<div>
+  <p>⁠Click on 👇 WhatsApp button to get Personalized Unmatchable Quotes..</p>
+</div>
 
             <a
               href="https://wa.me/94770063780?text=Hi%20I%27m%20interested%20in%20your%20offers!"
@@ -671,7 +626,7 @@ export default function HeroBookingSection({ onModalChange }: HeroProps) {
               Book Now via WhatsApp
               <FaWhatsapp style={{ fontSize: "1.5rem" }} />
             </a>
-
+<br/>
             <p
               style={{
                 fontSize: "1.125rem",
