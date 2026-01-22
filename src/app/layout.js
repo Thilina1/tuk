@@ -98,7 +98,8 @@ export default function RootLayout({ children }) {
 
         {/* Meta Pixel */}
 
-{/* Meta Pixel */}
+
+{/* Meta Pixel */} 
 <Script
   id="meta-pixel"
   strategy="afterInteractive"
